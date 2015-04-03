@@ -1,0 +1,35 @@
+<h1>Listing shifts</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Assignment</th>
+      <th>Week</th>
+      <th>Hours worked</th>
+      <th>Time in</th>
+      <th>Time out</th>
+      <th>State</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @shifts.each do |shift| %>
+      <tr>
+        <td><%= shift.assignment.job_order.company_profile.name %></td>
+        <td><%= shift.week %></td>
+        <td><%= shift.hours_worked %></td>
+        <td><%= shift.time_in %></td>
+        <td><%= shift.time_out %></td>
+        <td><%= shift.state %></td>
+        <td><%= link_to 'Show', assignment_shifts_path %></td>
+        <td><%= link_to 'Edit', edit_assignment_shift_path(shift.assignment, shift) %></td>
+        <td><%= link_to 'Destroy', assignment_shift_path(shift.assignment, shift), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Shift', new_assignment_shift_path %>

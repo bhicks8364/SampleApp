@@ -1,3 +1,31 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id                :integer          not null, primary key
+#  email             :string(255)
+#  created_at        :datetime
+#  updated_at        :datetime
+#  password_digest   :string(255)
+#  remember_digest   :string(255)
+#  admin             :boolean          default(FALSE)
+#  activation_digest :string(255)
+#  activated         :boolean          default(FALSE)
+#  activated_at      :datetime
+#  reset_digest      :string(255)
+#  reset_sent_at     :datetime
+#  first_name        :string(255)
+#  last_name         :string(255)
+#  profile_type      :string(255)
+#  profile_id        :string(255)
+#  role              :string(255)
+#
+# Indexes
+#
+#  index_users_on_email                        (email) UNIQUE
+#  index_users_on_profile_id_and_profile_type  (profile_id,profile_type)
+#
+
 require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase

@@ -1,17 +1,53 @@
 Rails.application.routes.draw do
-  root                'static_pages#home'
+
+
+  resources :assignments do
+      resources :shifts do
+        member do
+        patch :clock_in
+        patch :clock_out
+        
+      end
+    end
+  end
+
+  # resources :job_orders
+
+  root                'static_pages#about'
   get    'help'    => 'static_pages#help'
   get    'about'   => 'static_pages#about'
-  get    'contact' => 'static_pages#contact'
+  get    'dashboard' => 'static_pages#dashboard'
   get    'signup'  => 'users#new'
   get    'login'   => 'sessions#new'
   post   'login'   => 'sessions#create'
   delete 'logout'  => 'sessions#destroy'
-  resources :users
+  resources :users do
+    member do
+     patch :make_admin
+    end
+  end
+
+  
+  
+  resources :company_profiles do
+    resources :job_orders
+    member do
+      patch :assign_admin
+    end
+  end
+  resources :employee_profiles do
+    resources :users, module: :employee_profiles
+  end
+  # resources :companies do
+  #   resources :company_profiles
+  # end
+  # resources :employees do
+  #   resources :employee_profiles
+  # end
   resources :account_activations, only: [:edit]
   resources :password_resets,     only: [:new, :create, :edit, :update]
-end
 
+end
 
 
 

@@ -1,0 +1,24 @@
+<%= form_for [@shift.assignment, @shift] do |f| %>
+  <% if @shift.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@shift.errors.count, "error") %> prohibited this shift from being saved:</h2>
+
+      <ul>
+      <% @shift.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :week %><br>
+    <%= f.week_field :week,
+    min: Time.zone.today.beginning_of_year,
+    max: Time.zone.today.end_of_year %>
+    </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

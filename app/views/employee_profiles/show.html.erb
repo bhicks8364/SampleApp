@@ -1,0 +1,21 @@
+<p id="notice"><%= notice %></p>
+<div class="page-header">
+  <h3><%= @employee.user.name %> <small>Employee</small></h3>
+</div>
+    
+<% if @employee.assignments.any? %>
+<div class="employee-assignments">
+<ul class="list-group">
+    <% @assignments.each do |assignment| %>
+       <li class="list-group-item"><strong>Company: </strong>  <%= link_to assignment.job_order.company_profile.name, assignment %> </li>
+       <li class="list-group-item"><strong>Job Title: </strong> <%= assignment.job_order.job_title %></li>
+    <% end %>
+</ul>
+<% else %>
+<p>You currently do not have any job assignments</p></p>
+<% end %>
+</div>
+
+<br>
+<hr>
+<small> This profile was created <%= time_ago_in_words(@employee.created_at) %> ago</small>

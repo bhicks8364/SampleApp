@@ -2,10 +2,21 @@
 <div class="row">
   <aside class="col-md-4">
     <section class="user_info">
-      <h1>
+   
         <%= gravatar_for @user %>
-        <%= @user.name %>
-      </h1>
+        <h3><%= @user.name %></h3>
+        <hr>
+        <span id="user-profile-id"><%= @user.profile_id %></span>
+        <span id="user-role"><%= @user.role %></span>
+
+        <span id="updated-at"> <%= time_ago_in_words(@user.updated_at) %> ago</span>
+        <span id="<%= @user.id %>"><%= @user.admin %></span>
+        
+        <%= link_to "Make Admin", make_admin_user_path(@user), method: :patch, remote: true %>
+      
     </section>
   </aside>
+  <span id="user-profile-type"><%= @user.profile_type %></span>
 </div>
+
+

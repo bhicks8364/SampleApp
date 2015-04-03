@@ -1,0 +1,35 @@
+<h1>Listing job_orders</h1>
+<% if @job_orders.any? %>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Job title</th>
+      <th>Company profile</th>
+      <th>Fill date</th>
+      <th>Status</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @job_orders.each do |job_order| %>
+      <tr>
+        <td><%= job_order.job_title %></td>
+        <td><%= job_order.company_profile.name %></td>
+        <td><%= job_order.fill_date %></td>
+        <% if job_order.assignments.any? %>
+        <td>Assigned!</td>
+        <% else %>
+        <td> Unassigned </td>
+        <% end %>
+        <td><%= job_order.company_profile.name %></td>
+        <td><%= link_to 'Show', [job_order.company_profile, job_order] %></td>
+        <td><%= link_to 'Edit', edit_company_profile_job_order_path(job_order.company_profile, job_order) if can? :update, job_order %></td>
+        <td><%= link_to 'Destroy', [job_order.company_profile, job_order], method: :delete, data: { confirm: 'Are you sure?' } if can? :delete, job_order %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% else %>
+No Job Orders.
+<% end %>

@@ -8,7 +8,11 @@ class StaticPagesController < ApplicationController
   def about
   end
   
-  def contact
+  def dashboard
+    @user = current_user
+
+    @employees = EmployeeProfile.all
+    @companies = CompanyProfile.all
   end
   
 end

@@ -1,0 +1,16 @@
+<div class="nested-fields assignment-fields">
+  
+    <%= f.label :pay_rate, "Pay Rate:" %>
+    <%= f.text_field :pay_rate %>
+    
+    <%= f.label :bill_rate, "Bill Rate:" %>
+    <%= f.text_field :bill_rate %>
+
+    <%= f.collection_select(:employee_profile, EmployeeProfile.all, :id, :employee_name) %>
+
+  </div>
+
+      <%= link_to_remove_association "remove", f %>
+
+  
+

@@ -1,0 +1,24 @@
+# == Schema Information
+#
+# Table name: employee_profiles
+#
+#  id             :integer          not null, primary key
+#  ssn            :string(255)
+#  w2_box5        :integer
+#  marital_status :string(255)
+#  created_at     :datetime
+#  updated_at     :datetime
+#  employee_name  :string(255)
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  ssn: MyString
+  w2_box5: 1
+  marital_status: MyString
+
+two:
+  ssn: MyString
+  w2_box5: 1
+  marital_status: MyString

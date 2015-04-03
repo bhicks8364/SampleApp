@@ -1,0 +1,38 @@
+<p id="notice"><%= notice %></p>
+<div class="btn-group btn-group-justified" role="group" aria-label="...">
+  <div class="btn-group" role="group">
+    <button type="button" class="btn btn-default"><a><%= link_to "New Job Order", new_company_profile_job_order_path(@company) %>   </a></button>
+  </div>
+  <div class="btn-group" role="group">
+    <button type="button" class="btn btn-primary"><a><%= link_to "Current Job Orders", company_profile_job_orders_path(@company) %>  <span class="badge"><%= @company.job_orders.count %></span></a></button>
+  </div>
+  <div class="btn-group" role="group">
+    <button type="button" class="btn btn-default">Right</button>
+  </div>
+</div>
+
+<hr>
+
+    <div class="panel panel-default">
+     <strong><%= @company.company_name %></strong>
+     <%= time_ago_in_words(@company.created_at) %>
+            <div class="panel-body">
+                <% if @company.user != nil %>
+                <p>Company Admin: <%= @company.user.name %> | Admin ID: <%= @company.user.id %></p>
+                <p>Company Email: <%= @company.user.email %></p>
+                <% else %>
+                <p> No Company Admin has been assigned </p>
+                <% end %>
+            </div>
+    </div>
+    
+<div class="active-job-orders">
+  <h3>Active Job Orders</h3>
+<ul>
+<if @job_orders.active.any? %>
+  <% @job_orders.each do |jo| %>
+ <li>Job Title: <%= link_to jo.job_title, [jo.company_profile,jo] %> | Submitted <%= time_ago_in_words(jo.created_at) %> ago</li>
+<% end %>
+</ul>
+</div>
+

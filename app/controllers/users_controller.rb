@@ -16,12 +16,16 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(user_params)
+    @user = User.create(user_params)
+
+    
     if @user.save
-      @user.send_activation_email
-      flash[:info] = "Please check your email to activate your account."
-      redirect_to root_url
+      flash[:info] = "Welcome to Trackee #{@user.name}!"
+      # @user.send_activation_email
+      # flash[:info] = "Please check your email to activate your account."
+      redirect_to @user
     else
+      
       render 'new'
     end
   end
@@ -33,7 +37,7 @@ class UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     if @user.update_attributes(user_params)
-      flash[:success] = "Profile updated"
+      flash[:success] = "User Info updated"
       redirect_to @user
     else
       render 'edit'
@@ -47,12 +51,46 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
   
+  def make_admin
+    @user = User.find(params[:id])
+    if @user.admin?
+       @user.update(admin: false, updated_at: Time.zone.now)
+
+    else
+       @user.update(admin: true, updated_at: Time.zone.now)
+    end
+    @user.save!
+    # if @user.save
+    #   flash[:info] = "User is now an Admin User"
+    # end
+  end
+  
+  def change_role
+    @user = User.find(params[:id])
+    if @user.admin?
+       @user.update(admin: false, updated_at: Time.zone.now)
+
+    else
+       @user.update(admin: true, updated_at: Time.zone.now)
+    end
+    @user.save!
+    # if @user.save
+    #   flash[:info] = "User is now an Admin User"
+    # end
+  end
 
   private
+  
+  # def create_profile
+  #   self.profile.create
+  # end
+    # def set_profile
+    #   @user = User.find(params[:id])
+    # end
 
     def user_params
-      params.require(:user).permit(:first_name, :last_name, :email, :password,
-                                   :password_confirmation)
+      params.require(:user).permit(:first_name, :last_name, :role, :email, :password,
+                                   :password_confirmation, :profile_id, :profile_type)
     end
     
     # Confirms a logged-in user.

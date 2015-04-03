@@ -1,0 +1,47 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Company:</strong>
+  <%= @shift.assignment.job_order.company_profile.name %>
+</p>
+<p>
+  <strong>Job Title:</strong>
+  <%= @shift.assignment.job_order.job_title %>
+</p>
+  <strong>Pay Rate:</strong>
+  <%= @shift.assignment.pay_rate %>
+</p>
+        <% if @shift.time_in != nil %>
+        <span id="time-in"> Clocked In: <%= time_ago_in_words(@shift.time_in) %> ago</span>
+        <span id="<%= @shift.id %>"><%= @shift.time_in.strftime("%B %e, %Y at %I:%M %p") %></span>
+        <% end %>
+        <br>
+        <% if @shift.time_out != nil %>
+        <span id="time-in"> Clocked Out: <%= time_ago_in_words(@shift.time_out) %> ago</span>
+        <span id="<%= @shift.id %>"><%= @shift.time_out.strftime("%B %e, %Y at %I:%M %p") %></span>
+        <% end %>
+        <br>
+
+
+<button id="clock-in-button" class="btn btn-primary" type="button">
+  <%= link_to "Clock In", clock_in_assignment_shift_path(@shift.assignment, @shift), method: :patch, remote: true %>
+</button>
+<button id="clock-out-button" class="btn btn-primary" type="button">
+  <%= link_to "Clock Out", clock_out_assignment_shift_path(@shift.assignment, @shift), method: :patch, remote: true %>
+</button>
+
+
+<p>
+  <strong>Hours worked:</strong>
+  <%= @shift.hours_worked %>
+</p>
+
+
+
+<p>
+  <strong>State:</strong>
+  <%= @shift.state %>
+</p>
+
+<%= link_to 'Edit', edit_assignment_shift_path(@shift.assignment, @shift) %> |
+<%= link_to 'Back', assignment_shifts_path %>

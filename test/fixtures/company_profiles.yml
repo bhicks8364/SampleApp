@@ -1,0 +1,18 @@
+# == Schema Information
+#
+# Table name: company_profiles
+#
+#  id           :integer          not null, primary key
+#  company_name :string(255)
+#  created_at   :datetime
+#  updated_at   :datetime
+#  balance      :decimal(, )
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  company_name: MyString
+
+two:
+  company_name: MyString

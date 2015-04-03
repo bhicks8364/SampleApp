@@ -1,0 +1,2 @@
+$("#time-out").text("<%= time_ago_in_words(@shift.time_out) %>");
+$('#<%= @shift.id %>').text("<%= @shift.time_out.strftime("%B %e, %Y at %I:%M %p") %>");

@@ -1,0 +1,19 @@
+<%= form_for @employee do |f| %>
+  <div class="form-group">
+    <%= f.label :employee_name %>
+    <%= f.text_field :employee_name, class: "form-control", placeholder: "Full Name" %>
+    <%= f.label :marital_status %>
+    <%= f.select :marital_status, [['Single', 'Single'], ['Married', 'Married'], ['Married but claim Single', 'Married but claim Single']], class: 'form-control' %>
+    <%= f.label :w2_box5, "Box 5 of W4" %>
+    <%= f.select :w2_box5, [[0],[1], [2], [3], [4], [5]], class: 'form-control' %>
+    <%= f.label :ssn %>
+    <%= f.text_field :ssn, class: "form-control", placeholder: "Social Security Number" %>
+  </div>
+ 
+  
+  <br>
+  
+  <div class="form-group">
+  <%= f.submit class: "btn btn-primary" %>
+  </div>
+<% end %>

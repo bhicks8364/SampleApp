@@ -1,19 +1,21 @@
 <header class="navbar navbar-fixed-top navbar-inverse">
   <div class="container">
-    <%= link_to "sample app", root_path, id: "logo" %>
+    <%= link_to "Trackee", root_path, id: "logo" %>
     <nav>
       <ul class="nav navbar-nav navbar-right">
-        <li><%= link_to "Home", root_path %></li>
-        <li><%= link_to "Help", help_path %></li>
+        <li><%= link_to "Add New User", new_user_path %></li>
         <% if logged_in? %>
-          <li><%= link_to "Users", users_path %></li>
+          <li><%= link_to "Profile", current_user %></li>
+          <li><%= link_to "Company Profiles", company_profiles_path %></li>
+          <li><%= link_to "Employee Profiles", employee_profiles_path %></li>
+          <li><%= link_to "All Users", users_path %></li>
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              Account <b class="caret"></b>
+             | Signed in as : <%= current_user.name %> <b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
-              <li><%= link_to "Profile", current_user %></li>
-              <li><%= link_to "Settings", edit_user_path(current_user) %></li>
+
+
               <li class="divider"></li>
               <li>
                 <%= link_to "Log out", logout_path, method: "delete" %>

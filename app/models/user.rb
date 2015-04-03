@@ -1,10 +1,41 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id                :integer          not null, primary key
+#  email             :string(255)
+#  created_at        :datetime
+#  updated_at        :datetime
+#  password_digest   :string(255)
+#  remember_digest   :string(255)
+#  admin             :boolean          default(FALSE)
+#  activation_digest :string(255)
+#  activated         :boolean          default(FALSE)
+#  activated_at      :datetime
+#  reset_digest      :string(255)
+#  reset_sent_at     :datetime
+#  first_name        :string(255)
+#  last_name         :string(255)
+#  profile_type      :string(255)
+#  profile_id        :string(255)
+#  role              :string(255)
+#
+# Indexes
+#
+#  index_users_on_email                        (email) UNIQUE
+#  index_users_on_profile_id_and_profile_type  (profile_id,profile_type)
+#
+
 class User < ActiveRecord::Base
+  belongs_to :profile, polymorphic: true
+  accepts_nested_attributes_for :profile
   attr_accessor :remember_token, :activation_token, :reset_token
   before_save   :downcase_email
-  before_create :create_activation_digest
+  before_create :create_activation_digest, :set_profile
 
   validates :first_name,  presence: true, length: { maximum: 50 }
   validates :last_name,  presence: true, length: { maximum: 50 }
+  validates :role,  presence: true
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, length: { maximum: 255 },
                     format: { with: VALID_EMAIL_REGEX },
@@ -15,6 +46,56 @@ class User < ActiveRecord::Base
   validates :password, length: { minimum: 6 }, allow_blank: true
   
   scope :admin, -> { where("admin = ?", true)}
+  scope :agency, -> { where("role = ?", "agency")}
+  scope :company, -> { where("role = ?", "company")}
+  scope :employee, -> { where("role = ?", "employee")}
+  scope :super, -> { where("role = ?", "super")}
+  
+  def super?
+    role == "super"
+  end
+  
+  def admin?
+    admin == true
+  end
+  
+  def agency?
+    role == "agency"
+  end
+  
+  def company?
+    role == "company"
+  end
+  
+  def employee?
+    role == "employee"
+  end
+  
+  def guest?
+    role == "guest"
+  end
+  
+  def set_profile
+    
+    if self.role == "company"
+      profile = CompanyProfile.create(company_name: self.name)
+      self.profile_type = "CompanyProfile"
+      self.profile_id = profile.id
+    end
+    
+    if self.role == "employee"
+      profile = EmployeeProfile.create(employee_name: self.name)
+      self.profile_type = "EmployeeProfile"
+      self.profile_id = profile.id
+    end
+    
+    
+    
+    
+    
+  end
+  
+  
   
   
   # Returns the hash digest of the given string.
@@ -28,7 +109,7 @@ class User < ActiveRecord::Base
    "#{first_name} #{last_name}"
   end
   
-  
+    
   
   def User.new_token
     SecureRandom.urlsafe_base64

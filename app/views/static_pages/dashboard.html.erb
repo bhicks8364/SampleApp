@@ -1,0 +1,10 @@
+<% provide(:title, "Dashboard") %>
+<div class="center jumbotron">
+
+<% if @user.role == "company" %>
+<%= render "table" %>
+<% end %>
+</div>
+
+<%= link_to image_tag("lighthouse.jpg", alt: "Lighthouse logo"),
+            'http://lighthousehrgroup.com/' %>

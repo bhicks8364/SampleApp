@@ -1,0 +1,12 @@
+<%= form_for @company do |f| %>
+  <div class="form-group">
+    <%= f.label :company_name %>
+    <%= f.text_field :company_name, class: "form-control", placeholder: "Company Name" %>
+  </div>
+    
+  <br>
+  <div class="form-group">
+    <%= f.submit class: "btn btn-primary" %>
+  </div>
+<% end %>
+

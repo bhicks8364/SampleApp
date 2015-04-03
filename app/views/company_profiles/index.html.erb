@@ -1,0 +1,50 @@
+<h2 class="sub-header">All Companies</h2>
+<% if @companies.any? %>
+<div class="table-responsive">
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Company Name</th>
+      <th>Company ID | Admin_User ID</th>
+      <th>Company Admin Name | Company Admin Email</th>
+      <th>Created</th>
+    
+
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+  <% @companies.each do |company| %>
+    <% if company.user != nil %>
+      <tr>
+        <td><%= company.company_name %></td>
+        <td><%= company.id %>        |       <%= company.user.id %></td>
+        <td><%= company.user.name %> | <%= company.user.email %></td>
+        <td><%= time_ago_in_words(company.created_at) %></td>
+        
+        <td><%= link_to 'Show', company %></td>
+        <td><%= link_to 'Edit', edit_company_profile_path(company) %></td>
+        <td><%= link_to 'Destroy', company, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+      <% else %>
+      <tr>
+        <td><%= company.company_name %></td>
+        <td><%= company.id %></td>
+        <td> NO ADMIN USER ASSIGNED </td>
+        <td><%= time_ago_in_words(company.created_at) %></td>
+        
+        <td><%= link_to 'Show', company %></td>
+        <td><%= link_to 'Edit', edit_company_profile_path(company) %></td>
+        <td><%= link_to 'Destroy', company, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+      <% end %>
+  <% end %>
+ 
+  </tbody>
+</table>
+</div>
+<% else %>
+No Company Profiles.
+<% end %> 

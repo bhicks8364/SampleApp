@@ -1,0 +1,34 @@
+<%= form_for [@job_order.company_profile, @job_order] do |f| %>
+  <% if @job_order.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@job_order.errors.count, "error") %> prohibited this job_order from being saved:</h2>
+
+      <ul>
+      <% @job_order.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+<div class="field-set"
+  <div class="field">
+    <%= f.label :job_title %><br>
+    <%= f.text_field :job_title %>
+  </div>
+    <div class="field">
+    <%= f.label :job_description %><br>
+    <%= f.text_area :job_description %>
+  </div>
+  
+  <div class="field">
+    <%= f.label :fill_date %><br>
+    <%= f.date_select :fill_date %>
+  </div>
+  
+
+  
+  
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

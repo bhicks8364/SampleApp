@@ -1,0 +1,36 @@
+# == Schema Information
+#
+# Table name: shifts
+#
+#  id            :integer          not null, primary key
+#  assignment_id :integer
+#  week          :date
+#  hours_worked  :decimal(, )
+#  time_in       :datetime
+#  time_out      :datetime
+#  state         :string(255)
+#  created_at    :datetime
+#  updated_at    :datetime
+#
+# Indexes
+#
+#  index_shifts_on_assignment_id  (assignment_id)
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  assignment_id: 
+  week: 2015-04-01
+  hours_worked: 9.99
+  time_in: 2015-04-01 22:21:15
+  time_out: 2015-04-01 22:21:15
+  state: MyString
+
+two:
+  assignment_id: 
+  week: 2015-04-01
+  hours_worked: 9.99
+  time_in: 2015-04-01 22:21:15
+  time_out: 2015-04-01 22:21:15
+  state: MyString
