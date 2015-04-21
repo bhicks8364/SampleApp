@@ -19,13 +19,15 @@ class JobOrdersController < ApplicationController
   # GET /job_orders/new
   def new
     @company = CompanyProfile.find(params[:company_profile_id])
-    @job_order = @company.job_orders.new
-    # @assignment = @job_order.assignments.build
-
-
-
-
- 
+    @job_order = @company.job_orders.build
+    # @job_order.assignments.build
+    
+        respond_to do |format|
+          format.html 
+          format.json { render json: @job_order }
+          format.js
+        end
+      
   end
 
   # GET /job_orders/1/edit
@@ -37,16 +39,18 @@ class JobOrdersController < ApplicationController
   def create
     @company = CompanyProfile.find(params[:company_profile_id])
     @job_order = @company.job_orders.create(job_order_params)
-
+    # @job_order.assignments.build
 
 
     respond_to do |format|
       if @job_order.save
-        format.html { redirect_to @company, notice: 'Job order was successfully created.' }
+        format.html { redirect_to [@job_order.company_profile, @job_order], notice: 'Job order was successfully created.' }
         format.json { render :show, status: :created, location: @job_order }
+        format.js
       else
         format.html { render :new }
         format.json { render json: @job_order.errors, status: :unprocessable_entity }
+        format.js
       end
     end
   end

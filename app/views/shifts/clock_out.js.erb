@@ -1,2 +1,5 @@
-$("#time-out").text("<%= time_ago_in_words(@shift.time_out) %>");
-$('#<%= @shift.id %>').text("<%= @shift.time_out.strftime("%B %e, %Y at %I:%M %p") %>");
+$("#out-time").text("<%= @shift.time_out.strftime("%I:%M %p") %>");
+$("#hours-worked").text("<%= @shift.hours_worked.round(2) %>");
+$("#shift-state").text("<%= @shift.state %>");
+$('#clock-out-button').hide();
+

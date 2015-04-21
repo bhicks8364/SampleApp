@@ -17,6 +17,12 @@
     </section>
   </aside>
   <span id="user-profile-type"><%= @user.profile_type %></span>
+  <% if @user.company? %>
+  <button type="button" class="btn btn-default"><%= link_to "Go To Company Page", company_profile_path(@user.profile) %></button>
+  <% end %>
+    <% if @user.employee? %>
+  <button type="button" class="btn btn-default"><%= link_to "Go To Employee Page", employee_profile_path(@user.profile) %></button>
+  <% end %>
 </div>
 
 

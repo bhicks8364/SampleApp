@@ -1,0 +1,145 @@
+<p id="notice"><%= notice %></p>
+
+<div>
+    <strong>Company:</strong>
+  <%= link_to @timesheet.company, company_profile_path(@timesheet.assignment.job_order.company_profile_id) %>
+  <br>
+  <strong>Employee:</strong>
+  <%= @timesheet.employee.name %>
+  <br>
+  <strong>Pay:</strong>
+  <%= number_to_currency(@timesheet.pay_rate, :unit => "$") %>
+  <br>
+  <strong>Bill:</strong>
+  <%= number_to_currency(@timesheet.bill_rate, :unit => "$") %>
+  <br>
+    <strong>Mark Up:</strong>
+  <%= @timesheet.mark_up.round(2) %>
+  
+</div>
+
+
+
+<hr>
+
+<span id="timesheet-status">
+  <strong>Status:</strong>
+  <%= @timesheet.state %>
+</span>
+<br>
+<span id="approved-at">
+</span>
+<br>
+<% if @timesheet.state != "Approved" %>
+<button id="approve-button"><%= link_to 'Approve', approve_timesheet_path(@timesheet), remote: true, method: :patch %></button>
+<% end %>
+<div>
+  
+<h3>Timesheet Details</h3>
+
+<p>
+  <strong>Created on:</strong>
+  <%= @timesheet.created_at.strftime("%m / %d ") %>
+</p>
+
+<p>
+  <strong>Week #:</strong>
+  <%= @timesheet.week %>
+</p>
+
+
+  <strong>Total Pay:</strong>
+  <%= number_to_currency(@timesheet.total_pay, :unit => "$") %>
+<br>
+<strong>Total Bill:</strong>
+  <%= number_to_currency(@timesheet.total_bill, :unit => "$") %>
+</div>
+
+
+
+<button> <%= link_to "Go to Assignment", assignment_path(@assignment) %> </button>
+
+
+<br>
+<%= link_to 'Edit Timesheet', assignment_shifts_path(@assignment) %> |
+<%= link_to 'Back', timesheets_path %>
+<hr>
+
+<div class="pull-left"> 
+<h3>Shift count: <%= @timesheet.shifts.count %>  </h3>
+<div class="btn-toolbar" role="toolbar" aria-label="Shifts">
+  <% @timesheet.shifts.each do |shift| %>
+  <div class="btn-group" role="group" aria-label="...">
+    <button><%= link_to shift.created_at.strftime("%A - %m / %d "), assignment_shift_path(shift.assignment_id, shift)  %></button>
+    </div>
+  <% end %>
+</div>
+
+
+
+
+</div>
+
+
+
+<div class="row">
+  <div class="col-md-12">
+ 
+   
+
+ 
+ 
+ <table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Status</th>
+      <th>Shift ID</th>
+      <th>Week</th>
+      <th>Work Day</th>
+      <th>Work Date</th>
+      <th>Job Title</th>
+      <th>Time In</th>
+      <th>Time Out</th>
+      <th>Hours Worked</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    
+    <% @timesheet.shifts.each do |shift| %>
+    <tr>
+      <% if shift.state == "Clocked In" %>
+        <td class="success"><%= shift.state %></td>
+        <td class="success"><%= shift.id %> </td>
+        <td class="success"><%= shift.week %> </td>
+        <td class="success"><%= shift.time_in.strftime("%A") %> </td>
+        <td class="success"><%= shift.time_in.strftime("%m / %d ") %> </td>
+        <td class="success"><%= shift.assignment.job_title %> </td>
+        <td class="success"><%= shift.time_in ? shift.time_in.strftime("%I:%M %p") : "No clock in time" %></td>
+        <td class="success"><%= shift.time_out ? shift.time_out.strftime("%I:%M %p") : shift.state %></td>
+        <td class="success"><%= shift.hours_worked ? shift.hours_worked.round(2).to_f : shift.state %></td>
+        <% else %>
+        <td><%= shift.state %></td>
+        <td><%= shift.id %> </td>
+        <td><%= shift.week %> </td>
+        <td><%= shift.time_in.strftime("%A") %> </td>
+        <td><%= shift.time_in.strftime("%m / %d ") %> </td>
+        <td><%= shift.assignment.job_title %> </td>
+        <td><%= shift.time_in ? shift.time_in.strftime("%I:%M %p") : "No clock in time" %></td>
+        <td><%= shift.time_out ? shift.time_out.strftime("%I:%M %p") : shift.state %></td>
+        <td><%= shift.hours_worked ? shift.hours_worked.round(2).to_f : shift.state %></td>
+      <% end %>
+        <td><%= link_to 'Show', assignment_shift_path(shift.assignment, shift) %></td>
+        <td><%= link_to 'Edit', edit_assignment_shift_path(shift.assignment, shift) %></td>
+        <td><%= link_to 'Destroy', assignment_shift_path(shift.assignment, shift), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+  </div>
+</div>
+ 
+ 
+ 

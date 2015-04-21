@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150403175142) do
+ActiveRecord::Schema.define(version: 20150407131055) do
 
   create_table "assignments", force: true do |t|
     t.integer  "employee_profile_id"
@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 20150403175142) do
     t.decimal  "bill_rate"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "state"
   end
 
   add_index "assignments", ["employee_profile_id"], name: "index_assignments_on_employee_profile_id"
@@ -66,16 +67,31 @@ ActiveRecord::Schema.define(version: 20150403175142) do
 
   create_table "shifts", force: true do |t|
     t.integer  "assignment_id"
-    t.date     "week"
     t.decimal  "hours_worked"
     t.datetime "time_in"
     t.datetime "time_out"
     t.string   "state"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "timesheet_id"
+    t.integer  "week"
   end
 
   add_index "shifts", ["assignment_id"], name: "index_shifts_on_assignment_id"
+
+  create_table "timesheets", force: true do |t|
+    t.integer  "assignment_id"
+    t.integer  "week"
+    t.string   "state"
+    t.decimal  "reg_hours"
+    t.decimal  "ot_hours"
+    t.decimal  "gross_pay"
+    t.decimal  "gross_bill"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "timesheets", ["assignment_id"], name: "index_timesheets_on_assignment_id"
 
   create_table "users", force: true do |t|
     t.string   "email"

@@ -1,0 +1,33 @@
+ <div>
+  <strong>
+    <h3> Shift Date: </strong> <%= @shift.time_in.strftime("%B %e, %Y") %> </h3>
+      
+</div>
+
+<div class="btn-group" role="group" aria-label="...">
+  <button type="button" class="btn btn-default"><%= link_to "Back to All Shifts", assignment_shifts_path %></button>
+  <button type="button" class="btn btn-default"><%= link_to "View Timesheet", timesheet_path(@shift.timesheet_id) %></button>
+  <button type="button" class="btn btn-default"><%= link_to "View Employee", employee_profile_path(@shift.employee) %></button>
+  <button type="button" class="btn btn-default"><%= link_to "View Company", company_profile_path(@assignment.company_profile) %></button>
+</div>
+<hr>
+
+
+<p>
+  <strong>Company: </strong> <%= @shift.company %>    | <strong>Job Title: </strong><%= @shift.assignment.job_order.job_title %>
+</p>
+<p>
+  <strong>Pay Rate: </strong> <%= @shift.pay_rate %>  |  <strong>Bill Rate: </strong> <%= @shift.bill_rate %>
+</p>
+        
+  <div>
+    <p>Clocked In Time: <span id="<%= @shift.id %>"><%=  @shift.time_in ? @shift.time_in.strftime("%I:%M %p") : "No In Time" %></span></p>
+    <p>Clocked Out Time: <span id="<%= @shift.id %>"><%= @shift.time_out ? @shift.time_out.strftime("%I:%M %p") : "No Out Time" %></span></p>
+    
+  </div>
+<p>
+  <strong>Hours worked:</strong>
+  <%=@shift.hours_worked ? @shift.hours_worked.round(2) : @shift.state %>
+</p>
+
+<hr/>

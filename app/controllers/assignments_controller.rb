@@ -11,11 +11,20 @@ class AssignmentsController < ApplicationController
   # GET /assignments/1
   # GET /assignments/1.json
   def show
+    @timesheets = @assignment.timesheets
+    @shift = @assignment.shifts.last
+    
   end
 
   # GET /assignments/new
   def new
     @assignment = Assignment.new
+    
+    respond_to do |format|
+      format.html # new.html.erb
+      format.json { render json: @assignment }
+      format.js
+    end
   end
 
   # GET /assignments/1/edit
@@ -25,15 +34,18 @@ class AssignmentsController < ApplicationController
   # POST /assignments
   # POST /assignments.json
   def create
-    @assignment = Assignment.new(assignment_params)
+    @assignment = Assignment.create(assignment_params)
 
     respond_to do |format|
       if @assignment.save
-        format.html { redirect_to @assignment, notice: 'Assignment was successfully created.' }
+
+        format.html { redirect_to :back }
         format.json { render :show, status: :created, location: @assignment }
+        format.js
       else
         format.html { render :new }
         format.json { render json: @assignment.errors, status: :unprocessable_entity }
+        format.js
       end
     end
   end

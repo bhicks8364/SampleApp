@@ -1,0 +1,3 @@
+$("#timesheet-status").text("<%= @timesheet.state %>");
+$("#approved-at").text("<%= @timesheet.updated_at.strftime("%m / %d ") %>");
+$("#approve-button").hide();

@@ -13,14 +13,23 @@
 
 class EmployeeProfile < ActiveRecord::Base
     has_many :assignments
+    has_many :shifts, through: :assignments
     has_many :job_orders, through: :assignments
     has_one :user, as: :profile
+    
+    
     
     accepts_nested_attributes_for :user
     accepts_nested_attributes_for :job_orders
     accepts_nested_attributes_for :assignments
     
     validates_associated :user
+    
+    def timesheets
+        self.assignments.last.timesheets
+    end
+
+        
     
     def name
         "#{user.name}"

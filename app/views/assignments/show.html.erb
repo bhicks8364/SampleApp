@@ -1,52 +1,155 @@
 <p id="notice"><%= notice %></p>
+ 
+ <% if @assignment.shifts.where(state: "Clocked In").any? %>
+ <h3> You are currently clocked in to this assignment! </h3>
+ <% @assignment.shifts.where(state: "Clocked In").each do |shift| %>
+   <ul>
+     <li><strong>Clocked In: </strong><%= shift.time_in.strftime("%B %e, %Y at %I:%M %p") %></li>
+   </ul>
+   <% end %>
+ <% else %>
+<button class="btn-large">
+  <%= link_to "New Shift", new_assignment_shift_path(@assignment) %>
+</button>
+<% end %>
+
+
+
+
+
+
+<hr />
 
 <p>
   <strong>Employee profile:</strong>
-  <%= @assignment.employee_profile.name %>
+  <%= link_to @assignment.employee.name, user_path(@assignment.employee.user) %>
 </p>
+<div class="btn-group" role="group" aria-label="...">
+  <button type="button" class="btn btn-default"><%= link_to "All Shifts", assignment_shifts_path(@assignment) %></button>
+  <button type="button" class="btn btn-default"><%= link_to "View Employee", employee_profile_path(@assignment.employee) %></button>
+  <button type="button" class="btn btn-default"><%= link_to "View Company", company_profile_path(@assignment.company_profile) %></button>
+</div>
 
 
-  <div class="btn-group" role="group">
-    <button type="button" class="btn btn-primary"><a><%= link_to "Clock In to this Assignment", new_assignment_shift_path(@assignment) %></a></button>
-  </div>
+
 
 
 <p>
   <strong>Job title:</strong>
-  <%= @assignment.job_order.job_title %>
+  <%= @assignment.job_title %>
 </p>
-
 <p>
   <strong>Company</strong>
-  <%= @assignment.job_order.company_profile.name %>
+  <%= @assignment.company %>
 </p>
-
-
-
+<button> <%= link_to "Go to Job Order", company_profile_job_order_path(@assignment.company_profile, @assignment.job_order) %> </button>
 <p>
   <strong>Pay rate:</strong>
-  <%= @assignment.pay_rate %>
+  <%= number_to_currency(@assignment.pay_rate, :unit => "$") %>
 </p>
-
 <p>
   <strong>Bill rate:</strong>
-  <%= @assignment.bill_rate %>
+  <%= number_to_currency(@assignment.bill_rate, :unit => "$") %>
 </p>
-<hr>
-<% if @assignment.shifts != nil %>
-  <% @assignment.shifts.each do |shift| %>
- <br>
-   <% if shift.time_in != nil %>
-  In: <%=shift.time_in.strftime("%B %e, %Y at %I:%M %p") %> |
+
+
+
+<p>
+  <strong>Total Regular Hours</strong>
+  <%= @assignment.total_reg_hours %>
+</p>
+<p>
+  <strong>Total Overtime Hours</strong>
+  <%= @assignment.total_ot_hours %>
+</p>
+
+
+<p>
+  <strong>Total Gross Pay:</strong>
+  <%= number_to_currency(@assignment.gross_assignment_pay, :unit => "$") %>
+  <br>
+    <strong>Total Gross Bill:</strong>
+  <%= number_to_currency(@assignment.gross_assignment_bill, :unit => "$") %>
+</p>
+
+  <% if @assignment.timesheets != nil %>
+<p>
+<% @timesheets.each do |timesheet| %>
+Shift Count: <%= timesheet.shifts.count %> <br>
+Timesheet ID: <%= timesheet.id %> <br>
+Week: <%= timesheet.week %> <br>
+Status: <%= timesheet.state %> <br>
+Regular Hours: <%= timesheet.reg_hours ? timesheet.reg_hours.round(2) : 0 %> <br>
+Overtime Hours: <%= timesheet.ot_hours ? timesheet.ot_hours.round(2) : 0 %> <br>
+<hr />
+
+<div class="pull-left"> 
+<h3>Shift count: <%= timesheet.shifts.count %>  </h3>
+<div class="btn-toolbar" role="toolbar" aria-label="Shifts">
+
+  <% timesheet.shifts.each do |shift| %>
+  <div class="btn-group" role="group" aria-label="...">
+    <% if shift.time_in %>
+    <button>
+      <%= link_to shift.created_at.strftime("%A - %m / %d "), assignment_shift_path(shift.assignment_id, shift) %>
+    </button>
+    <% else %>
+        <button>
+      <%= link_to shift.employee.name, assignment_shift_path(shift.assignment_id, shift) %>
+    </button>
     <% end %>
-    <% if shift.time_out != nil %>
-  Out: <%=shift.time_out.strftime("%B %e, %Y at %I:%M %p") %>  |
-  Hours: <%= shift.hours_worked %>
-    <% end %>
+   </div>
   <% end %>
-<% else %>
+
+</div>
+
 
 <% end %>
+</p>
+<% else %>
+This Assignment has no timesheets.
+<% end %>
+
 <br>
 <%= link_to 'Edit', edit_assignment_path(@assignment) %> |
 <%= link_to 'Back', assignments_path %>
+
+
+    <% @assignment.timesheets.each do |timesheet| %>
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingOne">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+         <strong> View Timesheet for week of:  <%= timesheet.created_at.strftime("%B %e, %Y") %></strong>
+        </a>
+      </h4>
+    </div>
+
+    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+        <ul>
+          <li>
+             <h3>Timesheet Status: </h3<strong><%= timesheet.state %></strong>
+          </li>
+          <li>
+             <h3>Regular Hours: </h3><strong><%= timesheet.reg_hours %></strong>
+          </li>
+          <li>
+             <h3>Overtime Hours: </h3><strong><%= timesheet.ot_hours %></strong>
+          </li>
+          <li>
+             <h3>Total Pay: </h3><strong><%= timesheet.total_pay %></strong>
+          </li>
+           <li>
+             <h3>Total Bill: </h3><strong><%= timesheet.total_bill %></strong>
+          </li>
+        </ul>
+      </div>
+        
+    </div>
+  </div>
+
+  </div>
+  <% end %>

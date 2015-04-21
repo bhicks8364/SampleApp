@@ -17,9 +17,18 @@ class CompanyProfile < ActiveRecord::Base
     
     # validates_associated :user
     
+    def company_admin
+        self.user
+    end
+    
     def name
         company_name
     end
+    
+    #  def update_balance!
+    #     self.balance = self.account_entries.approved.sum(:amount)
+    #     self.save
+    # end
     
     # def global_user
     #     self.user.to_global_id if self.user.present?

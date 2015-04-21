@@ -17,11 +17,8 @@
   </div>
   <div class="field">
     <%= f.label :job_order_id %><br>
-    <%= f.collection_select :job_order_id, JobOrder.all, :id, :job_title %>
+    <%= f.grouped_collection_select :job_order_id, CompanyProfile.all, :job_orders, :company_name, :id, :job_title, include_blank: true %>
   </div>
-  
-
-
   
   
   <div class="field">
@@ -36,3 +33,5 @@
     <%= f.submit %>
   </div>
 <% end %>
+
+

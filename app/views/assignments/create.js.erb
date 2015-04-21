@@ -1,0 +1,12 @@
+<% if @assignment.errors.count == 0 %>
+
+	$('#new_assignment').remove();
+	$('#new_assignment').show();
+	$('#assignments').append('<%= j render("assignment", :assignment => @assignment) %>');
+
+<% else %>
+
+	$('.new_assignment').remove();
+	$('#new_assignment_link').after('<%= j render("form") %>');
+
+<% end %>

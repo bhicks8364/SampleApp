@@ -1,0 +1,29 @@
+# == Schema Information
+#
+# Table name: timesheets
+#
+#  id            :integer          not null, primary key
+#  assignment_id :integer
+#  week          :integer
+#  state         :string(255)
+#  reg_hours     :decimal(, )
+#  ot_hours      :decimal(, )
+#  gross_pay     :decimal(, )
+#  gross_bill    :decimal(, )
+#  created_at    :datetime
+#  updated_at    :datetime
+#
+# Indexes
+#
+#  index_timesheets_on_assignment_id  (assignment_id)
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  company_profile_id: 
+  week: 1
+
+two:
+  company_profile_id: 
+  week: 1

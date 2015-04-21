@@ -1,70 +1,86 @@
 class ShiftsController < ApplicationController
-  before_action :set_shift, only: [:show, :edit, :update, :destroy]
+  before_action :set_shift, only: [:show, :edit, :update, :destroy, :clock_in, :clock_out]
+
+  
 
   # GET /shifts
   # GET /shifts.json
   def index
-    @shifts = Shift.all
+    @assignment = Assignment.find(params[:assignment_id])
+    @shifts = @assignment.shifts
   end
 
   # GET /shifts/1
   # GET /shifts/1.json
   def show
+    @assignment = Assignment.find(params[:assignment_id])
   end
 
   # GET /shifts/new
   def new
     @assignment = Assignment.find(params[:assignment_id])
     @shift = @assignment.shifts.new
+
+    
+    # @timesheet = Timesheet.find(params[:timesheet_id])
+    # @shift = @timesheet.shifts.create(week: DateTime.now.cweek)
   end
 
-  def clock_in
-    @shift = Shift.find(params[:id])
-    if @shift.time_in === nil
-       @shift.update(time_in: Time.now, state: "Clocked In")
-
-    end
-  end
-  
-  def clock_out
-    @shift = Shift.find(params[:id])
-    if @shift.time_in != nil && @shift.time_out == nil
-       @shift.update(time_out: Time.now, state: "Clocked Out")
-       total = (@shift.time_out - @shift.time_in)
-       hours_worked = total / 3600
-      @shift.update(hours_worked: hours_worked)
-      # hours = @shift.time_out - @shift.time_in
-      # @shift.update(hours_worked: hours)
-    end
-  end
   
   # GET /shifts/1/edit
   def edit
+  end
+  def clock_in?
+     params[:commit] == "Clock in"
+  end
+  
+  def clock_out
+    sleep 2
+    @shift.time_out = Time.now
+    total = (@shift.time_out - @shift.time_in)
+    hours_worked = total / 3600
+    @shift.update(time_out: Time.now, state: "Clocked Out", week: Date.today.cweek, hours_worked: hours_worked)
+
   end
 
   # POST /shifts
   # POST /shifts.json
   def create
     @assignment = Assignment.find(params[:assignment_id])
-    @shift = @assignment.shifts.create(shift_params)
+    @shift = @assignment.shifts.build(time_in: Time.now, state: "Clocked In", week: Date.today.cweek)
+    @shift.new_timesheet
 
     respond_to do |format|
       if @shift.save
-        format.html { redirect_to [@shift.assignment, @shift], notice: 'Shift was successfully created.' }
+        
+        
+        
+
+        
+        format.html { redirect_to assignment_shift_path(@assignment, @shift), notice: 'Shift was successfully created.' }
         format.json { render :show, status: :created, location: @shift }
+        format.js
       else
         format.html { render :new }
         format.json { render json: @shift.errors, status: :unprocessable_entity }
+        format.js
       end
     end
   end
 
+  def set_new_timesheet
+    @shift.timesheet = Timesheet.find_or_create_by(assignment_id: self.assignment_id, week: Date.today.cweek)
+  end
   # PATCH/PUT /shifts/1
   # PATCH/PUT /shifts/1.json
   def update
+    
     respond_to do |format|
       if @shift.update(shift_params)
-        format.html { redirect_to @shift.assignment, notice: 'Shift was successfully updated.' }
+
+         
+        
+        format.html { redirect_to @shift, notice: 'Shift was successfully updated.' }
         format.json { render :show, status: :ok, location: @shift }
       else
         format.html { render :edit }
@@ -84,11 +100,11 @@ class ShiftsController < ApplicationController
   end
 
   private
-  def calculate_hours_worked
-    total = (@shift.time_out - @shift.time_in)
-    hours_worked = total / 3600
-    @shift.update(hours_worked: hours_worked)
-  end
+  
+
+  
+
+  
   
   # def time_diff(start_time, end_time)
   #   seconds_diff = (start_time - end_time).to_i.abs
@@ -107,11 +123,19 @@ class ShiftsController < ApplicationController
   
     # Use callbacks to share common setup or constraints between actions.
     def set_shift
-      @shift = Shift.find(params[:id])
+      @assignment = Assignment.find(params[:assignment_id])
+      @shift = @assignment.shifts.find(params[:id])
     end
+    
 
     # Never trust parameters from the scary internet, only allow the white list through.
+    # def shift_params
+    #   params.require(:shift).permit(:timesheet_id, :assignment_id, :week, :hours_worked, :time_in, :time_out, :state)
+    # end
+    
     def shift_params
-      params.require(:shift).permit(:assignment_id, :week, :hours_worked, :time_in, :time_out, :state)
+      params.require(:shift).permit!
     end
+    
+    
 end

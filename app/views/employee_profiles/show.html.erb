@@ -2,13 +2,22 @@
 <div class="page-header">
   <h3><%= @employee.user.name %> <small>Employee</small></h3>
 </div>
-    
+
+
 <% if @employee.assignments.any? %>
 <div class="employee-assignments">
+    Number of Assignments: <%= @employee.assignments.count %>
 <ul class="list-group">
     <% @assignments.each do |assignment| %>
-       <li class="list-group-item"><strong>Company: </strong>  <%= link_to assignment.job_order.company_profile.name, assignment %> </li>
-       <li class="list-group-item"><strong>Job Title: </strong> <%= assignment.job_order.job_title %></li>
+       <li class="list-group-item"><strong>Company: </strong><%= assignment.job_order.company_profile.name %> <br><button> <%= link_to "View Company Info", assignment.company %> </button>  </li>
+       <li class="list-group-item"><strong>Job Title:  </strong> <%= assignment.job_order.job_title %> <br><button><%= link_to "Go to Assignment", assignment %> </button></li>
+       <li class="list-group-item"><strong>Date Assigned: </strong> <%= assignment.created_at.strftime("%B %e, %Y at %I:%M %p") %></li>
+       <li class="list-group-item"><strong>Number of Timesheets: </strong> <%= assignment.timesheets.count %></li>
+       <li class="list-group-item"><strong>Last Timesheet Date: </strong> <%= assignment.timesheets.last.created_at.strftime("%B %e, %Y at %I:%M %p") %></li>
+       <li class="list-group-item"><strong>Number of shifts: </strong> <%= assignment.shifts.count %></li>
+       <li class="list-group-item"><strong>Current Status: </strong> <%= assignment.shifts.last.state %></li>
+       <li class="list-group-item"><strong>Last Clock In: </strong> <%= assignment.shifts.last.time_in.strftime("%B %e, %Y at %I:%M %p") %></li>
+       <br />
     <% end %>
 </ul>
 <% else %>

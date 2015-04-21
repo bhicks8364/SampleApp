@@ -1,0 +1,38 @@
+<%= form_for(@timesheet) do |f| %>
+  <% if @timesheet.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@timesheet.errors.count, "error") %> prohibited this timesheet from being saved:</h2>
+
+      <ul>
+      <% @timesheet.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+  <% f.fields_for :assignment do |assignment| %>
+      <div class="field">
+    <%= assignment.label :employee_profile_id %><br>
+    <%= assignment.collection_select :employee_profile_id, EmployeeProfile.all, :id, :employee_name %>
+  </div>
+  <div class="field">
+    <%= assignment.label :job_order_id %><br>
+    <%= assignment.collection_select :job_order_id, JobOrder.all, :id, :job_title %>
+  </div>
+
+
+  <% end %>
+
+
+    
+  </div>
+  <div class="field">
+    <%= f.label :week %><br>
+    <%= f.number_field :week %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

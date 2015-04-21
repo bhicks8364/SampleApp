@@ -1,10 +1,52 @@
 <% provide(:title, "Dashboard") %>
 <div class="center jumbotron">
+    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu4">
+        <li role="presentation"><a href="#">Home</a></li>
+        <li role="presentation"><a href="#">Profile</a></li>
+        <li role="presentation" class="dropdown-header"><a><%= link_to 'New Assignment', new_assignment_path, :remote => true, :id => "new_assignment_link" %></a></li>
+    </ul>
+
+             
+
+
+        
+
+
 
 <% if @user.role == "company" %>
+  <h2 class="page-header"><%= @company.name %></h2>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="sub-header">All Employees</h3>
+    </div>
+  </div>
+
 <%= render "table" %>
 <% end %>
-</div>
 
-<%= link_to image_tag("lighthouse.jpg", alt: "Lighthouse logo"),
-            'http://lighthousehrgroup.com/' %>
+
+
+
+
+<br>
+<% if @user.role == "agency" %>
+<div class="panel panel-default">
+  <h3 class="page-header">Agency View</h3>
+  <div class="panel-heading">
+    <h3 class="sub-header"> ALL Active Job Orders</h3>
+
+            
+<ul class="list-group">
+<% @active_job_orders.each do |active| %>
+<li class="list-group-item">
+ <strong><%= active.company_profile.name %> </strong> <br>
+  <small><%= active.job_title %></small>
+</li>
+
+
+<% end %>
+</ul>
+  </div>
+</div>
+<% end %>
+</div>

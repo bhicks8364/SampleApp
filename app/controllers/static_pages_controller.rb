@@ -1,4 +1,6 @@
 class StaticPagesController < ApplicationController
+
+  
   def home
   end
 
@@ -6,11 +8,14 @@ class StaticPagesController < ApplicationController
   end
   
   def about
+    @employees = EmployeeProfile.all
   end
+
   
   def dashboard
     @user = current_user
-
+    @company = @user.profile
+    @active_job_orders = JobOrder.active
     @employees = EmployeeProfile.all
     @companies = CompanyProfile.all
   end

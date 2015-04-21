@@ -10,9 +10,14 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
+//= require angular
+//= require angular-ui-router
+//= require angular-resource
 //= require jquery
 //= require jquery_ujs
 //= require cocoon
 //= require bootstrap
-//= require turbolinks
-//= require_tree .
+//= require lodash
+//= require restangular
+//= require_tree ../templates
+

@@ -4,13 +4,14 @@
 #
 #  id            :integer          not null, primary key
 #  assignment_id :integer
-#  week          :date
 #  hours_worked  :decimal(, )
 #  time_in       :datetime
 #  time_out      :datetime
 #  state         :string(255)
 #  created_at    :datetime
 #  updated_at    :datetime
+#  timesheet_id  :integer
+#  week          :integer
 #
 # Indexes
 #
@@ -18,9 +19,81 @@
 #
 
 class Shift < ActiveRecord::Base
+  belongs_to :timesheet, touch: true
   belongs_to :assignment
   
+  validates_associated :timesheet
+  validates_associated :assignment
+
+  # before_create :new_timesheet
+  # # after_save :go_to_shift
   
+  
+   delegate :employee, to: :assignment
+   delegate :company, to: :assignment
+   delegate :pay_rate, to: :assignment
+   delegate :bill_rate, to: :assignment
+
+  
+  
+  accepts_nested_attributes_for :timesheet
+  accepts_nested_attributes_for :assignment
+  
+  scope :newest_first, lambda { order("shifts.time_in DESC") }
+  
+  def week_percent
+    percent = (self.week.to_f / 52) * 100
+    percent.to_i
+  end
+
+  
+  
+  def new_timesheet
+    self.timesheet = Timesheet.find_or_create_by(assignment_id: self.assignment_id, week: Date.today.cweek)
+    self.save
+  end
+  
+
+
+  
+  
+  def self.created_today
+    where("created_at >= ? AND created_at < ?", Date.today, Date.tomorrow)
+  end
+  
+  def self.created_today
+    where("created_at >= ? AND created_at < ?", Date.today, Date.tomorrow)
+  end
+  
+  def self.last_week
+    where(:time_in => 1.week.ago.beginning_of_week..1.week.ago.end_of_week)
+  end
+  
+  def self.this_week
+    where(:week => DateTime.now.cweek)
+  end
+
+  
+  def set_week
+    self.week = DateTime.now.cweek
+    self.save
+  end
+  
+  def clock_out
+    self.time_out = Time.now
+    total = (self.time_out - self.time_in)
+    self.hours_worked = total / 3600
+    self.save
+
+  end
+
+
+  # def update_balance!
+  #       self.balance = self.account_entries.approved.sum(:amount)
+  #       self.save
+  #   end
+    
+
   
   
   

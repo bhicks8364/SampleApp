@@ -1,12 +1,13 @@
 <div class="nested-fields assignment-fields">
-  
+    <%= f.collection_select(:employee_profile, EmployeeProfile.all, :id, :employee_name) %>
+    
     <%= f.label :pay_rate, "Pay Rate:" %>
     <%= f.text_field :pay_rate %>
     
     <%= f.label :bill_rate, "Bill Rate:" %>
     <%= f.text_field :bill_rate %>
 
-    <%= f.collection_select(:employee_profile, EmployeeProfile.all, :id, :employee_name) %>
+
 
   </div>
 

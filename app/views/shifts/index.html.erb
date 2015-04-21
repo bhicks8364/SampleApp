@@ -1,35 +1,57 @@
-<h1>Listing shifts</h1>
+<h3>Listing shifts for: </h3>
+<p>Company: <strong> <%= @assignment.company %></strong></p>
+<p>Employee: <strong> <%= @assignment.employee.name %></strong></p>
+<p>Job Title: <strong> <%= @assignment.job_title %></strong></p>
+<p>Pay: <strong> <%= number_to_currency(@assignment.pay_rate, :unit => "$") %></strong></p>
+<p>Bill: <strong> <%= number_to_currency(@assignment.bill_rate, :unit => "$") %></strong></p>
 
-<table class="table">
+<table class="table table-hover">
   <thead>
     <tr>
-      <th>Assignment</th>
+      <th>Status</th>
+      <th>Shift ID</th>
       <th>Week</th>
-      <th>Hours worked</th>
-      <th>Time in</th>
-      <th>Time out</th>
-      <th>State</th>
+      <th>Work Day</th>
+      <th>Work Date</th>
+      <th>Job Title</th>
+      <th>Time In</th>
+      <th>Time Out</th>
+      <th>Hours Worked</th>
       <th colspan="3"></th>
     </tr>
   </thead>
 
   <tbody>
     <% @shifts.each do |shift| %>
-      <tr>
-        <td><%= shift.assignment.job_order.company_profile.name %></td>
-        <td><%= shift.week %></td>
-        <td><%= shift.hours_worked %></td>
-        <td><%= shift.time_in %></td>
-        <td><%= shift.time_out %></td>
+    <tr>
+      <% if shift.state == "Clocked In" %>
+        <td class="success"><%= shift.state %></td>
+        <td class="success"><%= shift.id %> </td>
+        <td class="success"><%= shift.week %> </td>
+        <td class="success"><%= shift.time_in.strftime("%A") %> </td>
+        <td class="success"><%= shift.time_in.strftime("%m / %d ") %> </td>
+        <td class="success"><%= shift.assignment.job_title %> </td>
+        <td class="success"><%= shift.time_in ? shift.time_in.strftime("%I:%M %p") : "No clock in time" %></td>
+        <td class="success"><%= shift.time_out ? shift.time_out.strftime("%I:%M %p") : shift.state %></td>
+        <td class="success"><%= shift.hours_worked ? shift.hours_worked.round(2).to_f : shift.state %></td>
+        <% else %>
         <td><%= shift.state %></td>
-        <td><%= link_to 'Show', assignment_shifts_path %></td>
+        <td><%= shift.id %> </td>
+        <td><%= shift.week %> </td>
+        <td><%= shift.time_in.strftime("%A") %> </td>
+        <td><%= shift.time_in.strftime("%m / %d ") %> </td>
+        <td><%= shift.assignment.job_title %> </td>
+        <td><%= shift.time_in ? shift.time_in.strftime("%I:%M %p") : "No clock in time" %></td>
+        <td><%= shift.time_out ? shift.time_out.strftime("%I:%M %p") : shift.state %></td>
+        <td><%= shift.hours_worked ? shift.hours_worked.round(2).to_f : shift.state %></td>
+      <% end %>
+        <td><%= link_to 'Show', assignment_shift_path(shift.assignment, shift) %></td>
         <td><%= link_to 'Edit', edit_assignment_shift_path(shift.assignment, shift) %></td>
         <td><%= link_to 'Destroy', assignment_shift_path(shift.assignment, shift), method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
-
+<button type="button" class="btn btn-default"><%= link_to "Back to Assignment", assignment_path(@assignment) %></button>
 <br>
 
-<%= link_to 'New Shift', new_assignment_shift_path %>

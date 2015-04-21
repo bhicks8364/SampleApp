@@ -1,0 +1,24 @@
+<p>
+  <strong>Employee profile:</strong>
+  <%= link_to @assignment.employee.name, user_path(@assignment.employee.user) %>
+</p>
+
+<p>
+  <strong>Job title:</strong>
+  <%= @assignment.job_order.job_title %>
+</p>
+
+<p>
+  <strong>Company</strong>
+  <%= @assignment.job_order.company_profile.name %>
+</p>
+
+<p>
+  <strong>Pay rate:</strong>
+  <%= @assignment.pay_rate %>
+</p>
+
+<p>
+  <strong>Bill rate:</strong>
+  <%= @assignment.bill_rate %>
+</p>

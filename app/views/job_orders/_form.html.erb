@@ -21,9 +21,13 @@
   </div>
   
   <div class="field">
-    <%= f.label :fill_date %><br>
-    <%= f.date_select :fill_date %>
+    <%= f.label :fill_date, "Needed by:" %><br>
+    <%= f.date_field :fill_date %>
   </div>
+  
+  <%= f.fields_for :assignments do |builder| %>
+    <%= render "assignment_fields", f: builder %>
+  <% end %>
   
 
   

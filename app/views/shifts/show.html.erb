@@ -1,47 +1,67 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Company:</strong>
-  <%= @shift.assignment.job_order.company_profile.name %>
-</p>
-<p>
-  <strong>Job Title:</strong>
-  <%= @shift.assignment.job_order.job_title %>
-</p>
-  <strong>Pay Rate:</strong>
-  <%= @shift.assignment.pay_rate %>
-</p>
-        <% if @shift.time_in != nil %>
-        <span id="time-in"> Clocked In: <%= time_ago_in_words(@shift.time_in) %> ago</span>
-        <span id="<%= @shift.id %>"><%= @shift.time_in.strftime("%B %e, %Y at %I:%M %p") %></span>
-        <% end %>
-        <br>
-        <% if @shift.time_out != nil %>
-        <span id="time-in"> Clocked Out: <%= time_ago_in_words(@shift.time_out) %> ago</span>
-        <span id="<%= @shift.id %>"><%= @shift.time_out.strftime("%B %e, %Y at %I:%M %p") %></span>
-        <% end %>
-        <br>
+<div class="progress">
+  <div class="progress-bar" role="progressbar" aria-valuenow="<%= @shift.week %>" aria-valuemin="0" aria-valuemax="52" style="width: <%= @shift.week_percent %>%; ">
+   week: <%= @shift.week %> | <%= @shift.week_percent %> %
+  </div>
+</div>
 
+<div>
+  <strong>
+    <h3> Shift Date: </strong> <%= @shift.time_in.strftime("%B %e, %Y") %> </h3>
+      
+</div>
 
-<button id="clock-in-button" class="btn btn-primary" type="button">
-  <%= link_to "Clock In", clock_in_assignment_shift_path(@shift.assignment, @shift), method: :patch, remote: true %>
-</button>
-<button id="clock-out-button" class="btn btn-primary" type="button">
-  <%= link_to "Clock Out", clock_out_assignment_shift_path(@shift.assignment, @shift), method: :patch, remote: true %>
-</button>
+<div class="btn-group" role="group" aria-label="...">
+  <button type="button" class="btn btn-default"><%= link_to "Back to All Shifts", assignment_shifts_path %></button>
+  <button type="button" class="btn btn-default"><%= link_to "View Timesheet", timesheet_path(@shift.timesheet_id) %></button>
+  <button type="button" class="btn btn-default"><%= link_to "View Employee", employee_profile_path(@shift.employee) %></button>
+  <button type="button" class="btn btn-default"><%= link_to "View Company", company_profile_path(@assignment.company_profile) %></button>
+</div>
+<hr>
 
 
 <p>
+  <strong>Company: </strong> <%= @shift.company %>    | <strong>Job Title: </strong><%= @shift.assignment.job_order.job_title %>
+</p>
+<p>
+  <strong>Pay Rate: </strong> <%= @shift.pay_rate %>  |  <strong>Bill Rate: </strong> <%= @shift.bill_rate %>
+</p>
+        
+  <div>
+    <p>Clocked In Time: <span id="in-time"><%=  @shift.time_in ? @shift.time_in.strftime("%I:%M %p") : "No In Time" %></span></p>
+    <p>Clocked Out Time: <span id="out-time"><%= @shift.time_out ? @shift.time_out.strftime("%I:%M %p") : "No Out Time" %></span></p>
+    
+  </div>
+
   <strong>Hours worked:</strong>
-  <%= @shift.hours_worked %>
-</p>
+  <span id="hours-worked">
+  <%=@shift.hours_worked ? @shift.hours_worked.round(2) : @shift.state %>
+  </span>
+
+<br>
 
 
-
-<p>
   <strong>State:</strong>
+  <span id="shift-state">
   <%= @shift.state %>
-</p>
+</span>
+<hr>
+<% if @shift.state != "Clocked In"%>
+<p> You are currently <strong> <%= @shift.state %> </strong> . </p>
+<% else %>
+<div id="clock-out-button">
+  <button type="button" class="btn btn-primary btn-lg">
+  <%= link_to 'Clock Out', clock_out_assignment_shift_path(@shift.assignment, @shift), method: :patch, remote: true, data: {disable_with: "Clocking Out..."} %>
+  </button>
+</div>
+<% end %>
+<hr>
+
+
 
 <%= link_to 'Edit', edit_assignment_shift_path(@shift.assignment, @shift) %> |
 <%= link_to 'Back', assignment_shifts_path %>
+
+      
+
