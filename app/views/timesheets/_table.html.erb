@@ -1,0 +1,42 @@
+<h3>Listing timesheets</h3>
+
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Week</th>
+      <th>Employee Name</th>
+      <th>Company Name</th>
+      <th>Status</th>
+      <th>Regular Hours</th>
+      <th>Overtime Hours</th>
+      <th>Gross Pay</th>
+      <th>Gross Bill</th>
+      <th colspan="4"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @timesheets.each do |timesheet| %>
+
+      <tr>
+        <td><%= timesheet.week %></td>
+        <td><%= timesheet.employee.name %></td>
+        <td><%= timesheet.company %></td>
+        <td id="timesheet-status"><%= timesheet.state %></td>
+        <td><%= timesheet.reg_hours.round(2).to_f %></td>
+        <td><%= timesheet.ot_hours %></td>
+        <td><%= number_to_currency(timesheet.total_pay, :unit => "$") %></td>
+        <td><%= number_to_currency(timesheet.total_bill, :unit => "$") %></td>
+
+        <td><button id="approve-button"><%= link_to 'Approve', approve_timesheet_path(timesheet), remote: true, method: :patch %></button></td>
+        <td><%= link_to 'Show', timesheet %></td>
+        <td><%= link_to 'Edit', edit_timesheet_path(timesheet) %></td>
+        <td><%= link_to 'Destroy', timesheet, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+

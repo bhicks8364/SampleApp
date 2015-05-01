@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1><small>Job Orders</small></h1>
+<% @job_orders.each do |job_order| %>
+<ul class="list-group">
+    <% if job_order.needs_attention? %>
+    <li class="list-group-item list-group-item-danger">
+        <strong><h3><strong>Company: </strong><%= job_order.company_profile.name %></h3>
+        <strong>Current State:</strong><%= job_order.state.titleize %><br>
+        <strong>Job title: </strong> <%= job_order.job_title %><br>
+        <strong>People Needed:</strong><%= job_order.needed %><br>
+        <strong>Needed By:</strong><%= job_order.fill_date.strftime("%A - %m / %d ") %><br>
+        <strong>Current Assignments:</strong><%= job_order.assignments.count %><br>
+    </li>
+    <% else %>
+    
+    <li class="list-group-item list-group-item-info">
+        <strong><h3>Company: </strong><%= job_order.company_profile.name %></h3>
+        <strong>Current State:</strong><%= job_order.state.titleize %><br>
+        <strong>Job title: </strong> <%= job_order.job_title %><br>
+        <strong>People Needed:</strong><%= job_order.needed %><br>
+        <strong>Needed By:</strong><%= job_order.fill_date.strftime("%A - %m / %d ") %><br>
+        <strong>Current Assignments:</strong><%= job_order.assignments.count %><br>
+    </li>
+    <% end %>
+    
+</ul>
+
+<% end %>
