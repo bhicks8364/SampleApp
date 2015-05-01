@@ -16,6 +16,7 @@
 # Indexes
 #
 #  index_timesheets_on_assignment_id  (assignment_id)
+#  index_timesheets_on_state          (state)
 #
 
 require 'test_helper'

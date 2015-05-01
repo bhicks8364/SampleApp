@@ -1,5 +1,6 @@
 class CompanyProfilesController < ApplicationController
   # before_action :set_profile
+  # load_and_authorize_resource
   
   def new
       # @company = CompanyProfile.new
@@ -19,12 +20,13 @@ class CompanyProfilesController < ApplicationController
   end
     
   def index
-    @companies = CompanyProfile.all
+    @q = CompanyProfile.search(params[:q])
+    @company_profiles = @q.result.includes(:job_orders).page(params[:page]).to_a.uniq
   end
 
   def show
     @company = CompanyProfile.find(params[:id])
-    @job_orders = @company.job_orders
+    # @job_orders = @company.job_orders
   end
 
 
@@ -39,12 +41,12 @@ class CompanyProfilesController < ApplicationController
 #   end
 
   def edit
-    @company = CompanyProfile.find(params[:id])
+    # @company = CompanyProfile.find(params[:id])
   end
 
   def update
-    @company = CompanyProfile.find(params[:id])
-    if @company.update_attributes(company_profile_params)
+    # @company = CompanyProfile.find(params[:id])
+    if @company.update(company_profile_params)
       redirect_to company_profiles_path, notice: "The company_profile has been updated"
     end
   end

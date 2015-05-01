@@ -15,6 +15,7 @@
 #
 #  index_assignments_on_employee_profile_id  (employee_profile_id)
 #  index_assignments_on_job_order_id         (job_order_id)
+#  index_assignments_on_state                (state)
 #
 
 class Assignment < ActiveRecord::Base
@@ -22,6 +23,7 @@ class Assignment < ActiveRecord::Base
   belongs_to :job_order
   has_many :timesheets
   has_many :shifts
+
   
   validates_associated :job_order
   validates_associated :employee_profile
@@ -30,7 +32,8 @@ class Assignment < ActiveRecord::Base
   delegate :company_profile, to: :job_order
 
   before_create :set_defaults
-  
+
+  # scope :by_status, -> { where(status: status) }
   
   accepts_nested_attributes_for :employee_profile
   accepts_nested_attributes_for :job_order
@@ -73,6 +76,10 @@ class Assignment < ActiveRecord::Base
    where(:time_in => 1.week.ago.beginning_of_week..1.week.ago.end_of_week)
   end
   
+  def current_shift
+    self.shifts.where(:state => "clocked_in").last
+  end
+
   def company
     self.job_order.company_profile.name
   end

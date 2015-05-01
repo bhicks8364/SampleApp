@@ -13,6 +13,7 @@
 
 class EmployeeProfile < ActiveRecord::Base
     has_many :assignments
+    has_many :timesheets, through: :assignments
     has_many :shifts, through: :assignments
     has_many :job_orders, through: :assignments
     has_one :user, as: :profile
@@ -25,14 +26,14 @@ class EmployeeProfile < ActiveRecord::Base
     
     validates_associated :user
     
-    def timesheets
+    def last_assignment_timesheets
         self.assignments.last.timesheets
     end
 
         
     
     def name
-        "#{user.name}"
+        self.employee_name
     end
     
 end

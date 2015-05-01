@@ -28,10 +28,13 @@
 
 class User < ActiveRecord::Base
   belongs_to :profile, polymorphic: true
+  # belongs_to :agency_profile, -> { where profile_id: profile_id, profile_type: 'AgencyProfile' }
+
   accepts_nested_attributes_for :profile
   attr_accessor :remember_token, :activation_token, :reset_token
+  
   before_save   :downcase_email
-  before_create :create_activation_digest, :set_profile
+  before_create :create_activation_digest, :set_profile_type
 
   validates :first_name,  presence: true, length: { maximum: 50 }
   validates :last_name,  presence: true, length: { maximum: 50 }
@@ -50,6 +53,7 @@ class User < ActiveRecord::Base
   scope :company, -> { where("role = ?", "company")}
   scope :employee, -> { where("role = ?", "employee")}
   scope :super, -> { where("role = ?", "super")}
+  scope :agency_admin, -> { where(role: "agency", admin: true)}
   
   def super?
     role == "super"
@@ -86,6 +90,12 @@ class User < ActiveRecord::Base
     if self.role == "employee"
       profile = EmployeeProfile.create(employee_name: self.name)
       self.profile_type = "EmployeeProfile"
+      self.profile_id = profile.id
+    end
+    
+    if self.role == "agency"
+      profile = AgencyProfile.create(agency_name: self.name)
+      self.profile_type = "AgencyProfile"
       self.profile_id = profile.id
     end
     

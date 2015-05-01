@@ -1,7 +1,10 @@
 <p id="notice"><%= notice %></p>
  
- <% if @assignment.shifts.where(state: "Clocked In").any? %>
+ <% if @assignment.shifts.where(state: "clocked_in").any? %>
  <h3> You are currently clocked in to this assignment! </h3>
+ <button class="btn-large">
+  <%= link_to @shift.created_at.strftime("%A - %m / %d "), assignment_shift_path(@assignment, @shift) %>
+</button>
  <% @assignment.shifts.where(state: "Clocked In").each do |shift| %>
    <ul>
      <li><strong>Clocked In: </strong><%= shift.time_in.strftime("%B %e, %Y at %I:%M %p") %></li>
@@ -116,12 +119,12 @@ This Assignment has no timesheets.
 
 
     <% @assignment.timesheets.each do |timesheet| %>
-<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+<div class="panel-group" id="accordion" role="tablist" >
 
   <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingOne">
       <h4 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        <a data-toggle="expand" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
          <strong> View Timesheet for week of:  <%= timesheet.created_at.strftime("%B %e, %Y") %></strong>
         </a>
       </h4>
@@ -140,10 +143,10 @@ This Assignment has no timesheets.
              <h3>Overtime Hours: </h3><strong><%= timesheet.ot_hours %></strong>
           </li>
           <li>
-             <h3>Total Pay: </h3><strong><%= timesheet.total_pay %></strong>
+             <h3>Total Pay: </h3><strong><%= number_to_currency(timesheet.total_pay, :unit => "$") %></strong>
           </li>
            <li>
-             <h3>Total Bill: </h3><strong><%= timesheet.total_bill %></strong>
+             <h3>Total Bill: </h3><strong><%= number_to_currency(timesheet.total_bill, :unit => "$") %></strong>
           </li>
         </ul>
       </div>

@@ -4,6 +4,10 @@
   <strong>Job title:</strong>
   <%= @job_order.job_title %>
 </p>
+<p>
+  <strong>Current State:</strong>
+  <%= @job_order.state.titleize %>
+</p>
 
 <p>
   <strong>Company profile:</strong>
@@ -14,10 +18,22 @@
   <strong>Fill date:</strong>
  <%= @job_order.fill_date.strftime("%A - %m / %d ") %>
 </p>
+<p>
+  <strong>ASAP Order?:</strong>
+ <%= @job_order.asap %>
+</p>
+<p>
+  <strong>People Needed:</strong>
+ <%= @job_order.needed %>
+</p>
 
 
 
 <h3>Job Order Totals </h3>
+<small>
+  Number of Assignments: <%= @job_order.assignments.count %> <br>
+</small>
+
  <strong>Total Regular Hours:</strong>
   <%= @job_order.total_order_reg_hours %> <br>
   <strong>Total Overtime Hours:</strong>

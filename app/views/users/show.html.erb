@@ -1,12 +1,32 @@
 <% provide(:title, @user.name) %>
 <div class="row">
+  <div class="user">
+  <div class="col-md-5"><span id="user-profile-type">Welcome, <%= @user.name %></span></div>
+  <div class="col-md-1">.col-md-1</div>
+  <div class="col-md-1">.col-md-1</div>
+  <div class="col-md-1">.col-md-1</div>
+  </div>
+</div>
+
+<div class="row">
   <aside class="col-md-4">
     <section class="user_info">
-   
         <%= gravatar_for @user %>
-        <h3><%= @user.name %></h3>
+        <%= @user.name %>
+        <%= @user.email %>
+        <%= @user.role %>
         <hr>
-        <span id="user-profile-id"><%= @user.profile_id %></span>
+        <span id="user-profile-id"><%= @user.profile.name %></span>
+
+
+
+        <% if @user.company? %>
+          <button type="button" class="btn btn-default"><%= link_to "Go To Company Page", company_profile_path(@user.profile) %></button>
+        <% end %>
+        <% if @user.employee? %>
+          <button type="button" class="btn btn-default"><%= link_to "Go To Employee Page", employee_profile_path(@user.profile) %></button>
+        <% end %>
+  
         <span id="user-role"><%= @user.role %></span>
 
         <span id="updated-at"> <%= time_ago_in_words(@user.updated_at) %> ago</span>
@@ -16,13 +36,17 @@
       
     </section>
   </aside>
-  <span id="user-profile-type"><%= @user.profile_type %></span>
-  <% if @user.company? %>
-  <button type="button" class="btn btn-default"><%= link_to "Go To Company Page", company_profile_path(@user.profile) %></button>
+  <% if @user.agency? %>
+  <div class="col-md-4">        
+  
+          <span id="agency-info">Number of Job Orders: <%= @user.profile.job_orders.count %></span>
+          <span id="agency-info">Number of Assignments: <%= @user.profile.assignments.count %></span>
+          
+          <button type="button" class="btn btn-default"><%= link_to "Go To Agency Page", agency_profile_path(@user.profile) %></button>
+          
   <% end %>
-    <% if @user.employee? %>
-  <button type="button" class="btn btn-default"><%= link_to "Go To Employee Page", employee_profile_path(@user.profile) %></button>
-  <% end %>
+  </div>
+
 </div>
 
 

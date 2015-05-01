@@ -24,7 +24,7 @@
   <tbody>
     <% @shifts.each do |shift| %>
     <tr>
-      <% if shift.state == "Clocked In" %>
+      <% if shift.clocked_in? %>
         <td class="success"><%= shift.state %></td>
         <td class="success"><%= shift.id %> </td>
         <td class="success"><%= shift.week %> </td>

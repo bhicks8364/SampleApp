@@ -1,9 +1,33 @@
 <h1>Listing timesheets</h1>
 
+<aside>
+  <div class="col-md-2">
+  <div class="timesheet-search-form">
+    <h3><small>Search by:</small></h3>
+    <%= search_form_for @q do |f| %>
+      <%= f.label :week_eq, "Work week" %>
+      <%= f.search_field :week_eq %>
+      <div class="field">
+        <%= f.label :assignment_bill_rate_gteq, "Bill Rate between..." %>
+        <%= f.search_field :assignment_bill_rate_gteq %>
+        <%= f.label :assignment_bill_rate_lteq, "and" %>
+        <%= f.search_field :assignment_bill_rate_lteq %>
+      </div>
+
+<div class="row">
+
+      <%= f.submit "search" %>
+    <% end %>
+  </div>
+</div>
+
+</aside>
+
+<div class="col-md-8">
 <table class="table">
   <thead>
     <tr>
-      <th>Week</th>
+      <th><%= sort_link(@q, :week, 'Week', default_order: :desc) %></th>
       <th>Employee Name</th>
       <th>Company Name</th>
       <th>Status</th>
@@ -24,11 +48,11 @@
         <td><%= timesheet.company %></td>
         <td id="timesheet-status"><%= timesheet.state %></td>
         <td><%= timesheet.reg_hours.round(2).to_f %></td>
-        <td><%= timesheet.ot_hours %></td>
-        <td><%= timesheet.total_pay.round(2).to_f %></td>
-        <td><%= timesheet.total_bill.round(2).to_f %></td>
+        <td><%= timesheet.ot_hours.round(2).to_f  %></td>
+        <td><%= number_to_currency(timesheet.gross_pay, :unit => "$") %></td>
+        <td><%= number_to_currency(timesheet.gross_bill, :unit => "$") %></td>
 
-        <td><button class="timesheet-status"><%= link_to 'Approve', approve_timesheet_path(timesheet), remote: true, method: :patch %></button></td>
+        <td><button id="approve-button"><%= link_to 'Approve', approve_timesheet_path(timesheet), remote: true, method: :patch %></button></td>
         <td><%= link_to 'Show', timesheet %></td>
         <td><%= link_to 'Edit', edit_timesheet_path(timesheet) %></td>
         <td><%= link_to 'Destroy', timesheet, method: :delete, data: { confirm: 'Are you sure?' } %></td>
@@ -36,7 +60,8 @@
     <% end %>
   </tbody>
 </table>
-
+</div>
+</div>
 <br>
 
 

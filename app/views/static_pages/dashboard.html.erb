@@ -35,13 +35,19 @@
   <div class="panel-heading">
     <h3 class="sub-header"> ALL Active Job Orders</h3>
 
-            
+<% @active_job_orders.each do |active| %> 
 <ul class="list-group">
-<% @active_job_orders.each do |active| %>
-<li class="list-group-item">
+
  <strong><%= active.company_profile.name %> </strong> <br>
-  <small><%= active.job_title %></small>
-</li>
+  <li class="list-group-item">
+    <small><%= active.job_title %></small></li>
+  <li class="list-group-item">
+    <small> ASAP?: <%= active.asap %></small></li>
+  <li class="list-group-item">
+    <small> People Needed: <%= active.needed %></small></li>
+  <li class="list-group-item">
+  <small> People Assigned: <%= active.employee_profiles.count %></small>
+  </li>
 
 
 <% end %>

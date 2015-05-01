@@ -47,12 +47,12 @@
   <%= @shift.state %>
 </span>
 <hr>
-<% if @shift.state != "Clocked In"%>
+<% if @shift.clocked_out? %>
 <p> You are currently <strong> <%= @shift.state %> </strong> . </p>
 <% else %>
 <div id="clock-out-button">
-  <button type="button" class="btn btn-primary btn-lg">
-  <%= link_to 'Clock Out', clock_out_assignment_shift_path(@shift.assignment, @shift), method: :patch, remote: true, data: {disable_with: "Clocking Out..."} %>
+  <button type="button" class="btn btn-primary btn-lg"> 
+  <%= link_to 'Clock Out', clock_out_assignment_shift_path(@shift.assignment, @shift), method: :patch, remote: true, data: {confirm: 'Are you sure you want to clock out now?', disable_with: "Clocking Out..."} %>
   </button>
 </div>
 <% end %>

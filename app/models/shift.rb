@@ -16,6 +16,7 @@
 # Indexes
 #
 #  index_shifts_on_assignment_id  (assignment_id)
+#  index_shifts_on_state          (state)
 #
 
 class Shift < ActiveRecord::Base
@@ -40,6 +41,42 @@ class Shift < ActiveRecord::Base
   accepts_nested_attributes_for :assignment
   
   scope :newest_first, lambda { order("shifts.time_in DESC") }
+  scope :clocked_out, -> { with_state(:clocked_out) }
+  scope :clocked_in, -> { with_state(:clocked_in) }
+  scope :by_state, -> { group(:state) }
+  
+  state_machine :state, :initial => :initialized do
+    
+    
+    event :clock_in do
+      transition :initialized => :clocked_in
+    end
+    event :clock_out do
+      transition :clocked_in => :clocked_out
+    end
+  end
+  
+  # ransacker :time_in do
+  # Arel.sql('date(time_in)')
+  # end
+  
+  def record_clock_in!
+    self.time_in = Time.now
+    self.week = Date.today.cweek
+    self.timesheet = Timesheet.find_or_create_by(assignment_id: self.assignment_id, week: self.week)
+    self.clock_in!
+  end
+  
+  def record_clock_out!
+    self.time_out = Time.now
+    total = (self.time_out - self.time_in)
+    self.hours_worked = total / 3600
+    self.clock_out
+  end
+  
+  
+
+  
   
   def week_percent
     percent = (self.week.to_f / 52) * 100
@@ -79,13 +116,7 @@ class Shift < ActiveRecord::Base
     self.save
   end
   
-  def clock_out
-    self.time_out = Time.now
-    total = (self.time_out - self.time_in)
-    self.hours_worked = total / 3600
-    self.save
 
-  end
 
 
   # def update_balance!

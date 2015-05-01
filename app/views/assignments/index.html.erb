@@ -1,7 +1,7 @@
 <h3>Listing assignments</h3>
 
 
-<% if @assignments %>
+<% if @assignments != nil %>
 <table class="table">
   <thead>
     <tr>
@@ -17,21 +17,34 @@
   <tbody>
     <% @assignments.each do |assignment| %>
       <tr>
-      
+        <% if assignment.current_shift != nil %>
+        <td class="success"><%= link_to assignment.job_title, assignment %></td>
+        <td class="success"><%= link_to assignment.employee.name, assignment.employee %></td>
+        <td class="success"><%= assignment.company %></td>
+        <td class="success"><%= assignment.pay_rate %></td>
+        <td class="success"><%= assignment.bill_rate %></td>
+        <td class="success"><%= link_to 'Edit', edit_assignment_path(assignment) if can? :update, assignment %></td>
+        <td class="success"><%= link_to 'Destroy', assignment, method: :delete, data: { confirm: 'Are you sure?' } if can? :destroy, assignment %></td>
+        <% else %>
         <td><%= link_to assignment.job_title, assignment %></td>
         <td><%= link_to assignment.employee.name, assignment.employee %></td>
         <td><%= assignment.company %></td>
         <td><%= assignment.pay_rate %></td>
         <td><%= assignment.bill_rate %></td>
-        <td><%= link_to 'Edit', edit_assignment_path(assignment) %></td>
-        <td><%= link_to 'Destroy', assignment, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Edit', edit_assignment_path(assignment) if can? :update, assignment %></td>
+        <td><%= link_to 'Destroy', assignment, method: :delete, data: { confirm: 'Are you sure?' } if can? :destroy, assignment %></td>
+        <% end %>
+
       </tr>
-    <% end %>
+        <% end %>
   </tbody>
 </table>
 <% else %>
-No Current Job Orders.
+No Assignments
 <% end %>
+
+
+
 
 <br>
 

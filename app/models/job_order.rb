@@ -10,15 +10,23 @@
 #  fill_date          :date
 #  created_at         :datetime
 #  updated_at         :datetime
+#  state              :string(255)
+#  needed             :integer
+#  asap               :boolean          default(FALSE)
+#  agency_profile_id  :integer
 #
 # Indexes
 #
+#  index_job_orders_on_agency_profile_id   (agency_profile_id)
 #  index_job_orders_on_company_profile_id  (company_profile_id)
+#  index_job_orders_on_state               (state)
 #
 
 class JobOrder < ActiveRecord::Base
   belongs_to :company_profile
+  belongs_to :agency_profile
   has_many :assignments
+  has_many :timesheets, through: :assignments, class_name: "Timesheet"
   has_many :employee_profiles, through: :assignments, class_name: "EmployeeProfile"
 
 
@@ -26,6 +34,36 @@ class JobOrder < ActiveRecord::Base
   accepts_nested_attributes_for :assignments
   accepts_nested_attributes_for :employee_profiles
   scope :active, -> { where(active: true)}
+  scope :asap, -> { where(asap: true)}
+  scope :by_fill_date, lambda { order("job_orders.fill_date DESC") }
+  scope :by_company, lambda { order("job_orders.company_profile DESC") }
+  
+  
+  state_machine :state, :initial => :submitted do
+    # event :approve do
+    #   transition :submitted => :approved
+    # end
+
+    
+  end
+  def needs_attention?
+    if self.needed > self.assignments.count
+      true
+    else
+      false
+    end
+  end
+  
+  def self.needed_today
+    where("fill_date >= ? AND fill_date < ?", Date.today, Date.tomorrow)
+  end
+  
+  
+  
+  
+  
+  
+  
   
   def total_bill_amount  
     self.assignments.to_a.sum(&:gross_assignment_bill)
@@ -39,6 +77,7 @@ class JobOrder < ActiveRecord::Base
   def total_order_ot_hours
     self.assignments.to_a.sum(&:total_ot_hours)
   end
+  
   
   
 

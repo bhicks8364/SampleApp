@@ -16,6 +16,7 @@
 # Indexes
 #
 #  index_shifts_on_assignment_id  (assignment_id)
+#  index_shifts_on_state          (state)
 #
 
 require 'test_helper'

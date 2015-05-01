@@ -26,13 +26,5 @@
             </div>
     </div>
     
-<div class="active-job-orders">
-  <h3>Active Job Orders</h3>
-<ul>
-<if @job_orders.active.any? %>
-  <% @job_orders.each do |jo| %>
- <li>Job Title: <%= link_to jo.job_title, [jo.company_profile, jo] %> | Submitted <%= time_ago_in_words(jo.created_at) %> ago</li>
-<% end %>
-</ul>
-</div>
+
 

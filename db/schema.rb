@@ -11,7 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150407131055) do
+ActiveRecord::Schema.define(version: 20150428142611) do
+
+  create_table "agency_profiles", force: true do |t|
+    t.string   "agency_name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "assignments", force: true do |t|
     t.integer  "employee_profile_id"
@@ -25,6 +31,7 @@ ActiveRecord::Schema.define(version: 20150407131055) do
 
   add_index "assignments", ["employee_profile_id"], name: "index_assignments_on_employee_profile_id"
   add_index "assignments", ["job_order_id"], name: "index_assignments_on_job_order_id"
+  add_index "assignments", ["state"], name: "index_assignments_on_state"
 
   create_table "company_profiles", force: true do |t|
     t.string   "company_name"
@@ -50,9 +57,15 @@ ActiveRecord::Schema.define(version: 20150407131055) do
     t.date     "fill_date"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "state"
+    t.integer  "needed"
+    t.boolean  "asap",               default: false
+    t.integer  "agency_profile_id"
   end
 
+  add_index "job_orders", ["agency_profile_id"], name: "index_job_orders_on_agency_profile_id"
   add_index "job_orders", ["company_profile_id"], name: "index_job_orders_on_company_profile_id"
+  add_index "job_orders", ["state"], name: "index_job_orders_on_state"
 
   create_table "profiles", force: true do |t|
     t.string   "name"
@@ -78,6 +91,7 @@ ActiveRecord::Schema.define(version: 20150407131055) do
   end
 
   add_index "shifts", ["assignment_id"], name: "index_shifts_on_assignment_id"
+  add_index "shifts", ["state"], name: "index_shifts_on_state"
 
   create_table "timesheets", force: true do |t|
     t.integer  "assignment_id"
@@ -92,6 +106,7 @@ ActiveRecord::Schema.define(version: 20150407131055) do
   end
 
   add_index "timesheets", ["assignment_id"], name: "index_timesheets_on_assignment_id"
+  add_index "timesheets", ["state"], name: "index_timesheets_on_state"
 
   create_table "users", force: true do |t|
     t.string   "email"

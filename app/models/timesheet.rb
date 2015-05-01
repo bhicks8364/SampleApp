@@ -16,6 +16,7 @@
 # Indexes
 #
 #  index_timesheets_on_assignment_id  (assignment_id)
+#  index_timesheets_on_state          (state)
 #
 
 class Timesheet < ActiveRecord::Base
@@ -23,6 +24,10 @@ class Timesheet < ActiveRecord::Base
   has_many :shifts
   
   validates_associated :assignment
+  
+  scope :shifts_states, -> {
+    joins(:shifts).merge(Shift.state_count)
+  }
 
   
   
@@ -40,7 +45,14 @@ class Timesheet < ActiveRecord::Base
   
   before_save :calculate_totals, :total_pay, :total_ot, :total_bill
   
-  
+  state_machine :state, :initial => :submitted do
+    event :approve do
+      transition :submitted => :approved
+    end
+    event :reject do
+      transition :submitted => :rejected
+    end
+  end
   
   
   
@@ -50,6 +62,10 @@ class Timesheet < ActiveRecord::Base
   
   def mark_up
     self.bill_rate / self.pay_rate
+  end
+  
+  def ot_rate
+    self.pay_rate * 1.5
   end
   
   
@@ -65,7 +81,7 @@ class Timesheet < ActiveRecord::Base
   end
   
   def total_pay
-   if self.reg_hours != 0 && self.pay_rate 
+   if self.reg_hours && self.pay_rate 
       self.gross_pay = self.reg_hours * self.pay_rate
    else
      self.gross_pay = "0.0".to_d
@@ -98,21 +114,21 @@ class Timesheet < ActiveRecord::Base
     # self.save
   end
   
-  def self.company
-    self.assignment.company_profile
-  end
+  # def self.company
+  #   self.assignment.company_profile
+  # end
   
-  def self.employee
-    self.assignment.employee_profile
-  end
+  # def self.employee
+  #   self.assignment.employee_profile
+  # end
   
-  def self.pay_rate
-    self.assignment.pay_rate
-  end
+  # def self.pay_rate
+  #   self.assignment.pay_rate
+  # end
   
-  def self.bill_rate
-    self.assignment.bill_rate
-  end
+  # def self.bill_rate
+  #   self.assignment.bill_rate
+  # end
   
   private
   

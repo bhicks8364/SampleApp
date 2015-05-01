@@ -1,4 +1,6 @@
 class ShiftsController < ApplicationController
+  # load_and_authorize_resource :assignment
+  # load_and_authorize_resource :shift, :through => :assignment
   before_action :set_shift, only: [:show, :edit, :update, :destroy, :clock_in, :clock_out]
 
   
@@ -30,16 +32,14 @@ class ShiftsController < ApplicationController
   # GET /shifts/1/edit
   def edit
   end
-  def clock_in?
-     params[:commit] == "Clock in"
-  end
+  # def clock_in?
+  #   params[:commit] == "Clock in"
+  # end
   
   def clock_out
     sleep 2
-    @shift.time_out = Time.now
-    total = (@shift.time_out - @shift.time_in)
-    hours_worked = total / 3600
-    @shift.update(time_out: Time.now, state: "Clocked Out", week: Date.today.cweek, hours_worked: hours_worked)
+    @shift.record_clock_out!
+    
 
   end
 
@@ -47,14 +47,13 @@ class ShiftsController < ApplicationController
   # POST /shifts.json
   def create
     @assignment = Assignment.find(params[:assignment_id])
-    @shift = @assignment.shifts.build(time_in: Time.now, state: "Clocked In", week: Date.today.cweek)
-    @shift.new_timesheet
+    @shift = @assignment.shifts.new
+    @shift.record_clock_in!
+
 
     respond_to do |format|
       if @shift.save
-        
-        
-        
+
 
         
         format.html { redirect_to assignment_shift_path(@assignment, @shift), notice: 'Shift was successfully created.' }
@@ -68,9 +67,9 @@ class ShiftsController < ApplicationController
     end
   end
 
-  def set_new_timesheet
-    @shift.timesheet = Timesheet.find_or_create_by(assignment_id: self.assignment_id, week: Date.today.cweek)
-  end
+  # def set_new_timesheet
+  #   @shift.timesheet = Timesheet.find_or_create_by(assignment_id: self.assignment_id, week: Date.today.cweek)
+  # end
   # PATCH/PUT /shifts/1
   # PATCH/PUT /shifts/1.json
   def update

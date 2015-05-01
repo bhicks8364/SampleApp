@@ -5,13 +5,22 @@ class EmployeeProfilesController < ApplicationController
     #     user.save
     #     redirect_to root_url
     # end
+    
+    # load_and_authorize_resource
+    
   def index
-    @employees = EmployeeProfile.all
+    @q = EmployeeProfile.search(params[:q])
+    @employee_profiles = @q.result.includes(:timesheets).page(params[:page]).to_a.uniq
   end
 
   def show
-    @employee = EmployeeProfile.find(params[:id])
-    @assignments = @employee.assignments
+    @employee_profile = EmployeeProfile.find(params[:id])
+    @timesheets = @employee_profile.timesheets
+    # @q = Timesheet.search(params[:q])
+    # @timesheets = @q.result.includes(:assignment, :shifts)
+
+    @assignments = @employee_profile.assignments
+
     # @user = @employee.user
   end
 

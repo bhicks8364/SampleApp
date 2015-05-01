@@ -4,25 +4,29 @@ class Ability
   def initialize(user)
     
     user ||= User.new(role: "guest")
+    # profile = user.profile
     
-    if user.super?
-      can :manage, User
-      can :manage, CompanyProfile
-      can :manage, JobOrder
-    end
+    # if user.super?
+      can :manage, :all
+    # end
     
-    if user.agency?
-      can :manage, JobOrder
-      can :manage, Assignment
-    elsif user.company?
-      can :manage, JobOrder
-      can :manage, Assignment
-      can :manage, Shift
-    else user.employee?
-      can :read, JobOrder
-      can :manage, Shift
-      can :manage, Assignment
-    end
+    # if user.agency?
+    #   can :manage, JobOrder
+    #   can :manage, Assignment
+    # end
+    # if user.company?
+    #   can :manage, CompanyProfile, :id => profile.id
+    #   can :manage, User, :id => user.id
+    #   can :manage, Assignment, :job_order => { :company_profile_id => profile.id }
+    #   can :manage, Shift
+    # end
+    # if user.employee?
+    #   can :read, EmployeeProfile, :id => profile.id
+    #   can :manage, Assignment, employee_profile_id: profile.id 
+    #   can :manage, Shift, :assignment => { :employee_profile_id => profile.id }
+    #   cannot :destroy, Shift
+      
+    # end
     
     
     

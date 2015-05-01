@@ -4,7 +4,8 @@ class TimesheetsController < ApplicationController
   # GET /timesheets
   # GET /timesheets.json
   def index
-    @timesheets = Timesheet.all
+    @q = Timesheet.search(params[:q])
+    @timesheets = @q.result.includes(:assignment, :shifts)
   end
 
   # GET /timesheets/1
@@ -49,7 +50,7 @@ class TimesheetsController < ApplicationController
   
   def approve
     sleep 3
-    @timesheet.update(state: "Approved")
+    @timesheet.approve!
   end
 
   # PATCH/PUT /timesheets/1

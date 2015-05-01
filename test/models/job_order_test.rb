@@ -10,10 +10,16 @@
 #  fill_date          :date
 #  created_at         :datetime
 #  updated_at         :datetime
+#  state              :string(255)
+#  needed             :integer
+#  asap               :boolean          default(FALSE)
+#  agency_profile_id  :integer
 #
 # Indexes
 #
+#  index_job_orders_on_agency_profile_id   (agency_profile_id)
 #  index_job_orders_on_company_profile_id  (company_profile_id)
+#  index_job_orders_on_state               (state)
 #
 
 require 'test_helper'

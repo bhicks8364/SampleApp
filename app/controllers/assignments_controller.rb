@@ -1,5 +1,7 @@
 class AssignmentsController < ApplicationController
-  load_and_authorize_resource
+  
+  # load_and_authorize_resource :employee_profile
+  # load_and_authorize_resource :assignment, :through => :employee_profile
   before_action :set_assignment, only: [:show, :edit, :update, :destroy]
 
   # GET /assignments
@@ -12,7 +14,8 @@ class AssignmentsController < ApplicationController
   # GET /assignments/1.json
   def show
     @timesheets = @assignment.timesheets
-    @shift = @assignment.shifts.last
+    @shift = @assignment.current_shift
+    
     
   end
 

@@ -16,6 +16,7 @@
 # Indexes
 #
 #  index_shifts_on_assignment_id  (assignment_id)
+#  index_shifts_on_state          (state)
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html

@@ -25,6 +25,14 @@
     <%= f.date_field :fill_date %>
   </div>
   
+  <div class="field">
+    <%= f.label :needed, "How many positions needed?" %><br>
+    <%= f.number_field(:needed, in: 1..10) %>
+  </div>
+  <div class="field">
+    <%= f.label :asap, "Needed ASAP?" %><br>
+    <%= f.check_box(:asap) %>
+  </div>
   <%= f.fields_for :assignments do |builder| %>
     <%= render "assignment_fields", f: builder %>
   <% end %>

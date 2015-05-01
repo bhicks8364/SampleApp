@@ -1,4 +1,4 @@
-<p id="notice"><%= notice %></p>
+
 
 <div>
     <strong>Company:</strong>
@@ -7,6 +7,18 @@
   <strong>Employee:</strong>
   <%= @timesheet.employee.name %>
   <br>
+  <p>
+  <strong>Current State:</strong>
+  <%= @timesheet.state.titleize %>
+</p>
+ <p>
+  <strong>Regular Hours:</strong>
+  <%= @timesheet.reg_hours.round(2).to_f %>
+</p>
+ <p>
+  <strong>Overtime Hours:</strong>
+  <%= @timesheet.ot_hours.round(2).to_f %>
+</p>
   <strong>Pay:</strong>
   <%= number_to_currency(@timesheet.pay_rate, :unit => "$") %>
   <br>
@@ -22,15 +34,21 @@
 
 <hr>
 
-<span id="timesheet-status">
-  <strong>Status:</strong>
-  <%= @timesheet.state %>
-</span>
+
 <br>
 <span id="approved-at">
 </span>
 <br>
-<% if @timesheet.state != "Approved" %>
+<% if @timesheet.approved? %>
+<span id="timesheet-status">
+  <strong>Status:</strong>
+  <%= @timesheet.state.titleize %>
+</span>
+<% else %>
+<strong>Status:</strong>
+<span id="timesheet-status">
+  <%= @timesheet.state.titleize %>
+</span>
 <button id="approve-button"><%= link_to 'Approve', approve_timesheet_path(@timesheet), remote: true, method: :patch %></button>
 <% end %>
 <div>
@@ -49,10 +67,10 @@
 
 
   <strong>Total Pay:</strong>
-  <%= number_to_currency(@timesheet.total_pay, :unit => "$") %>
+  <%= number_to_currency(@timesheet.gross_pay, :unit => "$") %>
 <br>
 <strong>Total Bill:</strong>
-  <%= number_to_currency(@timesheet.total_bill, :unit => "$") %>
+  <%= number_to_currency(@timesheet.gross_bill, :unit => "$") %>
 </div>
 
 
@@ -126,8 +144,9 @@
         <td><%= shift.time_in.strftime("%A") %> </td>
         <td><%= shift.time_in.strftime("%m / %d ") %> </td>
         <td><%= shift.assignment.job_title %> </td>
-        <td><%= shift.time_in ? shift.time_in.strftime("%I:%M %p") : "No clock in time" %></td>
+        <td><%= shift.time_in ? shift.time_in.strftime("%I:%M %p") : shift.state %></td>
         <td><%= shift.time_out ? shift.time_out.strftime("%I:%M %p") : shift.state %></td>
+        <td><%= shift.hours_worked ? shift.hours_worked.round(2).to_f : shift.state %></td>
         <td><%= shift.hours_worked ? shift.hours_worked.round(2).to_f : shift.state %></td>
       <% end %>
         <td><%= link_to 'Show', assignment_shift_path(shift.assignment, shift) %></td>
