@@ -20,7 +20,7 @@
 
 class Assignment < ActiveRecord::Base
   belongs_to :employee_profile
-  belongs_to :job_order
+  belongs_to :job_order, -> { includes :company_profile }
   has_many :timesheets
   has_many :shifts
 
@@ -28,8 +28,8 @@ class Assignment < ActiveRecord::Base
   validates_associated :job_order
   validates_associated :employee_profile
   
-  delegate :job_title, to: :job_order
-  delegate :company_profile, to: :job_order
+  # delegate :job_title, to: :job_order
+  # delegate :company_profile, to: :job_order
 
   before_create :set_defaults
 
@@ -39,6 +39,14 @@ class Assignment < ActiveRecord::Base
   accepts_nested_attributes_for :job_order
   accepts_nested_attributes_for :shifts
   accepts_nested_attributes_for :timesheets
+  
+  def mark_up
+    self.bill_rate / self.pay_rate
+  end
+  
+  # def self.current_timesheet
+  #   self.joins(:timesheets).merge(Timesheet.current).last
+  # end
   
   
   def set_defaults
@@ -76,14 +84,45 @@ class Assignment < ActiveRecord::Base
    where(:time_in => 1.week.ago.beginning_of_week..1.week.ago.end_of_week)
   end
   
+
+  def is_clocked_in?
+    if self.shifts.clocked_in.any?
+      true
+    else
+      false
+    end
+  end
+  
+  
+  
   def current_shift
     self.shifts.where(:state => "clocked_in").last
   end
 
-  def company
-    self.job_order.company_profile.name
+  def company_profile
+    if self.job_order != nil
+      self.job_order.company_profile
+    else
+      "No Job Order"
+    end
   end
   
+  def company
+    if self.job_order != nil
+      self.job_order.company_profile.name
+    else
+      "No Job Order"
+    end
+
+  end
+  
+  def job_title
+    if self.job_order != nil
+      self.job_order.job_title
+    else
+      "No Job Order"
+    end
+  end
   
   def employee
     self.employee_profile

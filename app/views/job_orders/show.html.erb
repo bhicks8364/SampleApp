@@ -1,6 +1,8 @@
 <p id="notice"><%= notice %></p>
-
 <p>
+  <strong>Company profile:</strong>
+  <%= @job_order.company_profile.name %>
+<br>
   <strong>Job title:</strong>
   <%= @job_order.job_title %>
 </p>
@@ -9,10 +11,7 @@
   <%= @job_order.state.titleize %>
 </p>
 
-<p>
-  <strong>Company profile:</strong>
-  <%= @job_order.company_profile.name %>
-</p>
+
 
 <p>
   <strong>Fill date:</strong>
@@ -29,10 +28,6 @@
 
 
 
-<h3>Job Order Totals </h3>
-<small>
-  Number of Assignments: <%= @job_order.assignments.count %> <br>
-</small>
 
  <strong>Total Regular Hours:</strong>
   <%= @job_order.total_order_reg_hours %> <br>
@@ -46,30 +41,26 @@
   <strong>Total Gross Pay:</strong>
   <%= number_to_currency(@job_order.total_pay_amount, :unit => "$") %>
   <br>
+    <% if @timesheets %>
+    <h3>Current Timesheets </h3>
+
+    <%= render 'timesheets/table' %>
+    
+  <% end %>
  
 <hr>
 <h3><strong><%= @job_order.assignments.count %></strong> Employees are assigned to this Job Order. </h3>
 <br>
 <ul>
-<% if @job_order.assignments != nil %>
-  <% @assignments.each do |assignment| %>
+  
+  <% if @assignments %>
+    <h3>Job Order Totals </h3>
+    <small>
+      Number of Assignments: <%= @assignments.count %> <br>
+    </small>
+    <%= render 'assignments/table' %>
 
-  <div class="assignment">
-    <li> Employee: <%= link_to assignment.employee.name, employee_profile_path(assignment.employee) %>
-    <br>| Pay: <%= assignment.pay_rate %> | Bill: <%= assignment.bill_rate %> |</li>
-    <small>Assigned: <%= assignment.created_at.strftime("%B %e, %Y ") %></small>
-    <button>
-  <%= link_to 'View Assignment', assignment_path(assignment) %>
-</button><br>
-<small>   <strong>Total Regular Hours: </strong><%= assignment.total_reg_hours %></small><br>
-<small>   <strong>Total Overtime Hours: </strong><%= assignment.total_ot_hours %></small><br>
-<small>   <strong>Total Gross Bill: </strong><%= number_to_currency(assignment.gross_assignment_bill, :unit => "$") %></small><br>
-<small>   <strong>Total Gross Pay: </strong><%= number_to_currency(assignment.gross_assignment_pay, :unit => "$") %></small>
-  </div>
-<br>
-  <% end %>
 <% end %>
-</ul>
 <button>
   <%= link_to 'New Assignment', new_assignment_path, :remote => true, :id => "new_assignment_link" %>
 </button>
@@ -79,6 +70,8 @@
 </button>
 
 <button class="btn btn-default">
-  <%= link_to 'Back', company_profile_job_orders_path %>
+  <%= link_to 'All Company Job Orders', company_profile_job_orders_path(@company_profile) %>
 </button>
+
+
 

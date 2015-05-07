@@ -31,10 +31,20 @@ module SessionsHelper
       end
     end
   end
+  
+  
+  
+  # def profile
+  #   current_user.profile
+  # end
 
   # Returns true if the user is logged in, false otherwise.
   def logged_in?
     !current_user.nil?
+  end
+  
+  def not_logged_in?
+    current_user.nil?
   end
 
   # Logs out the current user.

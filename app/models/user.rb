@@ -29,12 +29,14 @@
 class User < ActiveRecord::Base
   belongs_to :profile, polymorphic: true
   # belongs_to :agency_profile, -> { where profile_id: profile_id, profile_type: 'AgencyProfile' }
+  attr_accessor :new_agency_name
+  before_save :create_agency_from_name
 
   accepts_nested_attributes_for :profile
   attr_accessor :remember_token, :activation_token, :reset_token
   
   before_save   :downcase_email
-  before_create :create_activation_digest, :set_profile_type
+  before_create :create_activation_digest, :set_employee_profile
 
   validates :first_name,  presence: true, length: { maximum: 50 }
   validates :last_name,  presence: true, length: { maximum: 50 }
@@ -49,11 +51,22 @@ class User < ActiveRecord::Base
   validates :password, length: { minimum: 6 }, allow_blank: true
   
   scope :admin, -> { where("admin = ?", true)}
-  scope :agency, -> { where("role = ?", "agency")}
-  scope :company, -> { where("role = ?", "company")}
-  scope :employee, -> { where("role = ?", "employee")}
+  # scope :agency, -> { where("role = ?", "agency")}
+  # scope :company, -> { where("role = ?", "company")}
+  scope :employee_user, -> { where("profile_type = ?", "EmployeeProfile")}
+  scope :agency_user, -> { where("profile_type = ?", "AgencyProfile")}
+  scope :company_user, -> { where("profile_type = ?", "CompanyProfile")}
   scope :super, -> { where("role = ?", "super")}
   scope :agency_admin, -> { where(role: "agency", admin: true)}
+  
+  def profile?
+    if self.profile != nil
+      true
+    else
+      false
+    end
+  end
+  
   
   def super?
     role == "super"
@@ -64,22 +77,38 @@ class User < ActiveRecord::Base
   end
   
   def agency?
-    role == "agency"
+    profile_type == "AgencyProfile"
   end
   
   def company?
-    role == "company"
+    profile_type == "CompanyProfile"
   end
   
   def employee?
-    role == "employee"
+    profile_type == "EmployeeProfile"
   end
   
   def guest?
     role == "guest"
   end
   
-  def set_profile
+  def create_agency_from_name
+    create_profile(:name => new_agency_name) unless new_agency_name.blank?
+  end
+  
+  def create_agency_from_name
+    create_profile(:name => new_agency_name) unless new_agency_name.blank?
+  end
+  def set_employee_profile
+    if self.profile_type == "EmployeeProfile"
+      profile = EmployeeProfile.create(employee_name: self.name)
+      self.profile_type = "EmployeeProfile"
+      self.profile_id = profile.id
+    end
+  end
+  
+    
+  def set_profile_type
     
     if self.role == "company"
       profile = CompanyProfile.create(company_name: self.name)
@@ -98,12 +127,35 @@ class User < ActiveRecord::Base
       self.profile_type = "AgencyProfile"
       self.profile_id = profile.id
     end
-    
-    
-    
-    
-    
+
   end
+  
+  # def set_role
+  #   self.role = "Unassigned"
+  # end
+  
+  
+  # def set_profile
+    
+  #   if self.role == "company"
+  #     profile = CompanyProfile.create(company_name: self.name)
+  #     self.profile_type = "CompanyProfile"
+  #     self.profile_id = profile.id
+  #   end
+    
+  #   if self.role == "employee"
+  #     profile = EmployeeProfile.create(employee_name: self.name)
+  #     self.profile_type = "EmployeeProfile"
+  #     self.profile_id = profile.id
+  #   end
+    
+  #   if self.role == "agency"
+  #     profile = AgencyProfile.create(agency_name: self.name)
+  #     self.profile_type = "AgencyProfile"
+  #     self.profile_id = profile.id
+  #   end
+
+  # end
   
   
   

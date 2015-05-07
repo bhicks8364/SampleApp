@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   # before_action :logged_in_user, only: [:index, :edit, :update, :destroy]
   # before_action :correct_user,   only: [:edit, :update]
   # before_action :admin_user,     only: :destroy
-  load_and_authorize_resource
+  # load_and_authorize_resource
 
 
   def index
@@ -11,18 +11,23 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    @profile = @user.profile
   end
 
   def new
     @user = User.new
+    # @user.profile.new
+    
   end
 
   def create
     @user = User.create(user_params)
 
+   
+
     
     if @user.save
-      flash[:info] = "Welcome to Trackee #{@user.name}!"
+      flash[:info] = "#{@user.name} was successfuly added as a #{@user.role}!"
       # @user.send_activation_email
       # flash[:info] = "Please check your email to activate your account."
       redirect_to @user

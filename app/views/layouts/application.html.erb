@@ -7,21 +7,34 @@
     <%= csrf_meta_tags %>
     <%= render 'layouts/shim' %>
   </head>
-  <header>
-    <%= render 'layouts/header' %>
-  </header>
+      <%= render 'layouts/header' %>
+      
+
   <body>
+      <div id="wrapper">
+    <% if current_user.present? %>
+        <div id="sidebar-wrapper">
+          <%= render 'layouts/sidebar' %>
+        </div>
+    <% end %>
+          
+        <div id="page-content-wrapper">
+          <%= yield %>
+        </div>
+          
+          
+      </div>
     
-    <div class="container">
+    
         <% flash.each do |message_type, message| %>
         <div class="alert alert-<%= message_type %>"><%= message %></div>
         <% end %>
     
-          <%= yield %>
+
           
           
 
-      <%= debug(params) if Rails.env.development? %>
+      <!--<%= debug(params) if Rails.env.development? %>-->
     </div>
   </body>
 </html>

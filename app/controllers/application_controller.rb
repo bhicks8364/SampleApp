@@ -13,4 +13,8 @@ class ApplicationController < ActionController::Base
     redirect_to root_url
   end
   
+  def profile
+    current_user.profile
+  end
+  
 end

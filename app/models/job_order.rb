@@ -37,6 +37,7 @@ class JobOrder < ActiveRecord::Base
   scope :asap, -> { where(asap: true)}
   scope :by_fill_date, lambda { order("job_orders.fill_date DESC") }
   scope :by_company, lambda { order("job_orders.company_profile DESC") }
+  scope :newest_first, -> { order("job_orders.created_at DESC") }
   
   
   state_machine :state, :initial => :submitted do

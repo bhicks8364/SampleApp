@@ -15,6 +15,7 @@ class StaticPagesController < ApplicationController
   def dashboard
     @user = current_user
     @company = @user.profile
+    @job_orders = JobOrder.all
     @active_job_orders = JobOrder.active
     @employees = EmployeeProfile.all
     @companies = CompanyProfile.all

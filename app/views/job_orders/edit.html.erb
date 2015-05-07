@@ -3,4 +3,4 @@
 <%= render 'form' %>
 
 <%= link_to 'Show', [@job_order.company_profile, @job_order] %> |
-<%= link_to 'Back', company_profile_job_orders_path %>
+<%= link_to 'Back', company_profile_job_orders_path(@job_order.company_profile) %>

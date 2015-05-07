@@ -1,7 +1,47 @@
-<%= @agency_profile.name %>
-<%= @agency_profile.company_profiles.count %>
-<%= @agency_profile.job_orders.count %>
+<% if @profile == @agency_profile %>
+<h1>This is your agency profile!</h1>
+<% end %>
+<div class="col-md-4">
+<h3><%= @agency_profile.name %></h3>
+
+<% if @agency_profile.users.any? %>
+USER COUNT: <%= @agency_profile.users.count %> <hr>
 
 
 
-<%= render 'job_orders/job_order' %>
+
+    <div class="panel panel-default">
+        <div class="panel-heading"><h4><%= @agency_profile.name %>'s Users</h4></div>
+            <div class="panel-body">
+                <div class="list-group">
+                <% @agency_profile.users.each do |user| %>
+                  <%= render partial: 'users/user', locals: {user: user} %>
+                <% end %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<% end %>
+
+<%= link_to "Edit Agency Profile", edit_agency_profile_path(@agency_profile), class: "btn btn-default" %>
+<%= link_to "Manage Agency Users", add_user_agency_profile_path(@agency_profile), method: :patch, class: "btn btn-primary" %>
+
+<%= link_to "Add Company", new_company_profile_path, class: "btn btn-default" %>
+<hr>
+<div class="col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-heading"><h4><%= @agency_profile.name %>'s Active Job Orders</h4></div>
+            <div class="panel-body">
+                <div class="list-group">
+                <% @agency_profile.job_orders.active.limit(5).each do |job_order| %>
+                  <%= render partial: 'job_order', locals: {job_order: job_order} %>
+                <% end %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

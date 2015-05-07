@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'bootstrap-sass',       '3.2.0.0'
+gem 'bootstrap-sass', '~> 3.3.4'
 gem 'bcrypt',               '3.1.7' # Use ActiveModel has_secure_password
 gem 'faker',                '1.4.2'
 gem 'will_paginate',           '3.0.7'
@@ -15,8 +15,10 @@ gem 'bower-rails'
 gem 'active_model_serializers'
 gem 'state_machine'
 gem 'ransack'
+gem 'simple_form', '~> 3.1.0'
+gem 'jquery-datatables-rails', '~> 3.3.0'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.1.6'
+gem 'rails', '4.2.0'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
 # Use SCSS for stylesheets

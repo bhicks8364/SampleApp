@@ -1,0 +1,35 @@
+<h3>New Agency Profile</h3>
+<%= form_for @agency_profile do |f| %>
+  <div class="form-group">
+    <%= f.label :agency_name %>
+    <%= f.text_field :agency_name, class: "form-control", placeholder: "Agency Name" %>
+  </div>
+  <div class="form-group">
+      <%= f.fields_for :users do |u| %>
+    <div class="nested-fields">
+        <div class="form-group">
+          <%= u.label :first_name %>
+          <%= u.text_field :first_name, class: "form-control" %>
+          <%= u.label :last_name %>
+          <%= u.text_field :last_name, class: "form-control" %>
+            |
+          <%= u.label :email %>
+          <%= u.email_field :email, class: 'form-control' %>
+
+          <%= u.label :password %>
+          <%= u.password_field :password, class: 'form-control' %>
+
+          <%= u.label :password_confirmation, "Confirmation" %>
+          <%= u.password_field :password_confirmation, class: 'form-control' %>
+        </div>
+</div>
+      <% end %>
+  </div>
+
+  
+    
+  <br>
+  <div class="form-group">
+    <%= f.submit class: "btn btn-primary" %>
+  </div>
+<% end %>

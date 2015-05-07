@@ -1,29 +1,24 @@
-<p id="notice"><%= notice %></p>
 
-<h1><small>Job Orders</small></h1>
+<h3><%= @company_profile.name.titleize %>  -  <strong>Job Orders</strong></h3>
 <% @job_orders.each do |job_order| %>
-<ul class="list-group">
-    <% if job_order.needs_attention? %>
-    <li class="list-group-item list-group-item-danger">
-        <strong><h3><strong>Company: </strong><%= job_order.company_profile.name %></h3>
-        <strong>Current State:</strong><%= job_order.state.titleize %><br>
-        <strong>Job title: </strong> <%= job_order.job_title %><br>
-        <strong>People Needed:</strong><%= job_order.needed %><br>
-        <strong>Needed By:</strong><%= job_order.fill_date.strftime("%A - %m / %d ") %><br>
-        <strong>Current Assignments:</strong><%= job_order.assignments.count %><br>
-    </li>
-    <% else %>
-    
-    <li class="list-group-item list-group-item-info">
-        <strong><h3>Company: </strong><%= job_order.company_profile.name %></h3>
-        <strong>Current State:</strong><%= job_order.state.titleize %><br>
-        <strong>Job title: </strong> <%= job_order.job_title %><br>
-        <strong>People Needed:</strong><%= job_order.needed %><br>
-        <strong>Needed By:</strong><%= job_order.fill_date.strftime("%A - %m / %d ") %><br>
-        <strong>Current Assignments:</strong><%= job_order.assignments.count %><br>
-    </li>
-    <% end %>
-    
-</ul>
+    <%= div_for job_order do %>
+        <p><strong>Job Title:</strong> <%= link_to job_order.job_title, company_profile_job_order_path(@company_profile.id, job_order) %> | Current Status: <%= job_order.state.titleize %></p>
+        <p>People Needed: <%= job_order.needed %> | Currently Assigned: <%= job_order.assignments.count %></p>
+        <% if job_order.assignments.any? %>
+        <ol>
+        <% job_order.assignments.each do |assignment| %>
+        
+            <strong><li>Employee: <%= link_to assignment.employee.name, assignment.employee %>  </strong><br>
+            <small>Number of Shifts: <%= assignment.shifts.count %> | Date Assigned: <%= assignment.created_at.strftime("%m / %d ") %>
+            <br>Hours Today: <%= assignment.hours_today %> | Hours Last Week: <%= assignment.hours_last_week.round(2) %>
+            </small><button><%= link_to "View Assignment", assignment %></button>
+            </li>
+            <br>
+            <% end %>
+        </ol>
 
+        
+        <% end %>
+        <p>Needs Attention: <%= job_order.needs_attention? %>    |     ASAP Order?:  <%= job_order.asap? %></p>
+    <% end %>
 <% end %>

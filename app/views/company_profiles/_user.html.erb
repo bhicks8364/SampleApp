@@ -1,0 +1,4 @@
+<%= content_tag_for(:li, user, class: "list-group-item" ) do %>
+  <p><%= gravatar_for user, size: 50 %>  </p>
+    <h4><strong><%= link_to user.name, user %> <small> - <%= user.role %></strong><br> <%= user.email %></small></h4>
+<% end %>

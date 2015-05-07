@@ -9,12 +9,15 @@ class AssignmentsController < ApplicationController
   def index
     @assignments = Assignment.all
   end
+# Assignment.joins(:timesheets).merge(Timesheet.current)
 
   # GET /assignments/1
   # GET /assignments/1.json
   def show
+    @employee = @assignment.employee
     @timesheets = @assignment.timesheets
-    @shift = @assignment.current_shift
+    @shifts = @employee.shifts.clocked_in
+    
     
     
   end

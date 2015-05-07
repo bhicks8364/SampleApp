@@ -1,4 +1,7 @@
-<%= form_for [@job_order.company_profile, @job_order] do |f| %>
+<div class="jumbotron-center">
+<div class="col-md-5">
+<div class="job-order-form">
+<%= simple_form_for [@job_order.company_profile, @job_order] do |f| %>
   <% if @job_order.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@job_order.errors.count, "error") %> prohibited this job_order from being saved:</h2>
@@ -10,21 +13,13 @@
       </ul>
     </div>
   <% end %>
-<div class="field-set"
-  <div class="field">
-    <%= f.label :job_title %><br>
-    <%= f.text_field :job_title %>
-  </div>
-    <div class="field">
-    <%= f.label :job_description %><br>
-    <%= f.text_area :job_description %>
-  </div>
   
-  <div class="field">
-    <%= f.label :fill_date, "Needed by:" %><br>
-    <%= f.date_field :fill_date %>
-  </div>
-  
+<div class="field-set">
+    <%= f.input :job_title %>
+
+    <%= f.input :job_description %>
+
+    <%= f.date_field(:fill_date) %>
   <div class="field">
     <%= f.label :needed, "How many positions needed?" %><br>
     <%= f.number_field(:needed, in: 1..10) %>
@@ -36,6 +31,7 @@
   <%= f.fields_for :assignments do |builder| %>
     <%= render "assignment_fields", f: builder %>
   <% end %>
+</div>
   
 
   
@@ -44,3 +40,5 @@
     <%= f.submit %>
   </div>
 <% end %>
+</div>
+</div>

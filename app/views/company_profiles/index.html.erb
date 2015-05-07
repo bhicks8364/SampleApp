@@ -1,20 +1,20 @@
-<h2 class="sub-header">All Companies</h2>
-
-
-<div class="pull-left">
-  <%= search_form_for @q, html: { class: "form-inline" } do |f| %>
-    <%= f.search_field :company_name_cont, placeholder: "Search...", class: "form-control" %>
+<div class="col-md-10">
+  <div class="search">
+    <h3>All Companies </h3>
+    <%= search_form_for @q do |f| %>
+    <%= f.search_field :company_name_cont, placeholder: "Search by company...", class: "form-control" %>
 
   <% end %>
-</div>
+  </div>
 
 
 <div class="table-responsive">
-<table class="table table-striped">
+<table class="table table-hover">
   <thead>
     <tr>
       <th>Company Name</th>
       <th>Current Balance</th>
+      <th>Number of Job Orders</th>
       <th>Created</th>
     
 
@@ -25,10 +25,11 @@
   <tbody>
 
   <% @company_profiles.each do |company| %>
-    <% if company.user != nil %>
+    <% if company.users.any? %>
       <tr>
         <td><%= link_to company.company_name, company %></td>
-        <td><%= company.balance %></td>
+        <td><%= number_to_currency(company.balance, :unit => "$") %></td>
+        <td><%= company.job_orders.count %></td>
         <td><%= time_ago_in_words(company.created_at) %></td>
         
         <td><%= link_to 'Show', company %></td>

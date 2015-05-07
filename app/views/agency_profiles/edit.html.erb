@@ -1,0 +1,13 @@
+<h3>Edit Agency Profile</h3>
+<%= form_for @agency_profile do |f| %>
+  <div class="form-group">
+    <%= f.label :agency_name %>
+    <%= f.text_field :agency_name, class: "form-control", placeholder: "Agency Name" %>
+  </div>
+
+    
+  <br>
+  <div class="form-group">
+    <%= f.submit class: "btn btn-primary" %>
+  </div>
+<% end %>

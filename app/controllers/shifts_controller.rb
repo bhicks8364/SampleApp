@@ -16,6 +16,7 @@ class ShiftsController < ApplicationController
   # GET /shifts/1.json
   def show
     @assignment = Assignment.find(params[:assignment_id])
+    @employee = @assignment.employee
   end
 
   # GET /shifts/new

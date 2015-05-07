@@ -24,8 +24,7 @@
   <tbody>
     <% @shifts.each do |shift| %>
     <tr>
-      <% if shift.clocked_in? %>
-        <td class="success"><%= shift.state %></td>
+      <td><span class=" <%= shift.state == 'clocked_in' ? 'primary' : 'warning' %>"></span><%= shift.state %></td>
         <td class="success"><%= shift.id %> </td>
         <td class="success"><%= shift.week %> </td>
         <td class="success"><%= shift.time_in.strftime("%A") %> </td>
@@ -34,17 +33,7 @@
         <td class="success"><%= shift.time_in ? shift.time_in.strftime("%I:%M %p") : "No clock in time" %></td>
         <td class="success"><%= shift.time_out ? shift.time_out.strftime("%I:%M %p") : shift.state %></td>
         <td class="success"><%= shift.hours_worked ? shift.hours_worked.round(2).to_f : shift.state %></td>
-        <% else %>
-        <td><%= shift.state %></td>
-        <td><%= shift.id %> </td>
-        <td><%= shift.week %> </td>
-        <td><%= shift.time_in.strftime("%A") %> </td>
-        <td><%= shift.time_in.strftime("%m / %d ") %> </td>
-        <td><%= shift.assignment.job_title %> </td>
-        <td><%= shift.time_in ? shift.time_in.strftime("%I:%M %p") : "No clock in time" %></td>
-        <td><%= shift.time_out ? shift.time_out.strftime("%I:%M %p") : shift.state %></td>
-        <td><%= shift.hours_worked ? shift.hours_worked.round(2).to_f : shift.state %></td>
-      <% end %>
+
         <td><%= link_to 'Show', assignment_shift_path(shift.assignment, shift) %></td>
         <td><%= link_to 'Edit', edit_assignment_shift_path(shift.assignment, shift) %></td>
         <td><%= link_to 'Destroy', assignment_shift_path(shift.assignment, shift), method: :delete, data: { confirm: 'Are you sure?' } %></td>

@@ -1,0 +1,5 @@
+<%= content_tag_for(:li, assignment, class:"list-group-item list-group-item-danger") do %>
+    Employee: <%= link_to assignment.employee_profile.name, assignment %> | Current Status: <%= assignment.state.titleize %></strong><br>
+        <%= assignment.company_profile.name %> |  <%= assignment.job_title.titleize %><p>Pay: <%= assignment.pay_rate %> | Bill:  <%= assignment.bill_rate %>  | Mark-up: <%= assignment.mark_up.round(2) %></p>
+
+<% end %>

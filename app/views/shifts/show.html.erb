@@ -22,10 +22,10 @@
 
 
 <p>
-  <strong>Company: </strong> <%= @shift.company %>    | <strong>Job Title: </strong><%= @shift.assignment.job_order.job_title %>
+  <strong>Company: </strong> <%= @shift.company %>    | <strong>Job Title: </strong><%= @assignment.job_title.titleize %>
 </p>
 <p>
-  <strong>Pay Rate: </strong> <%= @shift.pay_rate %>  |  <strong>Bill Rate: </strong> <%= @shift.bill_rate %>
+  <strong>Pay Rate: </strong> <%= number_to_currency(@shift.pay_rate, :unit => "$") %>  |  <strong>Bill Rate: </strong> <%= number_to_currency(@shift.bill_rate, :unit => "$") %>
 </p>
         
   <div>
@@ -44,15 +44,18 @@
 
   <strong>State:</strong>
   <span id="shift-state">
-  <%= @shift.state %>
+  <%= @shift.state.titleize %>
 </span>
 <hr>
+
 <% if @shift.clocked_out? %>
-<p> You are currently <strong> <%= @shift.state %> </strong> . </p>
-<% else %>
+<p> You are currently <strong> <%= @shift.state.titleize %> </strong> . </p>
+<% end %>
+
+<% if @employee.is_clocked_in? %>
 <div id="clock-out-button">
-  <button type="button" class="btn btn-primary btn-lg"> 
-  <%= link_to 'Clock Out', clock_out_assignment_shift_path(@shift.assignment, @shift), method: :patch, remote: true, data: {confirm: 'Are you sure you want to clock out now?', disable_with: "Clocking Out..."} %>
+  <button type="button" class="btn btn-default btn-lg"> 
+  <%= link_to 'Clock Out', clock_out_assignment_shift_path(@assignment, @shift), method: :patch, remote: true, data: {confirm: 'Are you sure you want to clock out now?', disable_with: "Clocking Out..."} %>
   </button>
 </div>
 <% end %>
@@ -60,7 +63,7 @@
 
 
 
-<%= link_to 'Edit', edit_assignment_shift_path(@shift.assignment, @shift) %> |
+<%= link_to 'Edit', edit_assignment_shift_path(@assignment, @shift) %> |
 <%= link_to 'Back', assignment_shifts_path %>
 
       

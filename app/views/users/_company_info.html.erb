@@ -1,0 +1,48 @@
+<!-- COMPANY PROFILE INFO -->
+<!--JOB ORDER BUTTON DROPDOWN-->
+<div class="btn-group">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+    <span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>  Active Job Orders <span class="caret"></span>
+  </button>
+  
+  <ul class="dropdown-menu" role="menu">
+  <% @profile.job_orders.active.each do |job_order| %>
+    <li><span></span> <%= link_to job_order.job_title, company_profile_job_order_path(@profile, job_order) %></li>
+  <% end %>
+  </ul>
+</div>
+<!---->
+<!---->
+
+
+<!--CURRENT EMPLOYEES BUTTON DROPDOWN-->
+<div class="btn-group">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+    <span class="glyphicon glyphicon-user" aria-hidden="true"></span> Current Employees <span class="caret"></span>
+  </button>
+  
+  <ul class="dropdown-menu" role="menu">
+  <% @profile.assignments.each do |assignment| %>
+    <li> <%= link_to assignment.employee_profile.name, assignment.employee_profile %></li>
+  <% end %>
+  </ul>
+</div>
+<!---->
+<!---->
+
+<!--TIMESHEETS BUTTON DROPDOWN-->
+<div class="btn-group">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+    <span class="glyphicon glyphicon-time" aria-hidden="true"></span>  Current Timesheets <span class="caret"></span>
+  </button>
+  
+  <ul class="dropdown-menu" role="menu">
+  <% @profile.timesheets.current.each do |timesheet| %>
+    <li><span></span> <%= link_to timesheet.job_title, timesheet_path(timesheet) %></li>
+  <% end %>
+  </ul>
+</div>
+<button type="button" class="btn btn-default"></span><%= link_to "New Job Order", new_company_profile_job_order_path(@user.profile) %></button>
+</div>
+<!---->
+<!---->

@@ -3,17 +3,17 @@ class CompanyProfilesController < ApplicationController
   # load_and_authorize_resource
   
   def new
-      # @company = CompanyProfile.new
+      @company_profile = CompanyProfile.new
       # # @company.build_user
   end
     
   def create
-      # @company = CompanyProfile.create(company_profile_params)
+      @company_profile = CompanyProfile.create(company_profile_params)
       # @company.build_user
 
-      if @company.save
+      if @company_profile.save
         flash[:info] = "Company Profile was created!!"
-        redirect_to @company
+        redirect_to @company_profile
       else
         render 'new'
       end
@@ -21,12 +21,15 @@ class CompanyProfilesController < ApplicationController
     
   def index
     @q = CompanyProfile.search(params[:q])
-    @company_profiles = @q.result.includes(:job_orders).page(params[:page]).to_a.uniq
+    @company_profiles = @q.result.includes(:job_orders).limit(10).to_a.uniq
   end
 
   def show
-    @company = CompanyProfile.find(params[:id])
-    # @job_orders = @company.job_orders
+    @company_profile = CompanyProfile.find(params[:id])
+    @profile = current_user.profile
+    @job_orders = @company_profile.job_orders
+    @assignments = @company_profile.assignments
+    @users = @company_profile.users.all.paginate(page: params[:page])
   end
 
 
@@ -45,16 +48,19 @@ class CompanyProfilesController < ApplicationController
   end
 
   def update
-    # @company = CompanyProfile.find(params[:id])
-    if @company.update(company_profile_params)
+    @company_profile = CompanyProfile.find(params[:id])
+    
+    if @company_profile.update(company_profile_params)
       redirect_to company_profiles_path, notice: "The company_profile has been updated"
     end
   end
 
-#   def destroy
-#     @company = CompanyProfile.find(params[:id])
-#     @company.destroy
-#   end
+  def destroy
+    @company = CompanyProfile.find(params[:id])
+    @company.destroy
+    flash[:success] = "Company deleted"
+    redirect_to company_profiles_path
+  end
 private
  
 # def set_profile

@@ -24,7 +24,7 @@
 </aside>
 
 <div class="col-md-8">
-<table class="table">
+<table id="timesheets-table" class="table">
   <thead>
     <tr>
       <th><%= sort_link(@q, :week, 'Week', default_order: :desc) %></th>
@@ -35,7 +35,6 @@
       <th>Overtime Hours</th>
       <th>Gross Pay</th>
       <th>Gross Bill</th>
-      <th colspan="4"></th>
     </tr>
   </thead>
 
@@ -44,18 +43,13 @@
 
       <tr>
         <td><%= timesheet.week %></td>
-        <td><%= timesheet.employee.name %></td>
+        <td><%= link_to timesheet.employee, timesheet.employee_profile %></td>
         <td><%= timesheet.company %></td>
-        <td id="timesheet-status"><%= timesheet.state %></td>
+        <td><%= timesheet.state.titleize %></td>
         <td><%= timesheet.reg_hours.round(2).to_f %></td>
         <td><%= timesheet.ot_hours.round(2).to_f  %></td>
         <td><%= number_to_currency(timesheet.gross_pay, :unit => "$") %></td>
         <td><%= number_to_currency(timesheet.gross_bill, :unit => "$") %></td>
-
-        <td><button id="approve-button"><%= link_to 'Approve', approve_timesheet_path(timesheet), remote: true, method: :patch %></button></td>
-        <td><%= link_to 'Show', timesheet %></td>
-        <td><%= link_to 'Edit', edit_timesheet_path(timesheet) %></td>
-        <td><%= link_to 'Destroy', timesheet, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>

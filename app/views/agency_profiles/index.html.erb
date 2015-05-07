@@ -1,13 +1,13 @@
 <h2 class="sub-header">All Agencies</h2>
 
 <div class="table-responsive">
-<table class="table table-striped">
+<table class="table table-hover">
   <thead>
     <tr>
       <th>Agency Name</th>
-      <th>Company ID | Admin_User ID</th>
-      <th>Company Admin Name | Company Admin Email</th>
-      <th>Created</th>
+      <th>Agency ID </th>
+      <th>Agency Users Count</th>
+      <th>Created At</th>
     
 
       <th colspan="3"></th>
@@ -19,9 +19,9 @@
   <% @agency_profiles.each do |agency| %>
 
       <tr>
-        <td><%= agency.name %></td>
-        <td><%= agency.id %>        |       <%= agency.user.id %></td>
-        <td><%= agency.user.name %> | <%= agency.user.email %></td>
+        <td><%= link_to agency.name, agency %></td>
+        <td><%= agency.id %></td>
+        <td><%= agency.users.count %></td>
         <td><%= time_ago_in_words(agency.created_at) %></td>
         
         <td><%= link_to 'Show', agency %></td>
@@ -30,4 +30,5 @@
  
   </tbody>
 </table>
+<%= link_to 'Add New Agency', new_agency_profile_path, class: "btn btn-primary" %>
 </div>

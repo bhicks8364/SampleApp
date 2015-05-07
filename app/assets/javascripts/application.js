@@ -15,8 +15,10 @@
 //= require angular-resource
 //= require jquery
 //= require jquery_ujs
-//= require cocoon
 //= require bootstrap
+//= require dataTables/jquery.dataTables
+//= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
+//= require cocoon
 //= require lodash
 //= require restangular
 //= require_tree ../templates

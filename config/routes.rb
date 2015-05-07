@@ -5,9 +5,14 @@ Rails.application.routes.draw do
     resources :shifts, defaults: {format: :json}
   end
   
-  resources :agency_profiles
+  resources :agency_profiles do
+    member do
+      patch :add_user
+    end
+  end
+  get    'job_orders'    => 'job_orders#search'
   resources :job_orders do
-    collection { post :search, to: 'job_orders#index' }
+    collection { post :search, to: 'job_orders#search' }
   end
 
   resources :timesheets do
@@ -29,7 +34,7 @@ Rails.application.routes.draw do
 
   # resources :job_orders
 
-  root                'static_pages#help'
+  root                'static_pages#home'
   get    'help'    => 'static_pages#help'
   get    'about'   => 'static_pages#about'
   get    'dashboard' => 'static_pages#dashboard'

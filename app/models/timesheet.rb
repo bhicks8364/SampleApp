@@ -20,21 +20,25 @@
 #
 
 class Timesheet < ActiveRecord::Base
-  belongs_to :assignment
+  belongs_to :assignment, -> { includes :job_order }
   has_many :shifts
   
   validates_associated :assignment
   
   scope :shifts_states, -> {
-    joins(:shifts).merge(Shift.state_count)
+    joins(:shifts).merge(Shift.by_state)
   }
+  
+  scope :approved, -> { with_state(:approved) }
+  scope :current, -> { where(week: Date.today.cweek) }
 
   
   
   delegate :employee, to: :assignment
-  delegate :company, to: :assignment
+
   delegate :pay_rate, to: :assignment
   delegate :bill_rate, to: :assignment
+  delegate :job_title, to: :assignment
 
   
   
@@ -44,6 +48,7 @@ class Timesheet < ActiveRecord::Base
   before_create :set_defaults
   
   before_save :calculate_totals, :total_pay, :total_ot, :total_bill
+  after_save :update_company_balance!, :if => :approved?
   
   state_machine :state, :initial => :submitted do
     event :approve do
@@ -55,7 +60,13 @@ class Timesheet < ActiveRecord::Base
   end
   
   
-  
+  def current?
+    if self.shifts.clocked_in.any?
+      true
+    else
+      false
+    end
+  end
   
   
   
@@ -113,10 +124,38 @@ class Timesheet < ActiveRecord::Base
     self.gross_bill = 0
     # self.save
   end
+  def company_profile
+    self.assignment.company_profile
+  end
+  def company
+    if self.assignment != nil
+      self.assignment.company_profile.name
+    else
+      "No Assignment"
+    end
+
+  end
+  def employee_profile
+    if self.assignment != nil
+      self.assignment.employee_profile
+    else
+      "No Assignment"
+    end
+  end
   
-  # def self.company
-  #   self.assignment.company_profile
-  # end
+  def employee
+    if self.assignment != nil
+      self.assignment.employee_profile.name
+    else
+      "No Assignment"
+    end
+  end
+  
+  def update_company_balance!
+    self.company_profile.update_balance!
+  end
+  
+
   
   # def self.employee
   #   self.assignment.employee_profile

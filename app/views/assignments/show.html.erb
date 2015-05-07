@@ -1,20 +1,25 @@
 <p id="notice"><%= notice %></p>
  
- <% if @assignment.shifts.where(state: "clocked_in").any? %>
- <h3> You are currently clocked in to this assignment! </h3>
- <button class="btn-large">
-  <%= link_to @shift.created_at.strftime("%A - %m / %d "), assignment_shift_path(@assignment, @shift) %>
-</button>
- <% @assignment.shifts.where(state: "Clocked In").each do |shift| %>
-   <ul>
-     <li><strong>Clocked In: </strong><%= shift.time_in.strftime("%B %e, %Y at %I:%M %p") %></li>
-   </ul>
-   <% end %>
+
+ <% if @employee.is_clocked_in? %>
+   <h3> You are currently clocked in as a <%= link_to @employee.current_shift.assignment.job_order.job_title.titleize, assignment_shift_path(@employee.current_assignment, @employee.current_shift) %> ! </h3>
+   <p>Company: <%= @employee.current_assignment.company %></p>
+
  <% else %>
-<button class="btn-large">
-  <%= link_to "New Shift", new_assignment_shift_path(@assignment) %>
-</button>
-<% end %>
+   <button class="btn-large">
+      <%= link_to "New Shift", new_assignment_shift_path(@assignment) %>
+    </button>
+  <% end %>
+  <% if @shifts.any?  %>
+
+     <% @shifts.each do |shift| %>
+       <ul>
+         <li><strong>Clocked In: </strong><%= shift.time_in.strftime("%B %e, %Y at %I:%M %p") %></li>
+       </ul>
+     <% end %>
+    <% end %>
+
+
 
 
 
@@ -25,7 +30,7 @@
 
 <p>
   <strong>Employee profile:</strong>
-  <%= link_to @assignment.employee.name, user_path(@assignment.employee.user) %>
+  <%= link_to @assignment.employee.name, employee_profile_path(@employee) %>
 </p>
 <div class="btn-group" role="group" aria-label="...">
   <button type="button" class="btn btn-default"><%= link_to "All Shifts", assignment_shifts_path(@assignment) %></button>
@@ -39,7 +44,7 @@
 
 <p>
   <strong>Job title:</strong>
-  <%= @assignment.job_title %>
+  <%= @assignment.job_title.titleize %>
 </p>
 <p>
   <strong>Company</strong>
@@ -59,11 +64,11 @@
 
 <p>
   <strong>Total Regular Hours</strong>
-  <%= @assignment.total_reg_hours %>
+  <%= @assignment.total_reg_hours.round(2) %>
 </p>
 <p>
   <strong>Total Overtime Hours</strong>
-  <%= @assignment.total_ot_hours %>
+  <%= @assignment.total_ot_hours.round(2) %>
 </p>
 
 
@@ -134,19 +139,11 @@ This Assignment has no timesheets.
       <div class="panel-body">
         <ul>
           <li>
-             <h3>Timesheet Status: </h3<strong><%= timesheet.state %></strong>
-          </li>
-          <li>
-             <h3>Regular Hours: </h3><strong><%= timesheet.reg_hours %></strong>
-          </li>
-          <li>
-             <h3>Overtime Hours: </h3><strong><%= timesheet.ot_hours %></strong>
-          </li>
-          <li>
-             <h3>Total Pay: </h3><strong><%= number_to_currency(timesheet.total_pay, :unit => "$") %></strong>
-          </li>
-           <li>
-             <h3>Total Bill: </h3><strong><%= number_to_currency(timesheet.total_bill, :unit => "$") %></strong>
+             <small>Timesheet Status: <strong><%= timesheet.state.titleize %></strong></small>
+             <h3><strong>Regular Hours: <%= timesheet.reg_hours.round(2) %> |  Overtime Hours: <%= timesheet.ot_hours.round(2) %></strong></h3>
+             <h3><strong>Total Pay:<%= number_to_currency(timesheet.total_pay, :unit => "$") %> | Total Bill: <strong><%= number_to_currency(timesheet.total_bill, :unit => "$") %></strong></h3>
+             <p>Pay Rate: <%= number_to_currency(timesheet.pay_rate, :unit => "$") %> | Bill Rate: <%= number_to_currency(timesheet.bill_rate, :unit => "$") %></p>
+             <p>Overtime Rate: <%= timesheet.ot_rate %> | Mark Up: <%= timesheet.mark_up.round(2) %></p>
           </li>
         </ul>
       </div>

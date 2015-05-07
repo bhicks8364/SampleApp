@@ -1,0 +1,35 @@
+
+<% if @assignments.any? %>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Job Title</th>
+      <th>Employee</th>
+      <th>Company</th>
+      <th>Pay rate</th>
+      <th>Bill rate</th>
+      <th colspan="2"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @assignments.each do |assignment| %>
+      <tr>
+
+        <td><span class=" <%= assignment.is_clocked_in? ? 'label-warning' : 'label-success' %>"></span><%= link_to assignment.state, assignment %></td>
+        <td><span class=" <%= assignment.is_clocked_in? ? 'label-warning' : 'label-success' %>"></span><%= link_to assignment.job_title, assignment %></td>
+        <td><span class=" <%= assignment.is_clocked_in? ? 'label-warning' : 'label-success' %>"></span><%= link_to assignment.employee.name, assignment.employee %></td>
+        <td><span class="label <%= assignment.is_clocked_in? ? 'label-warning' : 'label-success' %>"></span><%= link_to assignment.company, assignment.company_profile %></td>
+        <td><span class="label <%= assignment.is_clocked_in? ? 'label-warning' : 'label-success' %>"></span><%= number_to_currency(assignment.pay_rate, :unit => "$") %></td>
+        <td><span class="label <%= assignment.is_clocked_in? ? 'label-warning' : 'label-success' %>"></span><%= number_to_currency(assignment.bill_rate, :unit => "$") %></td>
+
+        <td><span class="label <%= assignment.is_clocked_in? ? 'label-warning' : 'label-success' %>"></span><%= link_to 'Edit', edit_assignment_path(assignment) if can? :update, assignment %></td>
+        <td><span class="label <%= assignment.is_clocked_in? ? 'label-warning' : 'label-success' %>"></span><%= link_to 'Destroy', assignment, method: :delete, data: { confirm: 'Are you sure?' } if can? :destroy, assignment %></td>
+
+      </tr>
+        <% end %>
+  </tbody>
+</table>
+<% else %>
+No Assignments
+<% end %>

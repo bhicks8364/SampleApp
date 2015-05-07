@@ -1,0 +1,75 @@
+
+<!-- Left column -->
+
+            <ul class="sidebar-nav">
+                
+                <li class="sidebar-brand"><%= link_to '<i class="glyphicon glyphicon-home"> </i>  Profile '.html_safe, current_user.profile %></li>
+                
+                <% if current_user.company? %>
+                <li class="sidebar-brand"><%= link_to '<i class="glyphicon glyphicon-briefcase">  </i> Job Orders '.html_safe, company_profile_job_orders_path(current_user.profile) %></li>
+                <li class="sidebar-brand"><%= link_to '<i class="glyphicon glyphicon-time">  </i> Timesheets '.html_safe, timesheets_path %></li>
+                <li class="sidebar-brand"><%= link_to '<i class="glyphicon glyphicon-user">  </i> Employees '.html_safe, assignments_path if current_user.role == "Owner" %></li>
+                <% end %>
+                
+                <% if current_user.agency? %>
+                <li class="sidebar-brand"><%= link_to '<i class="glyphicon glyphicon-briefcase">  </i> Job Orders '.html_safe, job_orders_path %></li>
+                <li class="sidebar-brand"><%= link_to '<i class="glyphicon glyphicon-time">  </i> Timesheets '.html_safe, timesheets_path  %></li>
+                <li class="sidebar-brand"><%= link_to '<i class="glyphicon glyphicon-time">  </i> Employees '.html_safe, employee_profiles_path  %></li>
+                <li class="sidebar-brand"><%= link_to '<i class="glyphicon glyphicon-user">  </i> Assignments '.html_safe, assignments_path if current_user.role == "Owner" %></li>
+                <li class="sidebar-brand"><%= link_to '<i class="glyphicon glyphicon-briefcase">  </i> Companies '.html_safe, company_profiles_path if current_user.role == "Owner" %></li>
+                <% end %>
+                
+                <% if current_user.employee? %>
+                <li class="sidebar-brand"><%= link_to '<i class="glyphicon glyphicon-time">  </i> Timesheets '.html_safe, timesheets_path  %></li>
+                <li class="sidebar-brand"><%= link_to '<i class="glyphicon glyphicon-user">  </i> Assignments '.html_safe, assignments_path %></li>
+                <li class="sidebar-brand"><%= link_to '<i class="glyphicon glyphicon-briefcase">  </i> Companies '.html_safe, company_profiles_path %></li>
+                <% end %>
+
+            </ul>
+
+            <!--<ul class="sidebar-nav">-->
+                <!--<li class="sidebar-brand"> <a href="#" data-toggle="collapse" data-target="#menu2"> Reports <i class="glyphicon glyphicon-chevron-right"></i></a>-->
+
+            <!--        <ul class="nav nav-stacked collapse" id="menu2">-->
+            <!--            <li class="sidebar-brand"></li>-->
+            <!--            <li><a href="#"><i class="glyphicon glyphicon-envelope"></i> Messages <span class="badge badge-info">4</span></a></li>-->
+            <!--            <li><a href="#"><i class="glyphicon glyphicon-cog"></i> Options</a></li>-->
+            <!--            <li><a href="#"><i class="glyphicon glyphicon-comment"></i> Shoutbox</a></li>-->
+            <!--            <li><a href="#"><i class="glyphicon glyphicon-user"></i> Users</a></li>-->
+            <!--            <li><a href="#"><i class="glyphicon glyphicon-flag"></i> Transactions</a></li>-->
+            <!--            <li><a href="#"><i class="glyphicon glyphicon-exclamation-sign"></i> Rules</a></li>-->
+            <!--            <li><a href="#"><i class="glyphicon glyphicon-off"></i> Logout</a></li>-->
+            <!--        </ul>-->
+            <!--    </li>-->
+            <!--    <li class="nav-header">-->
+                    <!--<a href="#" data-toggle="collapse" data-target="#menu3"> Social Media <i class="glyphicon glyphicon-chevron-right"></i></a>-->
+            <!--        <ul class="nav nav-stacked collapse" id="menu3">-->
+            <!--            <li><a href=""><i class="glyphicon glyphicon-circle"></i> Facebook</a></li>-->
+            <!--            <li><a href=""><i class="glyphicon glyphicon-circle"></i> Twitter</a></li>-->
+            <!--        </ul>-->
+            <!--    </li>-->
+            <!--</ul>-->
+
+
+
+
+            <!--<hr>-->
+            <!--<ul class="nav nav-stacked">-->
+            <!--    <li class="active"><a href="http://bootply.com" title="The Bootstrap Playground" target="ext">Playground</a></li>-->
+            <!--    <li><a href="/tagged/bootstrap-3">Bootstrap 3</a></li>-->
+            <!--    <li><a href="/61518" title="Bootstrap 3 Panel">Panels</a></li>-->
+            <!--    <li><a href="/61521" title="Bootstrap 3 Icons">Glyphicons</a></li>-->
+            <!--    <li><a href="/62603">Layout</a></li>-->
+            <!--</ul>-->
+
+            <!--<hr>-->
+
+            <!--<a href="#"><strong><i class="glyphicon glyphicon-list"></i> More Templates</strong></a>-->
+
+            <!--<hr>-->
+
+            <!--<ul class="nav nav-stacked">-->
+            <!--    <li class="active"><a rel="nofollow" href="http://goo.gl/pQoXEh" target="ext">Premium Themes</a></li>-->
+            <!--    <li><a rel="nofollow" href="https://wrapbootstrap.com/?ref=bootply">Wrap Bootstrap</a></li>-->
+            <!--    <li><a rel="nofollow" href="http://bootstrapzero.com">BootstrapZero</a></li>-->
+            <!--</ul>-->

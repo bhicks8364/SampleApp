@@ -2,13 +2,25 @@
 <div class="page-header">
   <h3><%= @employee_profile.name %> <small>Employee</small></h3>
 </div>
-
-
-
-<% if @assignments %>
-<%= render 'assignments/table' %>
+<% if @employee_profile.current_timesheet %>
+    <div class="page-header">
+      <h3>Pay this week: <%= number_to_currency(@employee_profile.current_timesheet.gross_pay, :unit => "$") %> </h3>
+    </div>
+<% else %>
+<p>No timesheet for this week.</p>
+<% end %>
+<% if @employee_profile.timesheets.any? %>
+Your last timesheet was for the week of: <%= link_to @employee_profile.timesheets.last.created_at.strftime("%A - %m / %d "), timesheet_path(@employee_profile.timesheets.last) %>
 <% end %>
 
+
+<h3>All Assignments</h3>
+<% if @assignments %>
+<%= render 'assignments_table' %>
+<% end %>
+
+
+<h3>All Timesheets</h3>
 <% if @timesheets %>
 <%= render 'timesheets/table' %>
 <% end %>

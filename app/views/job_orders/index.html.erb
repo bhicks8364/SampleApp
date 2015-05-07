@@ -1,3 +1,4 @@
+<% if @q %>
 <div class= "row">
 <div class="col-md-2">
   <%= search_form_for @q, url: search_job_orders_path, method: :post do |f| %>
@@ -27,7 +28,7 @@
 <% end %>
 
 
-
+<% end %>
 
 
 <div class="col-md-6">

@@ -1,0 +1,12 @@
+<h3>Add a user to <%= @agency_profile.name %></h3>
+
+<%= simple_form_for @agency_profile do |f| %>
+
+  <div class="form-group">
+    <%= f.association :users, collection: @agency_profile.users, as: :check_boxes %>
+  </div>
+
+    <%= f.button :submit %>
+
+
+<% end %>

@@ -16,6 +16,8 @@ class EmployeeProfilesController < ApplicationController
   def show
     @employee_profile = EmployeeProfile.find(params[:id])
     @timesheets = @employee_profile.timesheets
+    @current_timesheet = @employee_profile.current_timesheet
+    
     # @q = Timesheet.search(params[:q])
     # @timesheets = @q.result.includes(:assignment, :shifts)
 
@@ -55,6 +57,8 @@ class EmployeeProfilesController < ApplicationController
   def destroy
     @employee = EmployeeProfile.find(params[:id])
     @employee.destroy
+    flash[:success] = "Employee deleted"
+    redirect_to employee_profiles_path
   end
 private
   def employee_profile_params

@@ -1,23 +1,30 @@
 class JobOrdersController < ApplicationController
 
-  # before_action :set_job_order, only: [:show, :edit, :update, :destroy]
+  before_action :set_job_order, only: [:show, :edit, :update, :destroy]
 # load_and_authorize_resource :company_profile
 # load_and_authorize_resource :job_order, :through => :company_profile
   # GET /job_orders
   # GET /job_orders.json
-  def index
-    # @company = CompanyProfile.find(params[:company_profile_id])
-    # @job_orders = @company.job_orders
+  def search
     @q = JobOrder.search(params[:q])
     @job_orders = @q.result.includes(:company_profile, :timesheets)
     @q.build_condition if @q.conditions.empty?
     @q.build_sort if @q.sorts.empty?
   end
+  
+  def index
+    @company_profile = CompanyProfile.find(params[:company_profile_id])
+    @job_orders = @company_profile.job_orders.newest_first
+  end
 
   # GET /job_orders/1
   # GET /job_orders/1.json
   def show
+    # @company_profile = CompanyProfile.find(params[:company_profile_id])
+    @job_order = JobOrder.find(params[:id])
     @assignments = @job_order.assignments
+    @timesheets = @job_order.timesheets.where(week: Date.today.cweek)
+    @company_profile = @job_order.company_profile
     # @user = @assignment.employee_profile.user
   end
 
@@ -44,14 +51,15 @@ class JobOrdersController < ApplicationController
   def create
     @company = CompanyProfile.find(params[:company_profile_id])
     agency = AgencyProfile.find(1)
-    @job_order = @company.job_orders.create(job_order_params)
+    @job_order = @company.job_orders.build(job_order_params)
     @job_order.agency_profile = agency
+    @job_order.save
     # @job_order.assignments.build
 
 
     respond_to do |format|
       if @job_order.save
-        format.html { redirect_to [@job_order.company_profile, @job_order], notice: 'Job order was successfully created.' }
+        format.html { redirect_to company_profile_path(@company, anchor: "job_order_#{@job_order.id}"), notice: 'Job order was successfully created.' }
         format.json { render :show, status: :created, location: @job_order }
         format.js
       else
@@ -79,9 +87,10 @@ class JobOrdersController < ApplicationController
   # DELETE /job_orders/1
   # DELETE /job_orders/1.json
   def destroy
+    @company_profile = @job_order.company_profile
     @job_order.destroy
     respond_to do |format|
-      format.html { redirect_to job_orders_url, notice: 'Job order was successfully destroyed.' }
+      format.html { redirect_to company_profile_job_orders_url(@company_profile), notice: 'Job order was successfully destroyed.' }
       format.json { head :no_content }
     end
   end

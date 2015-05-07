@@ -5,7 +5,7 @@
   <%= link_to @timesheet.company, company_profile_path(@timesheet.assignment.job_order.company_profile_id) %>
   <br>
   <strong>Employee:</strong>
-  <%= @timesheet.employee.name %>
+  <%= link_to @timesheet.employee, @timesheet.employee_profile %>
   <br>
   <p>
   <strong>Current State:</strong>

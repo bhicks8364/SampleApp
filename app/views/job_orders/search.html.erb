@@ -1,0 +1,49 @@
+<% if @q %>
+<div class= "row">
+<div class="col-md-2">
+  <%= search_form_for @q, url: search_job_orders_path, method: :post do |f| %>
+  <div class="field">
+        <h3><small>Search by:</small></h3>
+  <%= f.condition_fields do |c| %>
+  
+    <%= render "condition_fields", f: c %>
+  <% end %>
+  <br>
+  <p><%= link_to_add_fields "Add Conditions", f, :condition %></p>
+  <hr>
+  <div class="actions"><%= f.submit "Search" %></div>
+  </div>
+</div>
+
+<div class="col-md-2">
+  <div class="field">
+    <h3><small>Sort by:</small></h3>
+    <%= f.sort_fields do |s| %>
+      <%= s.sort_select %>
+    <% end %>
+  </div>
+
+</div>
+
+<% end %>
+
+
+<% end %>
+
+
+<div class="col-md-6">
+
+
+
+<h1><small>Job Orders</small></h1>
+<% @job_orders.each do |job_order| %>
+    <%= div_for job_order do %>
+        <p>Job Title: <%= link_to job_order.job_title, job_order_path(job_order) %> | Current Status: <%= job_order.state %></p>
+        <p><%= job_order.needed %> |  <%= job_order.assignments.count %></p>
+        <p><%= job_order.needs_attention? %> |  <%= job_order.asap? %></p>
+    <% end %>
+<% end %>
+</div>
+
+
+</div>
