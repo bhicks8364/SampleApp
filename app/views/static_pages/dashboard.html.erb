@@ -8,64 +8,36 @@
 
              
 <% if @user.employee? %>
-<div class="job-order-buttons">
-  <% @job_orders.each do |job_order| %>
-<!-- Button trigger modal -->
-<%= tag("button", type: 'button',  class: ["btn", "btn-default", "btn-xs"], data: {toggle: 'modal', target: job_order.id}) %>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Panel title</h3>
+  </div>
+  <div class="panel-body">
+    <div class="btn-group">
+    <!--Active Job Orders-->
+    <% @job_orders.each do |job_order| %>
+    <!--Job Order Modal Buttons-->
 
-<%= job_order.job_title %>
-</button>
-
-
-
-
-
+    <% if job_order.needs_attention? %>
+        <button class="btn btn-danger" data-toggle="modal" data-target="#job-order-<%= job_order.id %>-description">
+           <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>  <%= job_order.job_title %>
+        </button>
+    <% else %>
+        <button class="btn btn-default" data-toggle="modal" data-target="#job-order-<%= job_order.id %>-description">
+           <%= job_order.job_title %>
+        </button>
+    <% end %>
+    
+  
+    
+    <%= render partial: 'shared/jo_modal', locals: {job_order: job_order} %>
+    <% end %>
+  </ul>
 </div>
-
-
-<!-- Modal -->
-
-<%= tag("div", class: ["modal", "fade"], id: job_order.id, tabindex: "-1", role: "dialog", :aria => {:labelledby => "#{job_order.job_title}", :hidden => "true"}) do %>
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <%= tag("h4", class: "modal-title", id: job_order.id) do %>
-        <%= job_order.job_title %></h4>
-        <% end %>
-      </div>
-      <div class="modal-body">
-        <p><strong>Job Title:</strong> <%= link_to job_order.job_title, company_profile_job_orders_path(job_order.company_profile, job_order) %> | Current Status: <%= job_order.state.titleize %></p>
-        <p>People Needed: <%= job_order.needed %> | Currently Assigned: <%= job_order.assignments.count %></p>
-        <% if job_order.assignments.any? %>
-        <ol>
-        <% job_order.assignments.each do |assignment| %>
-        
-            <strong><li>Employee: <%= link_to assignment.employee.name, assignment.employee %>  </strong><br>
-            <small>Number of Shifts: <%= assignment.shifts.count %> | Date Assigned: <%= assignment.created_at.strftime("%m / %d ") %>
-            <br>Hours Today: <%= assignment.hours_today %> | Hours Last Week: <%= assignment.hours_last_week.round(2) %>
-            </small><button><%= link_to "View Assignment", assignment %></button>
-            </li>
-            <br>
-            <% end %>
-        </ol>
-
-        
-        <p>Needs Attention: <%= job_order.needs_attention? %>    |     ASAP Order?:  <%= job_order.asap? %></p>
-      </div>
-      <div class="modal-footer">
-
-      </div>
-    </div>
   </div>
 </div>
-<% end %>
-<% end %>
 
 <% end %>
-  <% end %>
-
-
 
 
 

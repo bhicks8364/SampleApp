@@ -15,6 +15,8 @@ class AgencyProfile < ActiveRecord::Base
     has_many :assignments, through: :job_orders
     has_many :timesheets, through: :assignments
     has_many :company_profiles, through: :job_orders
+    has_many :account_managers, -> { where role: 'Account Manager' }, class_name: "User", foreign_key: "profile_id"
+    has_one :owner, -> { where role: 'Owner' }, class_name: "User", foreign_key: "profile_id"
     
     accepts_nested_attributes_for :users
 

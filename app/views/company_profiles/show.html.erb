@@ -14,56 +14,43 @@
                 <p> No Company Admin has been assigned </p>
                 <% end %>
             </div>
-    </div>
+          </div>
+        </div>
+
+
+
+
+  <div class="btn-group">
+    <% @job_orders.each do |job_order| %>
+    <button class="btn btn-link" data-toggle="modal" data-target="#job-order-<%= job_order.id %>-description">
+   <%= job_order.job_title %>
+  </button>
+    <%= render partial: 'shared/jo_modal', locals: {job_order: job_order} %>
+    <% end %>
+  </ul>
 </div>
 
-    <% if @job_orders.any? %>
-  <div class="col-md-6">
-      <h3>Active Job Orders</h3>
-    <ul class="list-group">
-        <% @company_profile.job_orders.active.limit(5).each do |job_order| %>
-
-      <%= render partial: 'job_order', locals: {job_order: job_order} %>
-    </ul>
-      <% end %>
-
-    <% end %>
-
 <hr>
+</div>
 
-    <% if @assignments.any? %>
+
     
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h4><%= @company_profile.name %>'s Employees</h4>
-        </div>
-        <div class="panel-body">
-            <ul class="list-group">
-              <% @company_profile.assignments.each do |assignment| %>
-                  <%= render partial: 'assignments/list', locals: {assignment: assignment} %>
-              <% end %>
-            </ul>
-        </div>
-      </div>
-       <% end %> 
-    
-      <div class="panel panel-default">
-        <div class="panel-heading">
+
+
           <h4><%= @company_profile.name %>'s Users</h4>
          </div>
         <div class="panel-body">
             <ul class="list-group">
               <% @company_profile.users.each do |user| %>
-                  <%= render partial: 'user', locals: {user: user} %>
+                  <li><%= user.name %> | <%= user.role %></li>
               <% end %>
             </ul>
         </div>
       </div>
-  </div>
+
     
     
     
-</div>
     
     
 

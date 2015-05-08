@@ -13,7 +13,8 @@ class CompanyProfile < ActiveRecord::Base
     has_many :job_orders
     has_many :assignments, through: :job_orders
     has_many :timesheets, through: :assignments
-    # has_one :user, as: :profile
+    has_many :employee_profiles, through: :assignments
+    has_one :owner, -> { where role: 'Owner' }, class_name: "User", foreign_key: "profile_id"
     has_many :users, as: :profile, class_name: 'User'
     accepts_nested_attributes_for :users
     accepts_nested_attributes_for :job_orders
@@ -21,7 +22,8 @@ class CompanyProfile < ActiveRecord::Base
     # validates_associated :user
     
     # CompanyProfile.joins(job_orders: [{assignments: :employee_profile }, :assignments]).first
-
+    scope :with_active_orders, -> { joins(:job_orders).merge(JobOrder.active)}
+    
     
     def self.employees
         self.assignments

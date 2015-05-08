@@ -1,12 +1,9 @@
-<%= form_for @company_profile do |f| %>
-  <div class="form-group">
-    <%= f.label :company_name %>
-    <%= f.text_field :company_name, class: "form-control", placeholder: "Company Name" %>
-  </div>
-    
-  <br>
-  <div class="form-group">
-    <%= f.submit class: "btn btn-primary" %>
-  </div>
+<form>
+  <%= simple_form_for @company_profile do |f| %>
+  <%= f.input :company_name %>
+  <%= f.association :company %>
+  <%= f.association :roles %>
+  <%= f.button :submit %>
 <% end %>
+</form>
 

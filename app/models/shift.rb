@@ -20,7 +20,7 @@
 #
 
 class Shift < ActiveRecord::Base
-  belongs_to :timesheet, touch: true
+  belongs_to :timesheet, -> { includes :job_order }
   belongs_to :assignment
   
   validates_associated :timesheet

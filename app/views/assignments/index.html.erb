@@ -1,6 +1,9 @@
 <h3>All assignments</h3>
+<div class="row">
+  <button><%= link_to 'New Assignment', new_assignment_path, :remote => true, :id => "new_assignment_link" %></button>
+</div>
 
-<button><%= link_to 'New Assignment', new_assignment_path, :remote => true, :id => "new_assignment_link" %></button>
+<hr>
 <div class="col-md-8">
 <table id="assignments-table" class="table">
   <thead>

@@ -14,9 +14,14 @@
 #  needed             :integer
 #  asap               :boolean          default(FALSE)
 #  agency_profile_id  :integer
+#  est_pay            :decimal(, )
+#  est_bill           :decimal(, )
+#  acct_manager_id    :integer
+#  type               :string
 #
 # Indexes
 #
+#  index_job_orders_on_acct_manager_id     (acct_manager_id)
 #  index_job_orders_on_agency_profile_id   (agency_profile_id)
 #  index_job_orders_on_company_profile_id  (company_profile_id)
 #  index_job_orders_on_state               (state)
@@ -35,9 +40,9 @@ class JobOrder < ActiveRecord::Base
   accepts_nested_attributes_for :employee_profiles
   scope :active, -> { where(active: true)}
   scope :asap, -> { where(asap: true)}
-  scope :by_fill_date, lambda { order("job_orders.fill_date DESC") }
-  scope :by_company, lambda { order("job_orders.company_profile DESC") }
-  scope :newest_first, -> { order("job_orders.created_at DESC") }
+  scope :by_fill_date, lambda { order("fill_date DESC") }
+  scope :by_company, lambda { order("company_profile DESC") }
+  scope :newest_first, -> { order("created_at DESC") }
   
   
   state_machine :state, :initial => :submitted do
@@ -47,6 +52,11 @@ class JobOrder < ActiveRecord::Base
 
     
   end
+  
+  def self.latest_order
+    order('created_at desc').first
+  end
+  
   def needs_attention?
     if self.needed > self.assignments.count
       true

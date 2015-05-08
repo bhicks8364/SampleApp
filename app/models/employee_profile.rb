@@ -3,12 +3,13 @@
 # Table name: employee_profiles
 #
 #  id             :integer          not null, primary key
+#  employee_name  :string(255)
 #  ssn            :string(255)
 #  w2_box5        :integer
 #  marital_status :string(255)
 #  created_at     :datetime
 #  updated_at     :datetime
-#  employee_name  :string(255)
+
 #
 
 class EmployeeProfile < ActiveRecord::Base
@@ -17,14 +18,21 @@ class EmployeeProfile < ActiveRecord::Base
     has_many :shifts, through: :assignments
     has_many :job_orders, through: :assignments
     has_one :user, as: :profile
+    has_one :current_shift, -> { where state: 'clocked_in' }, class_name: "Shift", foreign_key: "employee_profile_id"
+    scope :with_active_orders, -> { joins(:job_orders).merge(JobOrder.active)}
     
     
     
     accepts_nested_attributes_for :user
-    accepts_nested_attributes_for :job_orders
+    # accepts_nested_attributes_for :job_orders
     accepts_nested_attributes_for :assignments
     
     validates_associated :user
+    
+    delegate :email, to: :user
+    delegate :role, to: :user
+    
+    scope :on_shift, -> { joins(:shifts).merge(Shift.clocked_in)}
 
     
     def last_assignment_timesheets

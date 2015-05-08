@@ -33,10 +33,27 @@ USER COUNT: <%= @agency_profile.users.count %> <hr>
     <div class="panel panel-default">
         <div class="panel-heading"><h4><%= @agency_profile.name %>'s Active Job Orders</h4></div>
             <div class="panel-body">
-                <div class="list-group">
-                <% @agency_profile.job_orders.active.limit(5).each do |job_order| %>
-                  <%= render partial: 'job_order', locals: {job_order: job_order} %>
+            <div class="btn-group">
+                <% @agency_profile.job_orders.active.limit(10).each do |job_order| %>
+                <% if job_order.needs_attention? %>
+                    <button class="btn btn-danger" data-toggle="modal" data-target="#job-order-<%= job_order.id %>-description">
+                       <%= job_order.job_title %>
+                     </button>
+                
+                <% else %>
+                    <button class="btn btn-default" data-toggle="modal" data-target="#job-order-<%= job_order.id %>-description">
+                       <%= job_order.job_title %>
+                     </button>
+                
                 <% end %>
+     
+
+                    <%= render partial: 'shared/jo_modal', locals: {job_order: job_order} %>
+                    <% end %>
+
+            </div>
+
+<hr>
                 </div>
             </div>
         </div>

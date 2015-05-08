@@ -40,13 +40,15 @@ class Assignment < ActiveRecord::Base
   accepts_nested_attributes_for :shifts
   accepts_nested_attributes_for :timesheets
   
+  
+  scope :on_shift, -> { joins(:shifts).merge(Shift.clocked_in)}
+  scope :with_current_timesheets, -> { joins(:timesheets).merge(Timesheet.current)}
+  
+  
   def mark_up
     self.bill_rate / self.pay_rate
   end
   
-  # def self.current_timesheet
-  #   self.joins(:timesheets).merge(Timesheet.current).last
-  # end
   
   
   def set_defaults
@@ -91,6 +93,14 @@ class Assignment < ActiveRecord::Base
     else
       false
     end
+  end
+  
+  def most_recent_timesheet
+    self.timesheets.last
+  end
+  
+  def most_recent_shift
+    self.shifts.last
   end
   
   
