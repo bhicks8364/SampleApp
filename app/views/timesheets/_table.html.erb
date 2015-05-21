@@ -1,42 +1,41 @@
-
-
-<table  >
+<table id="timesheets-table" class="display" cellspacing="0" width="100%">
   <thead>
     <tr>
       <th>Week</th>
-      <th>Employee</th>
-      <th>Company</th>
+      <th>Employee Name</th>
+      <th>Company Name</th>
       <th>Status</th>
       <th>Regular Hours</th>
       <th>Overtime Hours</th>
+      <th> Pay</th>
+      <th> Bill</th>
       <th>Gross Pay</th>
       <th>Gross Bill</th>
-      <th colspan="4"></th>
+      <th>Delete</th>
     </tr>
   </thead>
 
   <tbody>
-    <% @timesheets.each do |timesheet| %>
-    <tr>
-<% content_tag(:td, timesheet, :class => ('success' if timesheet.current?)) %>
+    <%= content_tag_for(:tr, @timesheets) do |timesheet| %>
 
-        <td><%= link_to timesheet.employee, timesheet.employee_profile %></td>
-        <td><%= timesheet.week %></td>
-        <td><%= link_to timesheet.employee, timesheet.employee_profile %></td>
-        <td><%= link_to timesheet.company, timesheet.company_profile %></td>
-        <td id="timesheet-status"><%= timesheet.state %></td>
-        <td><%= timesheet.reg_hours.round(2).to_f %></td>
-        <td><%= timesheet.ot_hours.round(2).to_f %></td>
+        <td><%= link_to (Date.commercial(2015, timesheet.week, 7)).strftime("%m / %d "), timesheet_path(timesheet) %></td>
+        <td><%= link_to timesheet.assignment.employee_profile.name, timesheet.assignment %></td>
+        <td><%= link_to timesheet.company_profile.name, timesheet.company_profile %></td>
+        <td><% if timesheet.approved? %>
+        <span id="timesheet-status">
+              <%= timesheet.state.titleize %>
+        </span>
+        <% else %>
+        <button id="approve-button"><%= link_to 'Approve', approve_timesheet_path(timesheet), remote: true, method: :patch %></button>
+        <% end %></td>
+        <td><%= timesheet.reg_hours.round(2)%></td>
+        <td><%= timesheet.ot_hours.round(2)  %></td>
+        <td><%= number_to_currency(timesheet.total_pay, :unit => "$") %></td>
+        <td><%= number_to_currency(timesheet.total_bill, :unit => "$") %></td>
         <td><%= number_to_currency(timesheet.gross_pay, :unit => "$") %></td>
         <td><%= number_to_currency(timesheet.gross_bill, :unit => "$") %></td>
-        <td><button id="approve-button"><%= link_to 'Approve', approve_timesheet_path(timesheet), remote: true, method: :patch %></button></td>
-
-        <td><%= link_to 'Show', timesheet %></td>
-        <td><%= link_to 'Edit', edit_timesheet_path(timesheet) %></td>
-      <% end %>
-      <tr>
+        <td><%= link_to 'Delete', timesheet, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        
+    <% end %>
   </tbody>
 </table>
-
-<br>
-

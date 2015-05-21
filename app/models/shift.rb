@@ -20,7 +20,7 @@
 #
 
 class Shift < ActiveRecord::Base
-  belongs_to :timesheet, -> { includes :job_order }
+  belongs_to :timesheet, touch: true
   belongs_to :assignment
   
   validates_associated :timesheet
@@ -30,8 +30,8 @@ class Shift < ActiveRecord::Base
   # # after_save :go_to_shift
   
   
-   delegate :employee, to: :assignment
-   delegate :company, to: :assignment
+   delegate :employee_profile, to: :assignment
+   delegate :company_profile, to: :assignment
    delegate :pay_rate, to: :assignment
    delegate :bill_rate, to: :assignment
 

@@ -1,17 +1,35 @@
 class UsersController < ApplicationController
   # before_action :logged_in_user, only: [:index, :edit, :update, :destroy]
-  # before_action :correct_user,   only: [:edit, :update]
+  # before_action :correct_user, only: :show
   # before_action :admin_user,     only: :destroy
   # load_and_authorize_resource
+  # load_resource :company_profile
+  # load_resource :agency_profile
+  # load_resource :employee_profile
+  # load_and_authorize_resource :user, :through => [:company_profile, :agency_profile, :employee_profile]
 
 
   def index
-    @users = User.paginate(page: params[:page])
+    @agency_users = User.agency_users.all
+    @company_users = User.company_users.all
+    @employee_users = User.employee_users.all
+    
+    # @current_user = current_user
+    @profile = current_user.profile
+    
+    # @agency_users = @profile.users.agency_users
+    # # @company_users = User.company_users
+    # # @employee_users = User.employee_users
+    # @account_managers = @profile.account_managers
   end
 
   def show
     @user = User.find(params[:id])
     @profile = @user.profile
+    @am_job_orders = @user.orders 
+    @companies = @profile.company_profiles.order(company_name: :asc).distinct
+    @employees = @profile.employee_profiles.order(employee_name: :asc).distinct
+    
   end
 
   def new
@@ -23,9 +41,7 @@ class UsersController < ApplicationController
   def create
     @user = User.create(user_params)
 
-   
 
-    
     if @user.save
       flash[:info] = "#{@user.name} was successfuly added as a #{@user.role}!"
       # @user.send_activation_email
@@ -119,6 +135,10 @@ class UsersController < ApplicationController
     end
     
     # Confirms an admin user.
+    def admin_user
+      redirect_to(root_url) unless current_user.admin?
+    end
+    
     def admin_user
       redirect_to(root_url) unless current_user.admin?
     end

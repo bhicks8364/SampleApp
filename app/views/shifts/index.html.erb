@@ -1,6 +1,6 @@
 <h3>Listing shifts for: </h3>
-<p>Company: <strong> <%= @assignment.company %></strong></p>
-<p>Employee: <strong> <%= @assignment.employee.name %></strong></p>
+<p>Company: <strong> <%= @assignment.company_profile.name %></strong></p>
+<p>Employee: <strong> <%= @assignment.employee_profile.name %></strong></p>
 <p>Job Title: <strong> <%= @assignment.job_title %></strong></p>
 <p>Pay: <strong> <%= number_to_currency(@assignment.pay_rate, :unit => "$") %></strong></p>
 <p>Bill: <strong> <%= number_to_currency(@assignment.bill_rate, :unit => "$") %></strong></p>

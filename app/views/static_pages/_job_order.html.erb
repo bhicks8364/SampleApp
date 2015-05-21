@@ -6,7 +6,7 @@
         <ol>
         <% job_order.assignments.each do |assignment| %>
         
-            <strong><li>Employee: <%= link_to assignment.employee.name, assignment.employee %>  </strong><br>
+            <strong><li>Employee: <%= link_to assignment.employee_profile.name, assignment.employee_profile %>  </strong><br>
             <small>Number of Shifts: <%= assignment.shifts.count %> | Date Assigned: <%= assignment.created_at.strftime("%m / %d ") %>
             <br>Hours Today: <%= assignment.hours_today %> | Hours Last Week: <%= assignment.hours_last_week.round(2) %>
             </small><button><%= link_to "View Assignment", assignment %></button>

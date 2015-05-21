@@ -1,5 +1,54 @@
-<h1>New job_order</h1>
+<h1>Create a new job order</h1>
 
-<%= render 'form' %>
+<!--ERRORS-->
+  <% if @job_order.errors.any? %>
+    <div id="error_explanation">
+      
+      <h2><%= pluralize(@job_order.errors.count, "error") %> prohibited this job_order from being saved:</h2>
 
-<%= link_to 'Back', company_profile_job_orders_path, :remote => true, :id => "new_company_job_order_link" %>
+      <ul>
+      <% @job_order.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
+<!--FORM-->
+
+  
+<%= simple_form_for @job_order do |f| %>
+    <%= f.association :company_profile, prompt: "Select Company", label: false %>
+
+
+    <%= f.input :job_title %>
+    <%= f.input :job_description, as: :text, placeholder: "Job Description" %>
+    
+    <%= f.text_field :fill_date, label: "Needed by:", placeholder: "Select start date" %>
+    <%= f.input :min_pay, as: :currency %>
+    
+    <%= f.input :max_pay, as: :currency, required: true %>
+
+    <hr>
+    <%= f.association :agency_profile, prompt: "Select Agency", label: false %>
+    
+    
+    
+
+    
+<hr>
+
+
+
+    <%= f.input :asap, inline_label: 'Is this an ASAP order?' %>
+    
+    <%= f.input :needed, collection: 1..10, prompt: "How many positions are needed?" %>
+    
+    
+    
+  
+    <%= f.button :button, "Submit Order".html_safe, data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Saving..."} %>
+
+<% end %>
+
+<%= link_to 'Back', job_orders_path %>

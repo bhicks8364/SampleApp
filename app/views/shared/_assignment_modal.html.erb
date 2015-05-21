@@ -1,0 +1,24 @@
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="assignment-<%= assignment.id %>-description" tabindex="-1" role="dialog" aria-labelledby="assignment-<%= assignment.id %>-label" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="todo-<%= assignment.id %>-label">Employee Assignment View</h4>
+        </div>
+        <div class="modal-body">
+          <%= link_to assignment.employee_profile.name, assignment %>
+          <% if assignment.timesheets %>
+          <%= render partial: 'timesheets/timesheet', locals: {assignment: @assignment} %>
+          <% end %>
+          <span class="has-tooltip" data-toggle="tooltip" title="<%= "Created on #{assignment.created_at.strftime("%m/%e/%Y at %w:%M %p")}  |   Last modified on #{assignment.updated_at.strftime("%m/%e/%Y at %w:%M %p")}" %>">
+            Details
+          </span>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>

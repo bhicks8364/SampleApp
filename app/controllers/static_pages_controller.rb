@@ -13,12 +13,10 @@ class StaticPagesController < ApplicationController
 
   
   def dashboard
-    @user = current_user
-    @company = @user.profile if @user.company?
-    @job_orders = JobOrder.active
-    @active_job_orders = JobOrder.active
-    @employees = EmployeeProfile.all
-    @companies = CompanyProfile.all
+    @current_user = current_user
+    @current_profile = current_user.profile
+    @companies = @current_profile.company_profiles.order(company_name: :asc).distinct
+    @assignments = @current_profile.assignments.with_current_timesheets
   end
   
 end

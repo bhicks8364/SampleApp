@@ -1,0 +1,35 @@
+<table id="company_profiles-table" class="display" cellspacing="0" width="100%">
+  <thead>
+    <tr>
+      <th>Company Name</th>
+      <th>Current Balance</th>
+      <th>Positions Requested</th>
+      <th>Unfilled Positions </th>
+      <th>Acct. Manager</th>
+      <th>Since</th>
+      
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+  <% @company_profiles.each do |company| %>
+ 
+      <tr>
+        <td><%= link_to company.company_name, company %></td>
+        <td><%= number_to_currency(company.balance, :unit => "$") %></td>
+        <td><%= company.positions_available %></td>
+        <td><%= company.unfilled_positions %></td>
+        
+        <td><%= company.account_manager ? company.account_manager : "No Acct Manager Assigned."  %></td>
+        <td><%= time_ago_in_words(company.created_at) %></td>
+
+        <td><%= link_to 'Edit', edit_company_profile_path(company) %></td>
+        <td><%= link_to 'Destroy', company, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+ 
+  </tbody>
+</table>

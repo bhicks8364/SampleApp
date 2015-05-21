@@ -1,4 +1,9 @@
 class AgencyProfilesController < ApplicationController
+    # load_and_authorize_resource :through => :current_user
+    # load_resource :profile
+    # load_and_authorize_resource :through => :profile
+    # load_and_authorize_resource
+    
     
     def index
         @agency_profiles = AgencyProfile.all
@@ -19,7 +24,7 @@ class AgencyProfilesController < ApplicationController
     
     def create
         @agency_profile = AgencyProfile.create(agency_profile_params)
-        @agency_profile.users.build
+        # @agency_profile.users.build
         # @agency_profile.users.new
         # @agency_profile.users.first.profile_id = @agency_profile.id
 
@@ -39,7 +44,8 @@ class AgencyProfilesController < ApplicationController
     
   def update
     @agency_profile = AgencyProfile.find(params[:id])
-    @agency_profile.update(agency_profile_params)
+ 
+    # @agency_profile.update(agency_profile_params)
     # @agency_profile.users.build
 
     
@@ -54,8 +60,10 @@ class AgencyProfilesController < ApplicationController
 
     def show
         @agency_profile = AgencyProfile.find(params[:id])
-        @job_orders = @agency_profile.job_orders.by_fill_date.limit(5)
+        @company_profiles = @agency_profile.company_profiles.order(company_name: :asc).distinct
+        @job_orders = @agency_profile.job_orders.joins(:company_profile).order('company_profiles.company_name')
         @profile = current_user.profile
+        @timesheets = @agency_profile.timesheets.order(week: :asc)
     end
   
     def agency_profile_params

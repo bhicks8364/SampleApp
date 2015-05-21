@@ -1,0 +1,34 @@
+<table id="job-orders-table" class="display">
+  <thead>
+    <tr>
+      <th>Company Name</th>
+      <th>Title</th>
+       <th>Acct Manager</th>
+      <th>Status</th>
+      <th>Need</th>
+      <th>Assigned</th>
+      <th>Pay</th>
+      <th>Max Bill</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <%= content_tag_for(:tr, @job_orders) do |job_order| %>
+
+        <td><%= link_to job_order.company_profile.name, job_order.company_profile %></td>
+        <td><%= link_to job_order.job_title, job_order %></td>
+        <td><%= link_to job_order.account_manager.name, job_order.account_manager %></td>
+
+    
+        <td>
+        <span id="job_order-status">
+              <%= job_order.state.titleize %></span>
+       </td>
+        <td><%= job_order.needed%></td>
+        <td><%= job_order.assignments.count %></td>
+        <td><%= number_to_currency(job_order.min_pay, :unit => "$") %> - <%= number_to_currency(job_order.max_pay, :unit => "$") %></td>
+        <td><%= number_to_currency(job_order.max_bill, :unit => "$") %></td>
+        
+    <% end %>
+  </tbody>
+</table>

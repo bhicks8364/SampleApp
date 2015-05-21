@@ -1,6 +1,70 @@
-<h1>Editing job_order</h1>
+<h1>Edit job order</h1>
 
-<%= render 'form' %>
+<!--ERRORS-->
+  <% if @job_order.errors.any? %>
+    <div id="error_explanation">
+      
+      <h2><%= pluralize(@job_order.errors.count, "error") %> prohibited this job_order from being saved:</h2>
+
+      <ul>
+      <% @job_order.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
+<!--FORM-->
+
+  
+<%= simple_form_for @job_order do |f| %>
+    <%= f.association :company_profile, disabled: true, label: "Company", hint: 'You cannot change the company for this job order.' %>
+<hr>
+    <%= f.input :job_title %>
+    <%= f.input :job_description, as: :text, placeholder: "Job Description" %>
+    
+    <%= f.input :fill_date, as: :string, placeholder: "Select start date" %>
+      <%= f.input :asap, label: 'ASAP order?' %>
+    
+    <%= f.input :needed, collection: 1..10, prompt: "How many positions are needed?" %>
+    <hr>
+    <div class="pay-range">
+        <p>Please enter desired <strong>pay range</strong> for this position.</p>
+        <%= f.input :min_pay, as: :currency, placeholder: "Minimum pay rate", label: "Minimum pay", required: true %>
+        <%= f.input :max_pay, as: :currency, placeholder: "Maximum pay rate", label: "Maximum pay", required: true %>
+    </div>
+    <hr>
+    <div class="markup-bill">
+        <p>Please enter desired <strong>bill rate</strong> for this position.</p>
+       
+        <%= f.input :max_bill, as: :currency, placeholder: "Maximum Bill Rate (per hour)", label: "Max. Bill", required: true %>
+    </div>
+
+  
+
+
+    <hr>
+    <%= f.association :agency_profile, disabled: true, hint: 'You cannot change the agency for this job order.' %>
+
+<% if current_user.agency? %>
+<h3> Please assign an account manager to this job order. </h3>
+    <%= f.collection_select :acct_manager_id, @account_managers, :id, :name, prompt: "Account Manager", label: false  %>
+<% end %>
+    
+
+    
+<hr>
+
+
+
+
+    
+    
+    
+  
+    <%= f.button :button, "Submit Order".html_safe, data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Saving..."} %>
+
+<% end %>
 
 <%= link_to 'Show', [@job_order.company_profile, @job_order] %> |
 <%= link_to 'Back', company_profile_job_orders_path(@job_order.company_profile) %>

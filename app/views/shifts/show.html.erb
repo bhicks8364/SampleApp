@@ -15,14 +15,14 @@
 <div class="btn-group" role="group" aria-label="...">
   <button type="button" class="btn btn-default"><%= link_to "Back to All Shifts", assignment_shifts_path %></button>
   <button type="button" class="btn btn-default"><%= link_to "View Timesheet", timesheet_path(@shift.timesheet_id) %></button>
-  <button type="button" class="btn btn-default"><%= link_to "View Employee", employee_profile_path(@shift.employee) %></button>
+  <button type="button" class="btn btn-default"><%= link_to "View Employee", employee_profile_path(@employee) %></button>
   <button type="button" class="btn btn-default"><%= link_to "View Company", company_profile_path(@assignment.company_profile) %></button>
 </div>
 <hr>
 
 
 <p>
-  <strong>Company: </strong> <%= @shift.company %>    | <strong>Job Title: </strong><%= @assignment.job_title.titleize %>
+  <strong>Company: </strong> <%= @company %>    | <strong>Job Title: </strong><%= @assignment.job_title.titleize %>
 </p>
 <p>
   <strong>Pay Rate: </strong> <%= number_to_currency(@shift.pay_rate, :unit => "$") %>  |  <strong>Bill Rate: </strong> <%= number_to_currency(@shift.bill_rate, :unit => "$") %>

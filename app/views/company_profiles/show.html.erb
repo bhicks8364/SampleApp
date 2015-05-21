@@ -1,6 +1,24 @@
 <% if @profile == @company_profile %>
 <h1>This is your company profile!</h1>This is your company profile!
 <% end %>
+<!--Job Order Nav-->
+<div class="row">
+
+  <div class="btn-group btn-group-justified" role="group" aria-label="JOB ORDERS">
+  <div class="btn-group" role="group">
+    <button type="button" class="btn btn-default"><a><%= link_to "New Job Order", new_company_profile_job_order_path(@company_profile) %>   </a></button>
+  </div>
+  <div class="btn-group" role="group">
+    <button type="button" class="btn btn-default"><a><%= link_to "Current Job Orders", company_profile_job_orders_path(@company_profile) %> </a>
+  </div>
+  <div class="btn-group" role="group">
+    <button type="button" class="btn btn-default">Archives</button>
+  </div>
+</div>
+</div> 
+
+
+
 <div class="col-md-4"><h3><%= @company_profile.company_name %></h3>
   <div class="panel panel-default">
      <strong><%= @company_profile.company_name %></strong>
@@ -31,14 +49,14 @@
 </div>
 
 <hr>
-</div>
+
 
 
     
 
 
           <h4><%= @company_profile.name %>'s Users</h4>
-         </div>
+         
         <div class="panel-body">
             <ul class="list-group">
               <% @company_profile.users.each do |user| %>
@@ -46,7 +64,7 @@
               <% end %>
             </ul>
         </div>
-      </div>
+      
 
     
     
@@ -54,19 +72,7 @@
     
     
 
-<div class="col-md-4">
-  <div class="btn-group btn-group-justified" role="group" aria-label="...">
-  <div class="btn-group" role="group">
-    <button type="button" class="btn btn-default"><a><%= link_to "New Job Order", new_company_profile_job_order_path(@company_profile) %>   </a></button>
-  </div>
-  <div class="btn-group" role="group">
-    <button type="button" class="btn btn-default"><a><%= link_to "Current Job Orders", company_profile_job_orders_path(@company_profile) %> </a>
-  </div>
-  <div class="btn-group" role="group">
-    <button type="button" class="btn btn-default">Inactive Job Orders</button>
-  </div>
-</div>
-</div>        
+       
         
 
 

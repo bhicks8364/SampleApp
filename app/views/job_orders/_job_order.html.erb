@@ -1,24 +1,27 @@
 
-<h3><%= @company_profile.name.titleize %>  -  <strong>Job Orders</strong></h3>
-<% @job_orders.each do |job_order| %>
-    <%= div_for job_order do %>
-        <p><strong>Job Title:</strong> <%= link_to job_order.job_title, company_profile_job_order_path(@company_profile.id, job_order) %> | Current Status: <%= job_order.state.titleize %></p>
+    <h3><strong><%= job_order.agency_profile.name %> </strong></h3>
+
+        <p><strong>Job Title:</strong> <%= link_to job_order.job_title, job_order %> | Current Status: <%= job_order.state.titleize %></p>
         <p>People Needed: <%= job_order.needed %> | Currently Assigned: <%= job_order.assignments.count %></p>
-        <% if job_order.assignments.any? %>
-        <ol>
+
+        <% if job_order.assignments %>
+        <ul>
         <% job_order.assignments.each do |assignment| %>
         
-            <strong><li>Employee: <%= link_to assignment.employee.name, assignment.employee %>  </strong><br>
+            <strong><li>Employee: <%= link_to assignment.employee_profile.name, assignment.employee_profile %>  </strong><br>
             <small>Number of Shifts: <%= assignment.shifts.count %> | Date Assigned: <%= assignment.created_at.strftime("%m / %d ") %>
             <br>Hours Today: <%= assignment.hours_today %> | Hours Last Week: <%= assignment.hours_last_week.round(2) %>
-            </small><button><%= link_to "View Assignment", assignment %></button>
+            </small>
+
+            <button><%= link_to "View Assignment", assignment %></button>
+
             </li>
             <br>
             <% end %>
-        </ol>
+        </ul>
 
         
         <% end %>
+
         <p>Needs Attention: <%= job_order.needs_attention? %>    |     ASAP Order?:  <%= job_order.asap? %></p>
-    <% end %>
-<% end %>
+  

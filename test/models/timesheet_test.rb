@@ -12,6 +12,8 @@
 #  gross_bill    :decimal(, )
 #  created_at    :datetime
 #  updated_at    :datetime
+#  approved_by   :integer
+#  approved_at   :datetime
 #
 # Indexes
 #

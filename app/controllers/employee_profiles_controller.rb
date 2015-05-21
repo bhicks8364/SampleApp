@@ -8,6 +8,9 @@ class EmployeeProfilesController < ApplicationController
     
     # load_and_authorize_resource
     
+  # load_and_authorize_resource :assignment
+  # load_and_authorize_resource :employee_profile, :through => :assignment
+    
   def index
     @q = EmployeeProfile.search(params[:q])
     @employee_profiles = @q.result.includes(:timesheets).page(params[:page]).to_a.uniq
@@ -15,13 +18,19 @@ class EmployeeProfilesController < ApplicationController
 
   def show
     @employee_profile = EmployeeProfile.find(params[:id])
-    @timesheets = @employee_profile.timesheets
+    @assignments = @employee_profile.assignments
     @current_timesheet = @employee_profile.current_timesheet
+    @current_assignment = @employee_profile.current_assignment if @employee_profile.current_assignment != nil
+    @timesheets = @employee_profile.timesheets
+    @company_profile = @current_assignment.company_profile if @current_assignment
+
+    
+ 
     
     # @q = Timesheet.search(params[:q])
     # @timesheets = @q.result.includes(:assignment, :shifts)
 
-    @assignments = @employee_profile.assignments
+
 
     # @user = @employee.user
   end

@@ -1,64 +1,80 @@
+<h1 class="dragme"><%= @agency_profile.name %></h1>
 <% if @profile == @agency_profile %>
-<h1>This is your agency profile!</h1>
-<% end %>
-<div class="col-md-4">
-<h3><%= @agency_profile.name %></h3>
-
-<% if @agency_profile.users.any? %>
-USER COUNT: <%= @agency_profile.users.count %> <hr>
-
-
-
-
-    <div class="panel panel-default">
-        <div class="panel-heading"><h4><%= @agency_profile.name %>'s Users</h4></div>
-            <div class="panel-body">
-                <div class="list-group">
-                <% @agency_profile.users.each do |user| %>
-                  <%= render partial: 'users/user', locals: {user: user} %>
-                <% end %>
-                </div>
-            </div>
-        </div>
-    </div>
-
+<h3>Welcome to your agency profile, <%= current_user.name %></h3>
 <% end %>
 
-<%= link_to "Edit Agency Profile", edit_agency_profile_path(@agency_profile), class: "btn btn-default" %>
-<%= link_to "Manage Agency Users", add_user_agency_profile_path(@agency_profile), method: :patch, class: "btn btn-primary" %>
 
-<%= link_to "Add Company", new_company_profile_path, class: "btn btn-default" %>
-<hr>
-<div class="col-md-4">
-    <div class="panel panel-default">
-        <div class="panel-heading"><h4><%= @agency_profile.name %>'s Active Job Orders</h4></div>
-            <div class="panel-body">
-            <div class="btn-group">
-                <% @agency_profile.job_orders.active.limit(10).each do |job_order| %>
-                <% if job_order.needs_attention? %>
-                    <button class="btn btn-danger" data-toggle="modal" data-target="#job-order-<%= job_order.id %>-description">
-                       <%= job_order.job_title %>
-                     </button>
-                
-                <% else %>
-                    <button class="btn btn-default" data-toggle="modal" data-target="#job-order-<%= job_order.id %>-description">
-                       <%= job_order.job_title %>
-                     </button>
-                
-                <% end %>
-     
 
-                    <%= render partial: 'shared/jo_modal', locals: {job_order: job_order} %>
-                    <% end %>
 
-            </div>
 
-<hr>
-                </div>
-            </div>
-        </div>
+
+
+
+
+
+
+
+
+
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingOne">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          <h3>All Companies</h3>
+        </a>
+      </h4>
     </div>
+    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+        <!--Companies Table-->
+        <% if @company_profiles %>
+        <%= render 'company_profiles/table' %>
+        <% else %>
+        No Companies Available.
+        <% end %>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingTwo">
+      <h4 class="panel-title">
+        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          <h3><%= @agency_profile.name %> Job Orders</h3>
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+      <div class="panel-body">
+        <% if @job_orders %>
+        <!--Job Orders Table-->
+        <%= render 'job_orders/table' %>
+        <% else %>
+        No Job Orders Available.
+        <% end %>
+      </div>
+    </div>
+  </div>
+  
+
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingThree">
+      <h4 class="panel-title">
+        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          <h3><%= @agency_profile.name %> Timesheets</h3>
+        </a>
+      </h4>
+    </div>
+    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+      <div class="panel-body">
+          <% if @timesheets %>
+        <!--Timesheets Table-->
+        <%= render 'timesheets/table' %>
+        <% else %>
+        No Timesheets Available.
+        <% end %>
+        
+      </div>
+    </div>
+  </div>
+
 </div>
-
-
-

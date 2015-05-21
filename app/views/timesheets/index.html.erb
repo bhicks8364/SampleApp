@@ -1,61 +1,12 @@
-<h1>Listing timesheets</h1>
+<%= @current_profile.name %>
+<%= @timesheets.count %>
+<%= render 'table' %>
 
-<aside>
-  <div class="col-md-2">
-  <div class="timesheet-search-form">
-    <h3><small>Search by:</small></h3>
-    <%= search_form_for @q do |f| %>
-      <%= f.label :week_eq, "Work week" %>
-      <%= f.search_field :week_eq %>
-      <div class="field">
-        <%= f.label :assignment_bill_rate_gteq, "Bill Rate between..." %>
-        <%= f.search_field :assignment_bill_rate_gteq %>
-        <%= f.label :assignment_bill_rate_lteq, "and" %>
-        <%= f.search_field :assignment_bill_rate_lteq %>
-      </div>
 
-<div class="row">
 
-      <%= f.submit "search" %>
-    <% end %>
-  </div>
-</div>
 
-</aside>
 
-<div class="col-md-8">
-<table id="timesheets-table" class="table">
-  <thead>
-    <tr>
-      <th><%= sort_link(@q, :week, 'Week', default_order: :desc) %></th>
-      <th>Employee Name</th>
-      <th>Company Name</th>
-      <th>Status</th>
-      <th>Regular Hours</th>
-      <th>Overtime Hours</th>
-      <th>Gross Pay</th>
-      <th>Gross Bill</th>
-    </tr>
-  </thead>
 
-  <tbody>
-    <% @timesheets.each do |timesheet| %>
 
-      <tr>
-        <td><%= timesheet.week %></td>
-        <td><%= link_to timesheet.employee, timesheet.employee_profile %></td>
-        <td><%= timesheet.company %></td>
-        <td><%= timesheet.state.titleize %></td>
-        <td><%= timesheet.reg_hours.round(2).to_f %></td>
-        <td><%= timesheet.ot_hours.round(2).to_f  %></td>
-        <td><%= number_to_currency(timesheet.gross_pay, :unit => "$") %></td>
-        <td><%= number_to_currency(timesheet.gross_bill, :unit => "$") %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-</div>
-</div>
-<br>
 
 

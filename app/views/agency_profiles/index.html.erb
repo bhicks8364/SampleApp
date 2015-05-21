@@ -24,11 +24,13 @@
         <td><%= agency.users.count %></td>
         <td><%= time_ago_in_words(agency.created_at) %></td>
         
-        <td><%= link_to 'Show', agency %></td>
+        <td><%= link_to 'Show', agency if can? :update, agency %></td>
       </tr>
   <% end %>
  
   </tbody>
 </table>
+<% if can? :create, AgencyProfile %>
 <%= link_to 'Add New Agency', new_agency_profile_path, class: "btn btn-primary" %>
+<% end %>
 </div>

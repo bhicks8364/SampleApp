@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150508130534) do
+ActiveRecord::Schema.define(version: 20150519164805) do
 
   create_table "agency_profiles", force: :cascade do |t|
     t.string   "agency_name", limit: 255
@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(version: 20150508130534) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "state",               limit: 255
+    t.integer  "recruiter_id"
   end
 
   add_index "assignments", ["employee_profile_id"], name: "index_assignments_on_employee_profile_id"
@@ -61,10 +62,13 @@ ActiveRecord::Schema.define(version: 20150508130534) do
     t.integer  "needed"
     t.boolean  "asap",                           default: false
     t.integer  "agency_profile_id"
-    t.decimal  "est_pay"
-    t.decimal  "est_bill"
     t.integer  "acct_manager_id"
     t.string   "type"
+    t.decimal  "mark_up"
+    t.decimal  "min_pay"
+    t.decimal  "max_pay"
+    t.decimal  "max_bill"
+    t.decimal  "desired_mark_up"
   end
 
   add_index "job_orders", ["acct_manager_id"], name: "index_job_orders_on_acct_manager_id"
@@ -108,6 +112,8 @@ ActiveRecord::Schema.define(version: 20150508130534) do
     t.decimal  "gross_bill"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "approved_by"
+    t.datetime "approved_at"
   end
 
   add_index "timesheets", ["assignment_id"], name: "index_timesheets_on_assignment_id"

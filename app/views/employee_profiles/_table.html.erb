@@ -1,0 +1,31 @@
+<table id="employees-table" class="display" cellspacing="0" width="100%">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>SSN #</th>
+      <th>Marital Status</th>
+      <th>Created</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <%= content_tag_for(:tr, @employee_profiles) do |employee| %>
+
+        <td><%= employee.id %></td>
+        <td><%= link_to employee.employee_name, employee %></td>
+        <td><%= employee.user.email %></td>
+        <td><%= employee.ssn %></td>
+        <td><%= employee.marital_status %></td>
+        <td><%= time_ago_in_words(employee.created_at) %></td>
+
+        <td><%= link_to 'Edit', edit_employee_profile_path(employee) %></td>
+        <td><%= link_to 'Destroy', employee, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+
+      <% end %>
+
+  </tbody>
+</table>

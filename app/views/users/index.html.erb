@@ -1,10 +1,43 @@
 <% provide(:title, 'All users') %>
-<h1>All users</h1>
 
-<%= will_paginate %>
 
-<ul class="users">
-  <%= render @users %>
-</ul>
+<!--Agency User View-->
+<% if current_user.agency? %>
+<h3><%= current_user.name %>  <small><%= current_user.role.titleize %>  Agency Users: <%= @profile.users.count if @profile.users %></small></h3>
+<hr>
+<h3><%= @profile.name %>  <small><%= @profile.owner.try(:name) || @profile.users.count %></small></h3>
 
-<%= will_paginate %>
+
+
+  <ul class="pagination">
+    <li>
+      <a href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    <ol class="users">
+        <% @agency_users.each do |user| %>
+          <%= render 'user', user: user %>
+        <% end %>
+    </ol>
+    </ul>
+<% end %>
+
+<!--Company User VIew-->
+<% if @current_user.company? %>
+    <ul class="users">
+        <% @company_users.each do |user| %>
+          <%= render 'user', user: user %>
+        <% end %>
+    </ul>
+<% end %>
+
+
+<!--Employee User VIew-->
+<% if @current_user.employee? %>
+    <ul class="users">
+        <% @employee_users.each do |user| %>
+          <%= render 'user', user: user %>
+        <% end %>
+    </ul>
+<% end %>
+

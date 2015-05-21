@@ -1,8 +1,7 @@
 <form>
   <%= simple_form_for @company_profile do |f| %>
   <%= f.input :company_name %>
-  <%= f.association :company %>
-  <%= f.association :roles %>
+
   <%= f.button :submit %>
 <% end %>
 </form>

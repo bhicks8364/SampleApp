@@ -1,0 +1,3 @@
+<h3><%= @assignment.employee_profile.name %> was assigned to <%= @assignment.company_profile.name %> as a <%= @assignment.job_title %> </h3>
+<h4>#Recruiter# made this assignment at <%= @assignment.created_at %></h4>
+<p><%= link_to "View Assignment", assignment_url(@assignment) %> </p>

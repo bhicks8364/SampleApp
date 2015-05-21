@@ -1,0 +1,87 @@
+  <% if @timesheet %>
+  <%= div_for(@timesheet) %>
+  <p>
+  <strong>Current State:</strong>
+  <%= @timesheet.state.titleize %>
+
+  <strong>Regular Hours:</strong>
+  <%= @timesheet.reg_hours.round(2).to_f %>
+</p>
+ <p>
+  <strong>Overtime Hours:</strong>
+  <%= @timesheet.ot_hours.round(2).to_f %>
+</p>
+  <strong>Pay:</strong>
+  <%= number_to_currency(@timesheet.pay_rate, :unit => "$") %>
+  <br>
+  <strong>Bill:</strong>
+  <%= number_to_currency(@timesheet.bill_rate, :unit => "$") %>
+  <br>
+    <strong>Mark Up:</strong>
+  <%= @timesheet.mark_up.round(2) %>
+  
+</div>
+
+
+
+<hr>
+
+
+<br>
+<span id="approved-at">
+</span>
+<br>
+<% if @timesheet.approved? %>
+<span id="timesheet-status">
+  <strong>Status:</strong>
+  <%= @timesheet.state.titleize %>
+</span>
+<% else %>
+<strong>Status:</strong>
+<span id="timesheet-status">
+  <%= @timesheet.state.titleize %>
+</span>
+<button id="approve-button"><%= link_to 'Approve', approve_timesheet_path(@timesheet), remote: true, method: :patch %></button>
+<% end %>
+<div>
+  
+<h3>Timesheet Details</h3>
+
+<p>
+  <strong>Created on:</strong>
+  <%= @timesheet.created_at.strftime("%m / %d ") %>
+</p>
+
+<p>
+  <strong>Week #:</strong>
+  <%= @timesheet.week %>
+</p>
+
+
+  <strong>Total Pay:</strong>
+  <%= number_to_currency(@timesheet.gross_pay, :unit => "$") %>
+<br>
+<strong>Total Bill:</strong>
+  <%= number_to_currency(@timesheet.gross_bill, :unit => "$") %>
+</div>
+
+
+
+<button> <%= link_to "Go to Assignment", assignment_path(@assignment) %> </button>
+
+
+<br>
+<%= link_to 'Edit Timesheet', assignment_shifts_path(@assignment) %> |
+<%= link_to 'Back', timesheets_path %>
+<hr>
+
+<div class="pull-left"> 
+<h3>Shift count: <%= @timesheet.shifts.count %>  </h3>
+<div class="btn-toolbar" role="toolbar" aria-label="Shifts">
+  <% @timesheet.shifts.each do |shift| %>
+  <div class="btn-group" role="group" aria-label="...">
+    <button><%= link_to shift.created_at.strftime("%A - %m / %d "), assignment_shift_path(shift.assignment_id, shift)  %></button>
+    </div>
+  <% end %>
+</div>
+ <% end %>

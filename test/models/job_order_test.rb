@@ -14,10 +14,13 @@
 #  needed             :integer
 #  asap               :boolean          default(FALSE)
 #  agency_profile_id  :integer
-#  est_pay            :decimal(, )
-#  est_bill           :decimal(, )
 #  acct_manager_id    :integer
 #  type               :string
+#  mark_up            :decimal(, )
+#  min_pay            :decimal(, )
+#  max_pay            :decimal(, )
+#  max_bill           :decimal(, )
+#  desired_mark_up    :decimal(, )
 #
 # Indexes
 #

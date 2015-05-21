@@ -10,6 +10,7 @@
 #  created_at          :datetime
 #  updated_at          :datetime
 #  state               :string(255)
+#  recruiter_id        :integer
 #
 # Indexes
 #
@@ -24,14 +25,16 @@ class Assignment < ActiveRecord::Base
   has_many :timesheets
   has_many :shifts
 
-  
+  validates :pay_rate,  presence: true
+  validates :state,  presence: true
   validates_associated :job_order
   validates_associated :employee_profile
   
-  # delegate :job_title, to: :job_order
+  delegate :job_title, to: :job_order
   # delegate :company_profile, to: :job_order
 
-  before_create :set_defaults
+  # before_create :set_defaults
+  after_create :send_assignment_notification
 
   # scope :by_status, -> { where(status: status) }
   
@@ -40,20 +43,48 @@ class Assignment < ActiveRecord::Base
   accepts_nested_attributes_for :shifts
   accepts_nested_attributes_for :timesheets
   
-  
   scope :on_shift, -> { joins(:shifts).merge(Shift.clocked_in)}
+  scope :active, -> { with_state(:active) }
+  scope :inactive, -> { with_state(:inactive) }
   scope :with_current_timesheets, -> { joins(:timesheets).merge(Timesheet.current)}
+ 
+ 
+ 
+  
+  state_machine :state, :initial => :active do
+    event :cancel do
+      transition :active => :inactive
+    end
+    event :assign do
+      transition :all => :active
+    end
+  end
+  
+  
+  def employee_profile
+    super || GuestEmployee.new
+
+  end
+  
+  def weeks_worked
+    self.timesheets.count
+  end
   
   
   def mark_up
     self.bill_rate / self.pay_rate
   end
   
-  
-  
-  def set_defaults
-    self.state = "Current"
+  def send_assignment_notification
+    user = self.job_order.account_manager
+    UserMailer.assignment_notification(user, self)
   end
+  
+  
+  
+  # def set_defaults
+  #   self.state = "Current"
+  # end
   def gross_assignment_pay  
     self.timesheets.to_a.sum(&:gross_pay)
   end
@@ -110,33 +141,29 @@ class Assignment < ActiveRecord::Base
   end
 
   def company_profile
-    if self.job_order != nil
       self.job_order.company_profile
-    else
-      "No Job Order"
-    end
   end
   
-  def company
-    if self.job_order != nil
-      self.job_order.company_profile.name
-    else
-      "No Job Order"
-    end
+  # def company
+  #   if self.job_order != nil
+  #     self.job_order.company_profile.name
+  #   else
+  #     "No Job Order"
+  #   end
 
-  end
+  # end
   
-  def job_title
-    if self.job_order != nil
-      self.job_order.job_title
-    else
-      "No Job Order"
-    end
-  end
+  # def job_title
+  #   if self.job_order != nil
+  #     self.job_order.job_title
+  #   else
+  #     "No Job Order"
+  #   end
+  # end
   
-  def employee
-    self.employee_profile
-  end
+  # def employee
+  #   self.employee_profile
+  # end
     
   
   def hours_today

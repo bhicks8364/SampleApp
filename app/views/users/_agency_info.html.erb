@@ -1,6 +1,6 @@
       <!-- AGENCY PROFILE INFO -->
 
-<div class="col-md-6">
+
 <!--COMPANIES BUTTON DROPDOWN-->
 <div class="btn-group">
   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -8,13 +8,14 @@
   </button>
   
   <ul class="dropdown-menu" role="menu">
-  <% @profile.company_profiles.each do |company| %>
+  <% @companies.each do |company| %>
     <li><span></span> <%= link_to company.name, company_profile_path(company) %></li>
   <% end %>
   </ul>
 </div>
 <!---->
 <!---->
+<% if @user.has_role?(:account_manager) %>
 <!--JOB ORDER BUTTON DROPDOWN-->
 <div class="btn-group">
   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -22,11 +23,12 @@
   </button>
   
   <ul class="dropdown-menu" role="menu">
-  <% @profile.job_orders.active.each do |job_order| %>
+  <% @am_job_orders.active.each do |job_order| %>
     <li><span></span> <%= link_to job_order.job_title, job_order_path(job_order) %></li>
   <% end %>
   </ul>
 </div>
+<% end %>
 <!---->
 <!---->
 
@@ -38,8 +40,8 @@
   </button>
   
   <ul class="dropdown-menu" role="menu">
-  <% @profile.assignments.each do |assignment| %>
-    <li> <%= link_to assignment.employee_profile.name, assignment.employee_profile %></li>
+  <% @employees.each do |employee| %>
+    <li> <%= link_to employee.name, employee.current_assignment %></li>
   <% end %>
   </ul>
 </div>
@@ -54,14 +56,14 @@
   
   <ul class="dropdown-menu" role="menu">
   <% @profile.timesheets.current.each do |timesheet| %>
-    <li><span></span> <%= link_to timesheet.job_title, timesheet_path(timesheet) %></li>
+    <li><span></span> <%= link_to timesheet.employee_profile.name, timesheet_path(timesheet) %></li>
   <% end %>
   </ul>
 </div>
 <button type="button" class="btn btn-default"></span><%= link_to "New Job Order", new_company_profile_job_order_path(@user.profile) %></button>
-</div>
+
 <button><%= link_to "New Company", new_company_profile_path %></button>
 <!---->
 <!---->
-</div>
+
 <hr>

@@ -1,54 +1,34 @@
-<div class="col-md-10">
-  <div class="search">
-    <h3>All Companies </h3>
-    <%= search_form_for @q do |f| %>
-    <%= f.search_field :company_name_cont, placeholder: "Search by company...", class: "form-control" %>
-
-  <% end %>
-  </div>
-
-
 <div class="table-responsive">
-<table class="table table-hover">
+<table id="company_profiles-table" class="display" cellspacing="0" width="100%">
   <thead>
     <tr>
       <th>Company Name</th>
       <th>Current Balance</th>
-      <th>Number of Job Orders</th>
-      <th>Created</th>
-    
-
-      <th colspan="3"></th>
+      <th>Active Orders</th>
+      <th>Acct. Manager</th>
+      <th></th>
+      
+      <th></th>
+      <th></th>
     </tr>
   </thead>
 
   <tbody>
 
   <% @company_profiles.each do |company| %>
-    <% if company.users.any? %>
+ 
       <tr>
         <td><%= link_to company.company_name, company %></td>
         <td><%= number_to_currency(company.balance, :unit => "$") %></td>
         <td><%= company.job_orders.count %></td>
         <td><%= time_ago_in_words(company.created_at) %></td>
+        <td><%= company.account_manager %></td>
         
-        <td><%= link_to 'Show', company %></td>
+
         <td><%= link_to 'Edit', edit_company_profile_path(company) %></td>
         <td><%= link_to 'Destroy', company, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
-      <% else %>
-      <tr>
-        <td><%= company.company_name %></td>
-        <td><%= company.id %></td>
-        <td> NO ADMIN USER ASSIGNED </td>
-        <td><%= time_ago_in_words(company.created_at) %></td>
-        
-        <td><%= link_to 'Show', company %></td>
-        <td><%= link_to 'Edit', edit_company_profile_path(company) %></td>
-        <td><%= link_to 'Destroy', company, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-      <% end %>
-  <% end %>
+    <% end %>
  
   </tbody>
 </table>

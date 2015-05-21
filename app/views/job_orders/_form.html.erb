@@ -1,9 +1,8 @@
-<div class="jumbotron-center">
-<div class="col-md-5">
 <div class="job-order-form">
-<%= simple_form_for [@job_order.company_profile, @job_order] do |f| %>
+<!--ERRORS-->
   <% if @job_order.errors.any? %>
     <div id="error_explanation">
+      
       <h2><%= pluralize(@job_order.errors.count, "error") %> prohibited this job_order from being saved:</h2>
 
       <ul>
@@ -14,31 +13,48 @@
     </div>
   <% end %>
   
-<div class="field-set">
+<!--FORM-->
+
+  
+<%= simple_form_for @job_order do |f| %>
+    <%= f.association :company_profile, prompt: "Select Company", label: false %>
+
+
     <%= f.input :job_title %>
+    <%= f.input :job_description, as: :text, placeholder: "Job Description" %>
+    
+    <%= f.text_field :fill_date, label: "Needed by:", placeholder: "Select start date" %>
+    <%= f.input :est_pay, as: :currency %>
+    
+    <%= f.input :est_bill, as: :currency %>
+<hr>
+<h4>Current Assignments</h4>
+    
+     <%= f.simple_fields_for :assignments do |assignment| %>
+    <%= assignment.association :employee_profile %>
+    <%= assignment.input :pay_rate, as: :currency %>
+    <%= assignment.input :bill_rate, as: :currency %>
 
-    <%= f.input :job_description %>
+    <% end %>
+    <hr>
+    <%= f.association :agency_profile, prompt: "Select Agency", label: false %>
+    <%= f.association :account_manager, prompt: "Account Manager", label: false %>
+    
+    
 
-    <%= f.date_field(:fill_date) %>
-  <div class="field">
-    <%= f.label :needed, "How many positions needed?" %><br>
-    <%= f.number_field(:needed, in: 1..10) %>
-  </div>
-  <div class="field">
-    <%= f.label :asap, "Needed ASAP?" %><br>
-    <%= f.check_box(:asap) %>
-  </div>
-  <%= f.fields_for :assignments do |builder| %>
-    <%= render "assignment_fields", f: builder %>
-  <% end %>
-</div>
-  
+    
+<hr>
 
+
+
+    <%= f.input :asap, inline_label: 'Is this an ASAP order?' %>
+    
+    <%= f.input :needed, collection: 1..10, prompt: "How many positions are needed?" %>
+    
+    
+    
   
-  
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+    <%= f.button :button, "Submit Order".html_safe, data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Saving..."} %>
+
 <% end %>
-</div>
 </div>

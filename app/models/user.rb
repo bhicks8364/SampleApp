@@ -28,7 +28,29 @@
 
 class User < ActiveRecord::Base
   belongs_to :profile, polymorphic: true
-  # belongs_to :agency_profile, -> { where profile_id: profile_id, profile_type: 'AgencyProfile' }
+  has_many :job_orders, through: :profile
+  has_many :orders, -> { where active: true }, class_name: "JobOrder", foreign_key: "acct_manager_id"
+  has_many :accounts, :through => :orders, :source => :company_profile
+  
+  # has_many :assignments, :through => :profile, :source => :profile, :source_type => "EmployeeProfile"
+  # has_many :timesheets, :through => :assignments
+  # belongs_to :agency_profile, -> { where profile_type: 'AgencyProfile' }, class_name: "User", foreign_key: "profile_id"
+  # belongs_to :company_profile, -> { where profile_type: 'CompanyProfile' }, class_name: "User", foreign_key: "profile_id"
+  # belongs_to :agency_profile,  :class_name => "AgencyProfile",
+  #                       :foreign_key => "profile_id"
+  # belongs_to :company_profile,     :class_name => "CompanyProfile",
+  #                       :foreign_key => "profile_id"
+  # belongs_to :agency_profile, :class_name => profile_type, :foreign_key => 'id'
+
+  # has_one :self_ref, :class_name => self, :foreign_key => :id
+
+  # has_one :agency_profile, :through => :self_ref, :source => :profile, :source_type => AgencyProfile
+  # has_one :company_profile, :through => :self_ref, :source => :profile, :source_type => CompanyProfile
+  # has_one :employee_profile, :through => :self_ref, :source => :profile, :source_type => EmployeeProfile
+  delegate :job_orders, to: :profile
+  delegate :assignments, to: :profile
+  delegate :timesheets, to: :profile
+ 
   attr_accessor :new_agency_name
   before_save :create_agency_from_name
 
@@ -50,14 +72,14 @@ class User < ActiveRecord::Base
   has_secure_password
   validates :password, length: { minimum: 6 }, allow_blank: true
   
-  scope :admin, -> { where("admin = ?", true)}
+  scope :admins, -> { where("admin = ?", true)}
   # scope :agency, -> { where("role = ?", "agency")}
   # scope :company, -> { where("role = ?", "company")}
-  scope :employee_user, -> { where("profile_type = ?", "EmployeeProfile")}
-  scope :agency_user, -> { where("profile_type = ?", "AgencyProfile")}
-  scope :company_user, -> { where("profile_type = ?", "CompanyProfile")}
-  scope :super, -> { where("role = ?", "super")}
-  scope :agency_admin, -> { where(role: "agency", admin: true)}
+  scope :employee_users, -> { where("profile_type = ?", "EmployeeProfile")}
+  scope :agency_users, -> { where("profile_type = ?", "AgencyProfile")}
+  scope :company_users, -> { where("profile_type = ?", "CompanyProfile")}
+  scope :supers, -> { where("role = ?", "super")}
+  scope :account_managers, -> { where(role: "Account Manager", profile_type: "AgencyProfile")}
   
   def profile?
     if self.profile != nil
@@ -65,6 +87,10 @@ class User < ActiveRecord::Base
     else
       false
     end
+  end
+  
+  def has_role?(role_sym)
+    role.downcase.squish.downcase.tr(" ","_").to_sym == role_sym
   end
   
   
@@ -76,8 +102,16 @@ class User < ActiveRecord::Base
     admin == true
   end
   
+  def acct_manager?
+    self.role == "Account Manager" && self.profile_type == "AgencyProfile"
+  end
+  
+  def agency_owner?
+    self.role == "Owner" && self.profile_type == "AgencyProfile"
+  end
+  
   def agency?
-    profile_type == "AgencyProfile"
+    self.profile_type == "AgencyProfile"
   end
   
   def company?

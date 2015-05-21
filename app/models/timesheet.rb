@@ -12,6 +12,8 @@
 #  gross_bill    :decimal(, )
 #  created_at    :datetime
 #  updated_at    :datetime
+#  approved_by   :integer
+#  approved_at   :datetime
 #
 # Indexes
 #
@@ -20,6 +22,7 @@
 #
 
 class Timesheet < ActiveRecord::Base
+  include ArelHelpers::ArelTable
   belongs_to :assignment, -> { includes :job_order }
   has_many :shifts
   
@@ -31,11 +34,13 @@ class Timesheet < ActiveRecord::Base
   
   scope :approved, -> { with_state(:approved) }
   scope :current, -> { where(week: Date.today.cweek) }
+  scope :with_overtime_errors, -> { where(Timesheet[:reg_hours].gt(40)) }
+  scope :with_overtime, -> { where(Timesheet[:ot_hours].gt(0)) }
 
   
   
-  delegate :employee, to: :assignment
-
+  delegate :company_profile, to: :assignment
+  delegate :employee_profile, to: :assignment
   delegate :pay_rate, to: :assignment
   delegate :bill_rate, to: :assignment
   delegate :job_title, to: :assignment
@@ -68,11 +73,10 @@ class Timesheet < ActiveRecord::Base
     end
   end
   
-  
-  
+
   
   def mark_up
-    self.bill_rate / self.pay_rate
+    assignment.bill_rate / assignment.pay_rate
   end
   
   def ot_rate
@@ -124,32 +128,26 @@ class Timesheet < ActiveRecord::Base
     self.gross_bill = 0
     # self.save
   end
-  def company_profile
-    self.assignment.company_profile
-  end
-  def company
-    if self.assignment != nil
-      self.assignment.company_profile.name
-    else
-      "No Assignment"
-    end
+  # def company_profile
+  #   self.assignment.company_profile
+  # end
+  # def company
+  #   if self.assignment != nil
+  #     self.assignment.company_profile.name
+  #   else
+  #     "No Assignment"
+  #   end
 
-  end
-  def employee_profile
-    if self.assignment != nil
-      self.assignment.employee_profile
-    else
-      "No Assignment"
-    end
-  end
+  # end
+
   
-  def employee
-    if self.assignment != nil
-      self.assignment.employee_profile.name
-    else
-      "No Assignment"
-    end
-  end
+  # def employee
+  #   if self.assignment != nil
+  #     self.assignment.employee_profile.name
+  #   else
+  #     "No Assignment"
+  #   end
+  # end
   
   def update_company_balance!
     self.company_profile.update_balance!

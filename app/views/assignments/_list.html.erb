@@ -1,5 +1,9 @@
 <%= content_tag_for(:li, assignment, class:"list-group-item list-group-item-danger") do %>
     Employee: <%= link_to assignment.employee_profile.name, assignment %> | Current Status: <%= assignment.state.titleize %></strong><br>
-        <%= assignment.company_profile.name %> |  <%= assignment.job_title.titleize %><p>Pay: <%= assignment.pay_rate %> | Bill:  <%= assignment.bill_rate %>  | Mark-up: <%= assignment.mark_up.round(2) %></p>
+        <%= assignment.company_profile.name %> |  <%= assignment.job_title.titleize %><p>Pay: <%= number_to_currency(assignment.pay_rate, :unit => "$") %> | Bill:  <%= number_to_currency(assignment.bill_rate, :unit => "$") %> 
+        Mark-up: <%= assignment.mark_up.round(2) %></p>
+        <h5><strong>Gross Pay:</strong><%=  number_to_currency(assignment.gross_assignment_pay, :unit => "$") %></h5> 
+        <h5><strong>Gross Bill:</strong><%=  number_to_currency(assignment.gross_assignment_bill, :unit => "$") %></h5>
+            <p> Total Weeks: <%= assignment.weeks_worked %> </p>
 
 <% end %>

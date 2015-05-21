@@ -1,0 +1,22 @@
+
+    <%= div_for assignment do %>
+        <p><strong>Assignment:</strong> <%= link_to assignment.job_title, assignment %> | Current Status: <%= assignment.state.titleize %></p>
+        <% if assignment.timesheets.any? %>
+        <p>Most Recent Time Sheet: <%= assignment.most_recent_timesheet.week %> | Currently Assigned: <%= assignment.most_recent_shift.time_in.strftime("%m / %d ") %> %></p>
+        
+        <ol>
+        <% assignment.timesheets.each do |timesheet| %>
+        
+            <strong><li>Employee: <%= link_to @employee_profile.name, @employee_profile %>  </strong><br>
+            <small>Number of Shifts: <%= assignment.shifts.count %> | Date Created: <%= timesheet.created_at.strftime("%m / %d ") %>
+            <br>Hours Today: <%= assignment.hours_today %> | Hours Last Week: <%= assignment.hours_last_week.round(2) %>
+            </small><button><%= link_to "View Assignment", assignment %></button>
+            </li>
+            <br>
+            <% end %>
+        </ol>
+        <p><strong>Currently Clocked In?</strong> <%= assignment.is_clocked_in? %>    |  <strong> Today's Pay:</strong>    <%= assignment.todays_pay %></p>
+<% end %>
+        
+        <% end %>
+        

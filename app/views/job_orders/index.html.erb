@@ -1,5 +1,6 @@
 <% if @q %>
-<div class= "row">
+
+
 <div class="col-md-2">
   <%= search_form_for @q, url: search_job_orders_path, method: :post do |f| %>
   <div class="field">
@@ -31,12 +32,15 @@
 <% end %>
 
 
-<div class="col-md-6">
 
 
 
-<%= render 'job_orders/job_order' %>
-</div>
+<% if can? :create, JobOrder %>
+  <button class="btn btn-default">
+  <%= link_to 'New Job Order', new_job_order_path %>
+</button>
+<% end %>
+<%= render 'company_profiles/job_orders' %>
 
 
-</div>
+

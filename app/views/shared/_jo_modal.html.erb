@@ -1,0 +1,25 @@
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="job-order-<%= job_order.id %>-description" tabindex="-1" role="dialog" aria-labelledby="job-order-<%= job_order.id %>-label" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="todo-<%= job_order.id %>-label">Job Description</h4>
+        </div>
+        <div class="modal-body">
+        <p><%= job_order.job_description %></p>
+        <h5> Pay Range: <%= job_order.min_pay %> - <%= job_order.max_pay %> </h5>
+        
+        <h4>Account Manager: <% if job_order.account_manager %><%= link_to job_order.account_manager.name, job_order.account_manager %><% else %> No Account Manager Assigned. <% end %></h4>
+          <span class="has-tooltip" data-toggle="tooltip" title="<%= "Created on #{job_order.created_at.strftime("%m/%e/%Y at %w:%M %p")}  |   Last modified on #{job_order.updated_at.strftime("%m/%e/%Y at %w:%M %p")}" %>">
+            Details
+          </span>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+

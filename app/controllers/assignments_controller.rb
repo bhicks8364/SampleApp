@@ -1,20 +1,24 @@
 class AssignmentsController < ApplicationController
-  
+  # load_and_authorize_resource :assignment
   # load_and_authorize_resource :employee_profile
+  # load_resource :job_order
   # load_and_authorize_resource :assignment, :through => :employee_profile
   before_action :set_assignment, only: [:show, :edit, :update, :destroy]
 
   # GET /assignments
   # GET /assignments.json
   def index
-    @assignments = Assignment.all
+    @assignments = Assignment.active.order("created_at DESC")
+    @inactive_assignments = Assignment.inactive.order("created_at DESC")
   end
 # Assignment.joins(:timesheets).merge(Timesheet.current)
 
   # GET /assignments/1
   # GET /assignments/1.json
   def show
-    @employee = @assignment.employee
+    @company = @assignment.company_profile
+    @job_order = @assignment.job_order
+    @employee = @assignment.employee_profile
     @timesheets = @assignment.timesheets
     @shifts = @employee.shifts.clocked_in
     
@@ -25,6 +29,8 @@ class AssignmentsController < ApplicationController
   # GET /assignments/new
   def new
     @assignment = Assignment.new
+    @company_profiles = CompanyProfile.order('company_profiles.company_name')
+    @employee_profiles = EmployeeProfile.unassigned.order('employee_profiles.employee_name').distinct
     
     respond_to do |format|
       format.html # new.html.erb
@@ -40,12 +46,15 @@ class AssignmentsController < ApplicationController
   # POST /assignments
   # POST /assignments.json
   def create
+
+
     @assignment = Assignment.create(assignment_params)
 
     respond_to do |format|
       if @assignment.save
+        
 
-        format.html { redirect_to :back }
+        format.html { redirect_to assignments_path(@assignment, anchor: "assignment_#{@assignment.id}"), notice: 'Assignment was successfully created.'} 
         format.json { render :show, status: :created, location: @assignment }
         format.js
       else
@@ -68,6 +77,11 @@ class AssignmentsController < ApplicationController
         format.json { render json: @assignment.errors, status: :unprocessable_entity }
       end
     end
+  end
+  
+  def cancel
+    @assignment = Assignment.find(params[:id])
+    @assignment.cancel
   end
 
   # DELETE /assignments/1

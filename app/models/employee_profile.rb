@@ -13,13 +13,25 @@
 #
 
 class EmployeeProfile < ActiveRecord::Base
+    include ArelHelpers::ArelTable
+    
     has_many :assignments
+
+
     has_many :timesheets, through: :assignments
     has_many :shifts, through: :assignments
     has_many :job_orders, through: :assignments
+    has_many :agency_profiles, through: :job_orders
     has_one :user, as: :profile
     has_one :current_shift, -> { where state: 'clocked_in' }, class_name: "Shift", foreign_key: "employee_profile_id"
-    scope :with_active_orders, -> { joins(:job_orders).merge(JobOrder.active)}
+    has_one :current_assignment, -> { where state: 'active' }, class_name: "Assignment", foreign_key: "employee_profile_id"    
+    
+    # scope :with_active_orders, -> { joins(:job_orders).merge(JobOrder.active)}
+    scope :with_active_assignments, -> { joins(:assignments).merge(Assignment.active)}
+    # scope :unassigned, joins(:assignments).merge(Assignment.active)
+
+     scope :unassigned, -> { joins(:assignments).where.not(id: Assignment.active.pluck(:employee_profile_id)) }
+
     
     
     
@@ -33,7 +45,11 @@ class EmployeeProfile < ActiveRecord::Base
     delegate :role, to: :user
     
     scope :on_shift, -> { joins(:shifts).merge(Shift.clocked_in)}
-
+    
+    def self.with_current_shift
+        joins(:current_shift)
+    end
+        
     
     def last_assignment_timesheets
         self.assignments.last.timesheets
@@ -46,9 +62,9 @@ class EmployeeProfile < ActiveRecord::Base
     def current_shift
         self.shifts.clocked_in.last
     end
-    def current_assignment
-        self.current_shift.assignment
-    end
+    # def current_assignment
+    #     self.current_shift.assignment
+    # end
     
     def has_assignment?
         if self.assignments.any?
@@ -59,7 +75,7 @@ class EmployeeProfile < ActiveRecord::Base
     end
     
     def is_assigned?
-        if self.assignments.where(state: "Current").any?
+        if self.assignments.where(state: "active").any?
             true
         else
             false

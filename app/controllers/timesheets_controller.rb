@@ -4,14 +4,23 @@ class TimesheetsController < ApplicationController
   # GET /timesheets
   # GET /timesheets.json
   def index
-    @q = Timesheet.search(params[:q])
-    @timesheets = @q.result.includes(:assignment, :shifts)
+    # @current_timesheets = Timesheet.current
+    @current_profile = current_user.profile
+    @timesheets = @current_profile.timesheets
+    
+    # @current_by_state = Timesheet.current.group(:state).count
+    @timesheets_by_week = @timesheets.group(:week).order(week: :desc, updated_at: :desc).count
+    # @all_by_week = Timesheet.group(:week).order(week: :desc, updated_at: :desc).count
   end
 
   # GET /timesheets/1
+  # Timesheet.group(:status).count
   # GET /timesheets/1.json
   def show
     @assignment = @timesheet.assignment
+    @employee = @assignment.employee_profile
+    @company = @assignment.company_profile
+    @shifts = @timesheet.shifts
     
   end
 
@@ -85,6 +94,6 @@ class TimesheetsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def timesheet_params
-      params.require(:timesheet).permit(:company_profile_id, :week)
+      params.require(:timesheet).permit!
     end
 end

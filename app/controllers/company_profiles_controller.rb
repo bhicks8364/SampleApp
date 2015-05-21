@@ -4,12 +4,12 @@ class CompanyProfilesController < ApplicationController
   
   def new
       @company_profile = CompanyProfile.new
-      # # @company.build_user
+
   end
     
   def create
       @company_profile = CompanyProfile.create(company_profile_params)
-      # @company.build_user
+
 
       if @company_profile.save
         flash[:info] = "Company Profile was created!!"
@@ -31,17 +31,6 @@ class CompanyProfilesController < ApplicationController
     @assignments = @company_profile.assignments
     @users = @company_profile.users.all.paginate(page: params[:page])
   end
-
-
-
-#   def create
-#     @company = CompanyProfile.new
-#     @company.user.create!
-
-#     if @company.save
-#       redirect_to company_profiles_path, notice: "The company has been successfully created."
-#     end
-#   end
 
   def edit
     # @company = CompanyProfile.find(params[:id])

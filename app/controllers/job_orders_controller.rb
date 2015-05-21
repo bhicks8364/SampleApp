@@ -1,9 +1,12 @@
 class JobOrdersController < ApplicationController
 
   before_action :set_job_order, only: [:show, :edit, :update, :destroy]
-# load_and_authorize_resource :company_profile
-# load_and_authorize_resource :job_order, :through => :company_profile
-  # GET /job_orders
+  # load_and_authorize_resource 
+  # load_and_authorize_resource :job_order
+  # load_resource :company_profile
+  # load_resource :agency_profile
+  # load_and_authorize_resource :job_order, :through => [:company_profile, :agency_profile]
+#   # GET /job_orders
   # GET /job_orders.json
   def search
     @q = JobOrder.search(params[:q])
@@ -14,6 +17,7 @@ class JobOrdersController < ApplicationController
   
   def index
     @company_profile = CompanyProfile.find(params[:company_profile_id])
+
     @job_orders = @company_profile.job_orders.newest_first
   end
 
@@ -22,6 +26,7 @@ class JobOrdersController < ApplicationController
   def show
     # @company_profile = CompanyProfile.find(params[:company_profile_id])
     @job_order = JobOrder.find(params[:id])
+    @company_profile = @job_order.company_profile
     @assignments = @job_order.assignments
     @timesheets = @job_order.timesheets.where(week: Date.today.cweek)
     @company_profile = @job_order.company_profile
@@ -30,8 +35,8 @@ class JobOrdersController < ApplicationController
 
   # GET /job_orders/new
   def new
-    @company = CompanyProfile.find(params[:company_profile_id])
-    @job_order = @company.job_orders.build
+    # @company_profile = CompanyProfile.find(params[:company_profile_id])
+    @job_order = JobOrder.new
     # @job_order.assignments.build
     
         respond_to do |format|
@@ -44,22 +49,24 @@ class JobOrdersController < ApplicationController
 
   # GET /job_orders/1/edit
   def edit
+    # @employees = EmployeeProfile.includes(:current_assignment).where(assignments: { id: nil })
+    @account_managers = @job_order.agency_profile.account_managers
+    # @job_order.assignments.build
   end
 
   # POST /job_orders
   # POST /job_orders.json
   def create
-    @company = CompanyProfile.find(params[:company_profile_id])
-    agency = AgencyProfile.find(1)
-    @job_order = @company.job_orders.build(job_order_params)
-    @job_order.agency_profile = agency
-    @job_order.save
+
+    @job_order = JobOrder.create(job_order_params)
+    # @job_order.agency_profile = agency
+    # @job_order.save
     # @job_order.assignments.build
 
 
     respond_to do |format|
       if @job_order.save
-        format.html { redirect_to company_profile_path(@company, anchor: "job_order_#{@job_order.id}"), notice: 'Job order was successfully created.' }
+        format.html { redirect_to job_orders_path(@job_order, anchor: "job_order_#{@job_order.id}"), notice: 'Job order was successfully created.' }
         format.json { render :show, status: :created, location: @job_order }
         format.js
       else
@@ -74,8 +81,8 @@ class JobOrdersController < ApplicationController
   # PATCH/PUT /job_orders/1.json
   def update
     respond_to do |format|
-      if @job_order.update(job_order_params)
-        format.html { redirect_to [@job_order.company_profile, @job_order], notice: 'Job order was successfully updated.' }
+      if @job_order.update_attributes(job_order_params)
+        format.html { redirect_to job_orders_path(@job_order, anchor: "job_order_#{@job_order.id}"), notice: 'Job order was successfully updated.' }
         format.json { render :show, status: :ok, location: @job_order }
       else
         format.html { render :edit }
@@ -87,7 +94,7 @@ class JobOrdersController < ApplicationController
   # DELETE /job_orders/1
   # DELETE /job_orders/1.json
   def destroy
-    @company_profile = @job_order.company_profile
+
     @job_order.destroy
     respond_to do |format|
       format.html { redirect_to company_profile_job_orders_url(@company_profile), notice: 'Job order was successfully destroyed.' }

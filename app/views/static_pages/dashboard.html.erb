@@ -1,104 +1,29 @@
 <% provide(:title, "Dashboard") %>
 <div class="center jumbotron">
-    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu4">
-        <li role="presentation"><a href="#">Home</a></li>
-        <li role="presentation"><a href="#">Profile</a></li>
-        <li role="presentation" class="dropdown-header"><a><%= link_to 'New Assignment', new_assignment_path, :remote => true, :id => "new_assignment_link" %></a></li>
-    </ul>
-
-             
-<% if @user.employee? %>
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">Panel title</h3>
-  </div>
-  <div class="panel-body">
-    <div class="btn-group">
-    <!--Active Job Orders-->
-    <% @job_orders.each do |job_order| %>
-    <!--Job Order Modal Buttons-->
-
-    <% if job_order.needs_attention? %>
-        <button class="btn btn-danger" data-toggle="modal" data-target="#job-order-<%= job_order.id %>-description">
-           <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>  <%= job_order.job_title %>
-        </button>
-    <% else %>
-        <button class="btn btn-default" data-toggle="modal" data-target="#job-order-<%= job_order.id %>-description">
-           <%= job_order.job_title %>
-        </button>
-    <% end %>
-    
+  <% if @current_user.agency? %>
   
-    
-    <%= render partial: 'shared/jo_modal', locals: {job_order: job_order} %>
-    <% end %>
-  </ul>
-</div>
-  </div>
-</div>
-
-<% end %>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-
-
-
-<% if @user.company? %>
-  <h2 class="page-header"><%= @company.name %></h2>
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="sub-header">All Employees</h3>
-    </div>
-  </div>
-
-<%= render "table" %>
-<% end %>
-
-
-
-
-
-<br>
-<% if @user.agency? %>
-<div class="panel panel-default">
-  <h3 class="page-header">Agency View</h3>
-  <div class="panel-heading">
-    <h3 class="sub-header"> ALL Active Job Orders</h3>
-
-<% @active_job_orders.each do |active| %> 
+<ul id="menu">
+  <%= content_tag_for(:li, @companies) do |company| %>
+  <%= company.name %>
 <ul class="list-group">
+ 
 
- <strong><%= active.company_profile.name %> </strong> <br>
-  <li class="list-group-item">
-    <small><%= active.job_title %></small></li>
-  <li class="list-group-item">
-    <small> ASAP?: <%= active.asap %></small></li>
-  <li class="list-group-item">
-    <small> People Needed: <%= active.needed %></small></li>
-  <li class="list-group-item">
-  <small> People Assigned: <%= active.employee_profiles.count %></small>
+  <% company.job_orders.each do |jo| %>
+  <% if jo.needs_attention? %>
+  <li class="list-group-item list-group-item-danger"><span class="label label-danger"><%= jo.needed %> | <%= jo.assignments.count %></span><%= link_to jo.job_title, jo %>
+  <% else %>
+  <li class="bg-default"><span class="label label-success"> <%= jo.needed %> </span> <%= link_to jo.job_title, jo %>
+  <% end %>
+  <ul>
+    <% jo.assignments.each do |assignment| %>
+    <li><%= link_to assignment.employee_profile.name, assignment %></li>
+    <% end %>
+    </ul>
   </li>
 
-
+    <% end %>
+</ul>
 <% end %>
 </ul>
-  </div>
 </div>
 <% end %>
-</div>

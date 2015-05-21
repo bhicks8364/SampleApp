@@ -1,51 +1,19 @@
 <h3>All assignments</h3>
-<div class="row">
+
   <button><%= link_to 'New Assignment', new_assignment_path, :remote => true, :id => "new_assignment_link" %></button>
-</div>
 
-<hr>
-<div class="col-md-8">
-<table id="assignments-table" class="table">
-  <thead>
-    <tr>
-      <th>On the clock?</th>
-      <th>Employee Name</th>
-      <th>Company Name</th>
-      <th>Status</th>
-      <th>Regular Hours</th>
-      <th>Overtime Hours</th>
-      <th>Timesheets</th>
-      <th>Shifts</th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @assignments.each do |assignment| %>
-
-    <%= content_tag_for(:tr, assignment) do %>
-        <td><%= assignment.is_clocked_in? %></td>
-        <td><%= link_to assignment.job_title, assignment %></td>
-        <td><%= link_to assignment.employee.name, assignment.employee %></td>
-        <td><%= link_to assignment.company, assignment.company_profile %></td>
-        <td><%= number_to_currency(assignment.pay_rate, :unit => "$") %></td>
-        <td><%= number_to_currency(assignment.bill_rate, :unit => "$") %></td>
-        <td> <%= assignment.timesheets.count %></td>
-        <td><%= assignment.shifts.count%></td>
-        <td><%= link_to 'Edit', edit_assignment_path(assignment) if can? :update, assignment %></td>
-        <td><%= link_to 'Destroy', assignment, method: :delete, data: { confirm: 'Are you sure?' } if can? :destroy, assignment %></td>
-        <% end %>
+<%= render 'table' %>
 
 
-    <% end %>
-  </tbody>
-</table>
-</div>
+<h4>Inactive Assignments</h4>
+<ul class="list-group">
+    
+<% @inactive_assignments.each do |assignment| %>
 
+    <%= render 'list', assignment: assignment %> 
 
+<% end %>
 
-<br>
-
+</ul>
 
  

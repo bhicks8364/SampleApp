@@ -1,71 +1,8 @@
-
-<div class="col-md-10">
-  <div class="search">
-    <h3>All Employees </h3>
-    <%= search_form_for @q do |f| %>
-    <%= f.search_field :employee_name_or_ssn_cont, placeholder: "Search by name or SSN", class: "form-control" %>
-
-  <% end %>
-  </div>
-
-
-
+<h3>Employees</h3>
 
 <% if @employee_profiles.any? %>
 
-<div class="table-responsive">
-<table class="table table-hover">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th><%= sort_link(@q, :employee_name, 'Employee Name') %></th>
-      <th>Email</th>
-      <th>SSN #</th>
-      <th>Marital Status</th>
-      <th>Created</th>
-
-      <th colspan="2"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @employee_profiles.each do |employee| %>
-    <% if employee.user %>
-      <tr>
-        <td><%= employee.id %></td>
-        <td><%= link_to employee.employee_name, employee %></td>
-        <td><%= employee.user.email %></td>
-        <td><%= employee.ssn %></td>
-        <td><%= employee.marital_status %></td>
-        <td><%= time_ago_in_words(employee.created_at) %></td>
-
-        <td><%= link_to 'Edit', edit_employee_profile_path(employee) %></td>
-        <td><%= link_to 'Destroy', employee, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-      <% end %>
-    <% end %>
-  </tbody>
-</table>
-<% else %>
-No Employee Profiles.
+<%= render 'employee_profiles/table' %>
 <% end %>
 
-<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-  <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingOne">
-      <h4 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-controls="collapseOne">
-          Collapsible Group Item #1
-        </a>
-      </h4>
-    </div>
-    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-      <div class="panel-body">
-        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-      </div>
-    </div>
-  </div>
-</div>
 
-
-</div>

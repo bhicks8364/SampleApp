@@ -2,20 +2,65 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    
+    # Set guest role if not logged in
     user ||= User.new(role: "guest")
-    # profile = user.profile
     
-    # if user.super?
+    if user.has_role? :agency_owner
       can :manage, :all
+      # can [:create, :read, :update ], User, :profile_id => user.profile_id
+      # can [:read, :update, :add_user ], AgencyProfile, 
+      #     AgencyProfile do |agency_profile|
+      #       agency_profile.users.include?(user)
+      #     end
+      # can :manage, JobOrder, JobOrder.active do |job_order|
+      #       job_order.agency_profile_id == user.profile_id
+      # end
+      # can :manage, Assignment, :job_order => { :agency_profile_id => user.profile_id }
+      # # can :manage, Assignment, :job_order => { :agency_profile_id => user.profile_id }
+
+      # can :create, CompanyProfile
+
+    end
+    
+    # if user.has_role? :account_manager
+    #   can :read, User, :profile_id => user.profile_id
+    #   can [:create, :read, :update ], AgencyProfile, 
+    #       AgencyProfile do |agency_profile|
+    #         agency_profile.users.include?(user)
+    #   end
+    #   can [:create, :read, :update ], JobOrder, 
+    #       JobOrder do |job_order|
+    #         job_order.try(:account_manager) == user
+    #   end
+
     # end
     
-    # if user.agency?
-    #   can :manage, JobOrder
-    #   can :manage, Assignment
+    # if user.has_role? :employee
+
+    # end
+
+
+ 
+    
+    # if user.agency_owner?
+    #   can :manage, User, :profile => { :id => user.profile_id }
+    # end 
+      
+  # can :read, AgencyProfile
+   
+    
+    # can [ :create ], TimeReport do |time_report|
+    # user.project_ids.include? time_report.project_id 
+
+      #   profile = user.profile
+      # can :manage, JobOrder, :agency_profile => { :profile_id => profile.id }
+      # can :manage, AgencyProfile, :id => profile.id
+    #   can :manage, User, :id => user.id
+    #   can :manage, Assignment, :job_order => { :company_profile_id => profile.id }
+    #   can :manage, Shift
     # end
     # if user.company?
-    #   can :manage, CompanyProfile, :id => profile.id
+      # can :manage, CompanyProfile, :id => user.profile_id
     #   can :manage, User, :id => user.id
     #   can :manage, Assignment, :job_order => { :company_profile_id => profile.id }
     #   can :manage, Shift

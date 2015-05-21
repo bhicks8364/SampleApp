@@ -1,15 +1,42 @@
 $(document).ready(function() {
     $('#assignments-table').DataTable( {
         "paging":   true,
-        "ordering": false,
-        "info":     false
+        "ordering": true,
+        "info":     true
     } );
     
     $('#timesheets-table').dataTable( {
         "paging":   true,
-        "ordering": false,
-        "info":     false
+        "info":     true,
+        "ordering": true,
+        // "scrollY":        200,
+        // "scrollCollapse": true,
+        "jQueryUI":       true,
+        "dom": 'T<"clear">lfrtip'
     } );
+    
+    $('#job-orders-table').dataTable( {
+        "paging":   true,
+        "ordering": true,
+        "info":     true,
+        "jQueryUI": true
+    } );
+    
+    $('#employees-table').dataTable( {
+        "paging":   true,
+        "ordering": true,
+        "info":     true
+    } );
+    
+    $('#company_profiles-table').DataTable( {
+        "paging":   true,
+        "ordering": true,
+        "info":     true
+    } );
+    
+    $( "#job_order_fill_date" ).datepicker({ minDate: -1, maxDate: "+1M +10D", dateFormat: "yy-mm-dd" });
+    $( ".dragme" ).draggable();
+    $( "#menu" ).menu();
     
     
 //     $('#jobOrderModal').on('show.bs.modal', function (event) {

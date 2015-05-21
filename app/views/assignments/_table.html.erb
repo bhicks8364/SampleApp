@@ -1,38 +1,48 @@
-<div class="col-md-4">
-<% if @assignments.any? %>
-<table id="assignments-table" class="table table-hover">
+<table id="assignments-table" class="table">
   <thead>
     <tr>
+      <th>Status </th>
+      <th>Employee Name</th>
+      <th>Company Name</th>
       <th>Job Title</th>
-      <th>Employee</th>
-      <th>Company</th>
-      <th>Pay rate</th>
-      <th>Bill rate</th>
-      <th colspan="2"></th>
+      <th>Pay</th>
+      <th>Bill</th>
+      <th>Gross Pay</th>
+      <th>Gross Bill</th>
+      <th>Assigned</th>
+      <th></th>
+      <th></th>
     </tr>
   </thead>
 
   <tbody>
     <% @assignments.each do |assignment| %>
 
-      <% if assignment.current_shift != nil %>
-    <%= content_tag_for(:tr, assignment, class:"list-group-item list-group-item-danger") do %>
-        <td><span class="label <%= assignment.current_shift != nil ? 'label-success' : 'label-warning' %>"></span>Green means clocked in</td>
-        <td><%= link_to assignment.job_title, assignment %></td>
-        <td><%= link_to assignment.employee.name, assignment.employee %></td>
-        <td><%= link_to assignment.company, assignment.company_profile %></td>
+    <%= content_tag_for(:tr, assignment) do %>
+        <% if assignment.is_clocked_in? %>
+        <td><span class="glyphicon glyphicon-time"></span></td>
+        <% else %>
+        <td><span class="glyphicon glyphicon-ok"></span></td>
+        <% end %>
+        <td><%= link_to assignment.employee_profile.name, assignment %></td>
+        <td><%= link_to assignment.company_profile.name, assignment.company_profile %></td>
+        <td><%= link_to assignment.job_title.titleize, assignment %></td>
+        
         <td><%= number_to_currency(assignment.pay_rate, :unit => "$") %></td>
         <td><%= number_to_currency(assignment.bill_rate, :unit => "$") %></td>
-        <td><%= link_to 'Edit', edit_assignment_path(assignment) if can? :update, assignment %></td>
-        <td><%= link_to 'Destroy', assignment, method: :delete, data: { confirm: 'Are you sure?' } if can? :destroy, assignment %></td>
+        <td> <%=  number_to_currency(assignment.gross_assignment_pay, :unit => "$") %></td>
+        <td><%=  number_to_currency(assignment.gross_assignment_bill, :unit => "$") %></td>
+        <td><%= assignment.created_at.strftime("%m/%e/%Y at %w:%M %p") %></td>
+        <td><%= link_to edit_assignment_path(assignment), class: "btn btn-default" do %>
+              <i class="glyphicon glyphicon-pencil"></i>
+            <% end %></td>
+            <td><%= link_to cancel_assignment_path(assignment), remote: true, method: :patch, data: { confirm: 'Are you sure?' }, class: "btn btn-default" do %>
+              <i class="glyphicon glyphicon-trash"></i>
+            <% end %></td>
+
         <% end %>
+
 
     <% end %>
-
-        <% end %>
   </tbody>
 </table>
-<% else %>
-No Assignments
-<% end %>
-</div>

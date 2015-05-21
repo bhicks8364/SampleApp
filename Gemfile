@@ -17,6 +17,9 @@ gem 'state_machine'
 gem 'ransack'
 gem 'simple_form', '~> 3.1.0'
 gem 'jquery-datatables-rails', '~> 3.3.0'
+gem 'arel-helpers'
+gem 'jquery-ui-rails'
+gem 'mandrill-api', '~> 1.0.53', require: "mandrill"
 
 # gem 'pg'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'

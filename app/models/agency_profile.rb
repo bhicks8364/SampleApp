@@ -9,11 +9,12 @@
 #
 
 class AgencyProfile < ActiveRecord::Base
-    has_many :users, as: :profile, class_name: 'User'
+    has_many :users, -> { where profile_type: 'AgencyProfile' }, class_name: "User", foreign_key: "profile_id"
     # has_many :agency_users, -> { where processed: true }, class_name: 'User'
     has_many :job_orders
     has_many :assignments, through: :job_orders
-    has_many :timesheets, through: :assignments
+    has_many :employee_profiles, through: :assignments
+    has_many :timesheets, -> { order(week: :desc, updated_at: :desc) }, through: :assignments 
     has_many :company_profiles, through: :job_orders
     has_many :account_managers, -> { where role: 'Account Manager' }, class_name: "User", foreign_key: "profile_id"
     has_one :owner, -> { where role: 'Owner' }, class_name: "User", foreign_key: "profile_id"
@@ -34,7 +35,7 @@ class AgencyProfile < ActiveRecord::Base
     end
     def add_as_sales(user)
        self.users << user
-       user.update(role: "Sales")
+       user.update(role: "Sales Team")
        user
     end
     def add_as_payroll(user)
@@ -44,7 +45,7 @@ class AgencyProfile < ActiveRecord::Base
     end
     def add_as_admin(user)
        self.users << user
-       user.update(role: "Admin", admin: true)
+       user.update(role: "Agency Super", admin: true)
        user
     end
         

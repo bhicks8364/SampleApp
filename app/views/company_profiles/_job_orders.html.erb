@@ -1,6 +1,6 @@
-<h3>All Job Orders</h3>
+
 <% if @job_orders.any? %>
-<table class="table">
+<table id="job-orders-table" class="display" cellspacing="0" width="100%">
   <thead>
     <tr>
       <th>Job title</th>
@@ -9,20 +9,22 @@
       <th>People Needed</th>
       <th>Current Assignments</th>
       <th>Needs Attention?</th>
-      <th colspan="3"></th>
+
+      <th></th>
+      <th></th>
     </tr>
   </thead>
 
   <tbody>
     <% @job_orders.each do |job_order| %>
       <tr>
-        <td><%= job_order.job_title %></td>
+        <td><%= link_to job_order.job_title, job_order %></td>
         <td><%= job_order.job_description %></td>
         <td><%= job_order.fill_date %></td>
         <td><%= job_order.needed %></td>
         <td><%= job_order.assignments.count %></td>
         <td><%= job_order.needs_attention? %></td>
-        <td><%= link_to 'Show', job_order if can? :read, job_order %></td>
+        
         <td><%= link_to 'Edit', edit_job_order_path(job_order) if can? :update, job_order %></td>
         <td><%= link_to 'Destroy', job_order, method: :delete, data: { confirm: 'Are you sure?' } if can? :delete, job_order %></td>
       </tr>

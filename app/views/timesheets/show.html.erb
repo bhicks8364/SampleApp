@@ -1,11 +1,11 @@
 
 
-<div>
+
     <strong>Company:</strong>
-  <%= link_to @timesheet.company, company_profile_path(@timesheet.assignment.job_order.company_profile_id) %>
+  <%= link_to @company.name, @company %>
   <br>
   <strong>Employee:</strong>
-  <%= link_to @timesheet.employee, @timesheet.employee_profile %>
+  <%= link_to @employee.name, @employee %>
   <br>
   <p>
   <strong>Current State:</strong>
@@ -27,8 +27,7 @@
   <br>
     <strong>Mark Up:</strong>
   <%= @timesheet.mark_up.round(2) %>
-  
-</div>
+
 
 
 
@@ -75,7 +74,7 @@
 
 
 
-<button> <%= link_to "Go to Assignment", assignment_path(@assignment) %> </button>
+<button> <%= link_to "Go to Assignment", assignment_path(@timesheet.assignment) %> </button>
 
 
 <br>
@@ -124,20 +123,7 @@
   </thead>
 
   <tbody>
-    
-    <% @timesheet.shifts.each do |shift| %>
-    <tr>
-      <% if shift.state == "Clocked In" %>
-        <td class="success"><%= shift.state %></td>
-        <td class="success"><%= shift.id %> </td>
-        <td class="success"><%= shift.week %> </td>
-        <td class="success"><%= shift.time_in.strftime("%A") %> </td>
-        <td class="success"><%= shift.time_in.strftime("%m / %d ") %> </td>
-        <td class="success"><%= shift.assignment.job_title %> </td>
-        <td class="success"><%= shift.time_in ? shift.time_in.strftime("%I:%M %p") : "No clock in time" %></td>
-        <td class="success"><%= shift.time_out ? shift.time_out.strftime("%I:%M %p") : shift.state %></td>
-        <td class="success"><%= shift.hours_worked ? shift.hours_worked.round(2).to_f : shift.state %></td>
-        <% else %>
+<%= content_tag_for(:tr, @shifts) do |shift| %>
         <td><%= shift.state %></td>
         <td><%= shift.id %> </td>
         <td><%= shift.week %> </td>
@@ -148,11 +134,11 @@
         <td><%= shift.time_out ? shift.time_out.strftime("%I:%M %p") : shift.state %></td>
         <td><%= shift.hours_worked ? shift.hours_worked.round(2).to_f : shift.state %></td>
         <td><%= shift.hours_worked ? shift.hours_worked.round(2).to_f : shift.state %></td>
-      <% end %>
+
         <td><%= link_to 'Show', assignment_shift_path(shift.assignment, shift) %></td>
         <td><%= link_to 'Edit', edit_assignment_shift_path(shift.assignment, shift) %></td>
         <td><%= link_to 'Destroy', assignment_shift_path(shift.assignment, shift), method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+
     <% end %>
   </tbody>
 </table>

@@ -1,29 +1,82 @@
 <p id="notice"><%= notice %></p>
-<p>
-  <strong>Company profile:</strong>
-  <%= @job_order.company_profile.name %>
+<div>
+ <h3> <strong><%= @job_order.company_profile.name %></strong></h3> 
+  <h4><%= @job_order.agency_profile.name %></h4>
+  <br>
+    <strong>Maximum Bill Per Hour:</strong>
+  <%= number_to_currency(@job_order.max_bill, precision: 2) %>
+  <br>
+      <strong> Pay Range: </strong>
+  <%= number_to_currency(@job_order.min_pay, precision: 2) %> - <%= number_to_currency(@job_order.max_pay, precision: 2) %>
+    <br>
+      <strong> Estimated Mark Up: </strong>
+  <%= number_with_precision(@job_order.low_markup, precision: 2) %> - <%= number_with_precision(@job_order.high_markup, precision: 2) %>
+  <br>
+    <strong>Account Manager: </strong>
+  <%= link_to @job_order.account_manager.name, @job_order.account_manager %>
+  <hr>
+  
 <br>
-  <strong>Job title:</strong>
-  <%= @job_order.job_title %>
-</p>
-<p>
   <strong>Current State:</strong>
   <%= @job_order.state.titleize %>
-</p>
+</div>
+
+
+
+
 
 
 
 <p>
-  <strong>Fill date:</strong>
- <%= @job_order.fill_date.strftime("%A - %m / %d ") %>
+  <strong><%= @job_order.needed %> people needed by <%= @job_order.fill_date.strftime("%A - %m / %d ") %></strong>
+</p>
+<div class="progress">
+  <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="70"
+  aria-valuemin="0" aria-valuemax="100" style="width: <%= @job_order.percent_filled %>%; ">
+    <%= number_to_percentage(@job_order.percent_filled, precision: 0) %> Complete 
+  </div>
+</div>
+<hr>
+<% if @job_order.assignments.count > 1 %>
+<h4><strong>There are <%= @job_order.assignments.count %> employees assigned to this job order. </strong> </h4>
+<% else %>
+<h4><strong> There is <%= @job_order.assignments.count %> employee assigned to this job order. </strong>  </h4>
+<% end %>
+<br>
+
+<% @assignments.each do |assignment| %>
+<p>
+<br>
+<% if assignment.mark_up > @job_order.low_markup %>
+<span class="glyphicon glyphicon-ok-circle"></span>
+<% else %>
+<span class="glyphicon glyphicon-alert"></span>
+<% end %>
+<strong><%= assignment.employee_profile.name %> </strong> <br>
+ Pay: <%= number_to_currency(assignment.pay_rate, precision: 2) %> <br>
+ Bill: <%= number_to_currency(assignment.bill_rate, precision: 2) %> <br>
+ Mark-up: <%= number_with_precision(assignment.mark_up, precision: 2) %>
+</p>
+
+
+
+
+<% end %>
+
+<br>
+
+<p>
+  
+ <% if @job_order.asap %>
+ <strong>URGENT REQUEST - Needed ASAP</strong>
+ <% else %>
+ <strong><small>Needed by <%= @job_order.fill_date.strftime("%A - %m / %d ") %></small></strong>
+ <% end %>
 </p>
 <p>
-  <strong>ASAP Order?:</strong>
- <%= @job_order.asap %>
-</p>
-<p>
-  <strong>People Needed:</strong>
- <%= @job_order.needed %>
+  <strong>Job Description:</strong><br>
+   <h3><%= @job_order.job_title %></h3>
+ <%= @job_order.job_description %>
 </p>
 
 
@@ -35,32 +88,13 @@
   <%= @job_order.total_order_ot_hours %><br>
 
     
- <strong>Total Gross Bill:</strong>
-  <%= number_to_currency(@job_order.total_bill_amount, :unit => "$") %>
-  <br>
-  <strong>Total Gross Pay:</strong>
-  <%= number_to_currency(@job_order.total_pay_amount, :unit => "$") %>
-  <br>
-    <% if @timesheets %>
-    <h3>Current Timesheets </h3>
 
-    <%= render 'timesheets/table' %>
-    
-  <% end %>
  
-<hr>
-<h3><strong><%= @job_order.assignments.count %></strong> Employees are assigned to this Job Order. </h3>
-<br>
+
 <ul>
   
-  <% if @assignments %>
-    <h3>Job Order Totals </h3>
-    <small>
-      Number of Assignments: <%= @assignments.count %> <br>
-    </small>
-    <%= render 'assignments/table' %>
 
-<% end %>
+
 <button>
   <%= link_to 'New Assignment', new_assignment_path, :remote => true, :id => "new_assignment_link" %>
 </button>
@@ -73,5 +107,33 @@
   <%= link_to 'All Company Job Orders', company_profile_job_orders_path(@company_profile) %>
 </button>
 
+<button class="btn btn-default">
+  <%= link_to 'New Job Order', new_job_order_path %>
+</button>
 
 
+
+ 
+    <% if @assignments %>
+    <h3>Job Order Totals </h3>
+    <small>
+      Number of Assignments: <%= @assignments.count %> <br>
+    </small>
+     <strong>Total Gross Bill:</strong>
+  <%= number_to_currency(@job_order.total_bill_amount, :unit => "$") %>
+  <br>
+  <strong>Total Gross Pay:</strong>
+  <%= number_to_currency(@job_order.total_pay_amount, :unit => "$") %>
+  <br>
+    <%= render 'assignments/table' %>
+
+<% end %>
+  
+  
+    <% if @timesheets %>
+    <h3>Current Timesheets </h3>
+
+    <%= render 'timesheets/table' %>
+    
+  <% end %>
+ 

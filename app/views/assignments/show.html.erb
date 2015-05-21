@@ -2,12 +2,12 @@
  
 
  <% if @employee.is_clocked_in? %>
-   <h3> You are currently clocked in as a <%= link_to @employee.current_shift.assignment.job_order.job_title.titleize, assignment_shift_path(@employee.current_assignment, @employee.current_shift) %> ! </h3>
-   <p>Company: <%= @employee.current_assignment.company %></p>
+   <h3> You are currently clocked in as a <%= link_to @employee.current_shift.assignment.job_title.titleize, assignment_shift_path(@employee.current_shift.assignment, @employee.current_shift) %> ! </h3>
+   <p>Company: <%= @company.name %></p>
 
  <% else %>
    <button class="btn-large">
-      <%= link_to "New Shift", new_assignment_shift_path(@assignment) %>
+      <%= link_to "Clock In", new_assignment_shift_path(@assignment) %>
     </button>
   <% end %>
   <% if @shifts.any?  %>
@@ -28,13 +28,13 @@
 
 <hr />
 
-<p>
+<h3>
   <strong>Employee profile:</strong>
-  <%= link_to @assignment.employee.name, employee_profile_path(@employee) %>
-</p>
+  <%= link_to @employee.name, employee_profile_path(@employee) %>
+</h3>
 <div class="btn-group" role="group" aria-label="...">
   <button type="button" class="btn btn-default"><%= link_to "All Shifts", assignment_shifts_path(@assignment) %></button>
-  <button type="button" class="btn btn-default"><%= link_to "View Employee", employee_profile_path(@assignment.employee) %></button>
+  <button type="button" class="btn btn-default"><%= link_to "View Employee", employee_profile_path(@assignment.employee_profile) %></button>
   <button type="button" class="btn btn-default"><%= link_to "View Company", company_profile_path(@assignment.company_profile) %></button>
 </div>
 
@@ -48,9 +48,9 @@
 </p>
 <p>
   <strong>Company</strong>
-  <%= @assignment.company %>
+  <%= @company.name %>
 </p>
-<button> <%= link_to "Go to Job Order", company_profile_job_order_path(@assignment.company_profile, @assignment.job_order) %> </button>
+<button> <%= link_to "Go to Job Order", company_profile_job_order_path(@company, @job_order) %> </button>
 <p>
   <strong>Pay rate:</strong>
   <%= number_to_currency(@assignment.pay_rate, :unit => "$") %>
@@ -81,6 +81,12 @@
 </p>
 
   <% if @assignment.timesheets != nil %>
+  
+  
+  <%= render "timesheets/table" %>
+  
+  
+  
 <p>
 <% @timesheets.each do |timesheet| %>
 Shift Count: <%= timesheet.shifts.count %> <br>

@@ -22,6 +22,9 @@ Rails.application.routes.draw do
   end
 
   resources :assignments do
+    member do
+      patch :cancel
+    end
     resources :shifts do
       member do
         patch :clock_in

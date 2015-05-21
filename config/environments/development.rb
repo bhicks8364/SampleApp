@@ -15,7 +15,7 @@ Rails.application.configure do
 
   # Account Activation Mailer.
   config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.delivery_method = :test
+  # config.action_mailer.delivery_method = :test
   host = 'sampleapp-bhicks8364.c9.io'
   config.action_mailer.default_url_options = { host: host }
   

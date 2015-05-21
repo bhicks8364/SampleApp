@@ -12,16 +12,23 @@
       <%= f.input :email %>
       
       <% if @user.profile_type == "AgencyProfile" %>
-      <%= f.input :profile_id, collection: AgencyProfile.all %>
-      <%= f.input :role, collection: [ "Owner", "Payroll", "Recruiter", "Account Manager", "Sales", "Super", "Admin-Team"] %>
+        <%= f.input :profile_id, collection: AgencyProfile.all %>
+        <%= f.input :role, collection: [ "Agency Owner", "Payroll", "Recruiter", "Account Manager", "Sales Support", "Agency Super", "Admin Team" ] %>
       <% end %>
       
       <% if @user.profile_type == "CompanyProfile" %>
-      <%= f.input :profile_id, collection: CompanyProfile.all %>
-      <%= f.input :role, collection: [ "Owner", "Super", "HR"] %>
+        <%= f.input :profile_id, collection: CompanyProfile.all %>
+        <%= f.input :role, collection: [ "Company Owner", "Company Super", "HR"] %>
+      <% end %>
+      
+      <% if @user.profile_type == "EmployeeProfile" %>
+        <%= f.input :profile_id, collection: EmployeeProfile.all %>
+        <%= f.input :role, collection: [ "Employee"] %>
       <% end %>
 
-      <%= f.label :password %>
+
+
+      <%= f.label :password, "Set New Password" %>
       <%= f.password_field :password, class: 'form-control' %>
 
       <%= f.label :password_confirmation, "Confirmation" %>
